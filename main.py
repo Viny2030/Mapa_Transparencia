@@ -20,7 +20,7 @@ app.add_middleware(
 # ── URLs de los servicios integrados ────────────────────────────────────────
 SERVICES = {
     "contratos":    os.getenv("CONTRATOS_API_URL",   "https://gobbocomprartgn-production.up.railway.app"),
-    "contratos_v2": os.getenv("CONTRATOS_V2_API_URL","https://monitorcontratosv2-production.up.railway.app"),
+    "contratos_v2": os.getenv("CONTRATOS_V2_API_URL","https://monitorcontratosv2-production-65d2.up.railway.app"),
     "ejecutivo":    os.getenv("EJECUTIVO_API_URL",   "https://jefaturagabinete-production.up.railway.app"),
     "justicia":     os.getenv("JUSTICIA_API_URL",    "https://justicia-production-6a54.up.railway.app"),
     "diputados":    os.getenv("LEGISTATIVO_API_URL", "https://monitorlegistativo-production.up.railway.app"),
