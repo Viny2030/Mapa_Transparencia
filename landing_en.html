@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transparency Map · Argentine State</title>
+<meta name="description" content="Real-time algorithmic monitoring of all three branches of the Argentine government. Open source. Official data only.">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,sans-serif;background:#0a0e1a;color:#e8eaf0;line-height:1.6}
+  a{color:inherit;text-decoration:none}
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:4rem 2rem;background:linear-gradient(160deg,#0a0e1a 60%,#0d1f3c)}
+  .badge{display:inline-block;background:#1a3a5c;border:1px solid #2a5a8c;color:#7ab3e0;font-size:0.75rem;padding:0.3rem 0.8rem;border-radius:20px;margin-bottom:1.5rem;letter-spacing:0.05em;text-transform:uppercase}
+  h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1.15;margin-bottom:1rem;max-width:800px}
+  h1 span{color:#4a9eff}
+  .subtitle{font-size:1.1rem;color:#9aa3b5;max-width:600px;margin-bottom:2.5rem}
+  .cta-row{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+  .btn{padding:0.8rem 1.8rem;border-radius:8px;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+  .btn-primary{background:#4a9eff;color:#fff}
+  .btn-primary:hover{background:#2a7edf}
+  .btn-secondary{background:transparent;border:1px solid #3a4a6a;color:#9aa3b5}
+  .btn-secondary:hover{border-color:#4a9eff;color:#4a9eff}
+  .stats{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin-top:4rem;padding-top:3rem;border-top:1px solid #1a2a4a}
+  .stat{text-align:center}
+  .stat-num{font-size:2rem;font-weight:700;color:#4a9eff}
+  .stat-label{font-size:0.8rem;color:#6a7a9a;text-transform:uppercase;letter-spacing:0.05em;margin-top:0.25rem}
+  .section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+  .section-label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#4a9eff;margin-bottom:0.75rem}
+  h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;margin-bottom:1rem}
+  .muted{color:#9aa3b5}
+  .iri-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:2rem}
+  .iri-card{background:#0f1624;border:1px solid #1e2d4a;border-radius:12px;padding:1.5rem}
+  .iri-card h3{font-size:1rem;font-weight:600;margin-bottom:0.5rem}
+  .iri-weight{font-size:2rem;font-weight:700;color:#4a9eff}
+  .iri-desc{font-size:0.85rem;color:#6a7a9a;margin-top:0.5rem}
+  .monitors-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:2rem}
+  .monitor-card{background:#0f1624;border:1px solid #1e2d4a;border-radius:12px;padding:1.5rem;transition:border-color 0.2s}
+  .monitor-card:hover{border-color:#4a9eff}
+  .monitor-branch{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem}
+  .branch-exec{color:#f0a050}
+  .branch-leg{color:#50c0f0}
+  .branch-jud{color:#a050f0}
+  .branch-iri{color:#50f0a0}
+  .monitor-card h3{font-size:0.95rem;font-weight:600;margin-bottom:0.4rem}
+  .monitor-card p{font-size:0.82rem;color:#6a7a9a}
+  .live-dot{display:inline-block;width:7px;height:7px;background:#22c55e;border-radius:50%;margin-right:6px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .stack{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:2rem}
+  .pill{background:#0f1624;border:1px solid #1e2d4a;border-radius:20px;padding:0.35rem 0.9rem;font-size:0.8rem;color:#9aa3b5}
+  .author{background:#0f1624;border:1px solid #1e2d4a;border-radius:16px;padding:2rem;display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;margin-top:2rem}
+  .author-avatar{width:64px;height:64px;background:#1a3a5c;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#4a9eff;flex-shrink:0}
+  .author h3{font-size:1rem;font-weight:600;margin-bottom:0.25rem}
+  .author p{font-size:0.85rem;color:#9aa3b5}
+  .author a{color:#4a9eff}
+  .disclaimer{background:#0d1218;border-top:1px solid #1a2a3a;padding:2rem;text-align:center;font-size:0.8rem;color:#4a5a7a;max-width:700px;margin:0 auto}
+  footer{background:#070b12;border-top:1px solid #111d30;padding:2rem;text-align:center;font-size:0.8rem;color:#4a5a7a}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="badge">🇦🇷 Open GovTech · Argentina</div>
+  <h1>Algorithmic monitoring of the<br><span>Argentine State</span> — in real time</h1>
+  <p class="subtitle">7 independent monitors. 3 branches of government. 1 composite risk index. Official public data only. Open source.</p>
+  <div class="cta-row">
+    <a href="https://mapatransparencia-production.up.railway.app" class="btn btn-primary" target="_blank">🚀 Open Platform</a>
+    <a href="https://mapatransparencia-production.up.railway.app/docs" class="btn btn-secondary" target="_blank">📡 API Docs</a>
+    <a href="https://github.com/Viny2030/Mapa_Transparencia" class="btn btn-secondary" target="_blank">⭐ GitHub</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Active monitors</div></div>
+    <div class="stat"><div class="stat-num">3/3</div><div class="stat-label">Gov. branches</div></div>
+    <div class="stat"><div class="stat-num">1,154</div><div class="stat-label">Officials tracked</div></div>
+    <div class="stat"><div class="stat-num">1,839</div><div class="stat-label">Contracts</div></div>
+    <div class="stat"><div class="stat-num">$3.8B</div><div class="stat-label">ARS monitored</div></div>
+  </div>
+</section>
+
+<div style="background:#070b12;padding:5rem 2rem">
+<div class="section" style="padding:0">
+  <div class="section-label">Methodology</div>
+  <h2>The Institutional Risk Index (IRI)</h2>
+  <p class="muted">A composite score that aggregates four weighted dimensions of institutional risk across all government branches. Every alert is explainable — not a black box.</p>
+  <div class="iri-grid">
+    <div class="iri-card">
+      <div class="iri-weight">35%</div>
+      <h3>Financial Risk</h3>
+      <div class="iri-desc">Anomalies in budget execution, payment flows, and treasury operations</div>
+    </div>
+    <div class="iri-card">
+      <div class="iri-weight">30%</div>
+      <h3>Procurement Risk</h3>
+      <div class="iri-desc">XAI-powered detection of irregular patterns in public tenders and contracts (COMPR.AR + BORA)</div>
+    </div>
+    <div class="iri-card">
+      <div class="iri-weight">20%</div>
+      <h3>Operational Risk</h3>
+      <div class="iri-desc">Absenteeism, productivity, and institutional performance metrics</div>
+    </div>
+    <div class="iri-card">
+      <div class="iri-weight">15%</div>
+      <h3>Data Risk</h3>
+      <div class="iri-desc">Quality, completeness, and timeliness of published public information</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div style="padding:5rem 2rem">
+<div class="section" style="padding:0">
+  <div class="section-label">Monitors</div>
+  <h2>All three branches of government</h2>
+  <p class="muted"><span class="live-dot"></span>All monitors are live and updated daily from official sources.</p>
+  <div class="monitors-grid">
+    <a href="https://jefaturagabinete-production.up.railway.app" target="_blank" class="monitor-card">
+      <div class="monitor-branch branch-exec">⚡ Executive</div>
+      <h3>Executive Monitor</h3>
+      <p>Chief of Staff Office · SGP · Presidency · Payroll · Alerts</p>
+    </a>
+    <a href="https://gobbocomprartgn-production.up.railway.app" target="_blank" class="monitor-card">
+      <div class="monitor-branch branch-exec">⚡ Executive</div>
+      <h3>Contracts Monitor v1</h3>
+      <p>COMPR.AR · National Treasury · Real-time risk analysis</p>
+    </a>
+    <a href="https://monitorcontratosv2-production-65d2.up.railway.app" target="_blank" class="monitor-card">
+      <div class="monitor-branch branch-exec">⚡ Executive</div>
+      <h3>Contracts Monitor v2</h3>
+      <p>BORA + COMPR.AR · XAI irregularity detection</p>
+    </a>
+    <a href="https://monitorlegistativo-production.up.railway.app" target="_blank" class="monitor-card">
+      <div class="monitor-branch branch-leg">🏛️ Legislative</div>
+      <h3>Deputies Monitor</h3>
+      <p>Attendance · Productivity · Cost per capita · ICE index</p>
+    </a>
+    <a href="https://monitorlegistativosenadores-production.up.railway.app" target="_blank" class="monitor-card">
+      <div class="monitor-branch branch-leg">🏛️ Legislative</div>
+      <h3>Senate Monitor</h3>
+      <p>Participation · Party reports · Performance indicators</p>
+    </a>
+    <a href="https://justicia-production-6a54.up.railway.app" target="_blank" class="monitor-card">
+      <div class="monitor-branch branch-jud">⚖️ Judicial</div>
+      <h3>Judicial Monitor</h3>
+      <p>Supreme Court · Judiciary Council · Federal courts · IRA</p>
+    </a>
+    <a href="https://monitor-production-f053.up.railway.app" target="_blank" class="monitor-card">
+      <div class="monitor-branch branch-iri">🚦 Cross-branch</div>
+      <h3>IRI Dashboard</h3>
+      <p>Composite institutional risk score · Central dashboard</p>
+    </a>
+  </div>
+</div>
+</div>
+
+<div style="background:#070b12;padding:5rem 2rem">
+<div class="section" style="padding:0">
+  <div class="section-label">Technology</div>
+  <h2>Open source stack</h2>
+  <p class="muted">Built with Python and FastAPI. Deployed on Railway. Data fetched daily from official Argentine government APIs.</p>
+  <div class="stack">
+    <span class="pill">Python 3</span>
+    <span class="pill">FastAPI 0.115</span>
+    <span class="pill">Uvicorn 0.30</span>
+    <span class="pill">HTTPX 0.27</span>
+    <span class="pill">Railway</span>
+    <span class="pill">Swagger UI</span>
+    <span class="pill">XAI / Explainable AI</span>
+    <span class="pill">JGM Open Data</span>
+    <span class="pill">COMPR.AR</span>
+    <span class="pill">BORA</span>
+    <span class="pill">CSJN</span>
+  </div>
+</div>
+</div>
+
+<div style="padding:5rem 2rem">
+<div class="section" style="padding:0">
+  <div class="section-label">Author</div>
+  <h2>About the researcher</h2>
+  <div class="author">
+    <div class="author-avatar">VM</div>
+    <div>
+      <h3>Ph.D. Vicente Humberto Monteverde</h3>
+      <p>Doctor in Economic Sciences · Researcher in political economy and corruption phenomena.<br>
+      Author of the <em>Regressive Income Transfer</em> theory and developer of the XAI algorithm applied to public procurement analysis.<br>
+      Published in <em>Journal of Financial Crime</em> (Emerald Publishing). Advisor on transparency and algorithmic auditing of public spending.</p>
+      <p style="margin-top:0.75rem"><a href="mailto:vhmonte@retina.ar">vhmonte@retina.ar</a></p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div style="padding:2rem">
+<div class="disclaimer">
+  <strong>Disclaimer:</strong> This tool is experimental and academic in nature. Results are algorithmic risk indicators — they do not imply legal judgment, accusation, or determination of responsibility regarding any company, institution, or individual. The goal is to promote transparency and informed public debate about government spending.
+</div>
+</div>
+
+<footer>
+  Mapa de Transparencia · <a href="https://github.com/Viny2030/Mapa_Transparencia" style="color:#4a9eff">github.com/Viny2030</a> · Ph.D. Vicente Humberto Monteverde · v1.0
+</footer>
+
+</body>
+</html>
