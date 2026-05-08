@@ -1,0 +1,51 @@
+# 🗺️ Mapa de Transparencia del Estado Argentino
+### *Transparency Map of the Argentine State*
+
+> **Algoritmos contra la Corrupción · Algorithms Against Corruption**
+
+[![Live Platform](https://img.shields.io/badge/live-platform-brightgreen)](https://mapatransparencia-production.up.railway.app)
+[![API Docs](https://img.shields.io/badge/API-docs-blue)](https://mapatransparencia-production.up.railway.app/docs)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688)](https://fastapi.tiangolo.com)
+[![Deploy: Railway](https://img.shields.io/badge/deploy-Railway-purple)](https://railway.app)
+
+---
+
+## 🇦🇷 Español · 🇺🇸 English
+
+---
+
+## Español
+
+### ¿Qué es esto?
+
+**Mapa de Transparencia** es una plataforma de monitoreo algorítmico del Estado argentino en tiempo real. Centraliza siete monitores independientes que cubren los tres poderes del Estado — Ejecutivo, Legislativo y Judicial — más un índice compuesto de riesgo institucional (IRI) desarrollado específicamente para detectar patrones de corrupción en datos públicos.
+
+El proyecto es de código abierto, académico y sin fines de lucro. Todos los datos provienen de fuentes oficiales del Estado argentino (JGM, COMPR.AR, BORA, Magistratura del Poder Judicial).
+
+### El Índice de Riesgo Institucional (IRI)
+
+El IRI es el núcleo metodológico de la plataforma. Es un score compuesto que agrega cuatro dimensiones de riesgo institucional:
+
+| Dimensión | Peso | Descripción |
+|---|---|---|
+| Riesgo Financiero | 35% | Anomalías en ejecución presupuestaria y pagos |
+| Riesgo de Contratación | 30% | Irregularidades en licitaciones y contratos públicos (XAI) |
+| Riesgo Operativo | 20% | Ausentismo, productividad y desempeño institucional |
+| Riesgo de Datos | 15% | Calidad, completitud y actualización de la información pública |
+
+El componente de Riesgo de Contratación utiliza **XAI (Explainable AI)** para identificar patrones irregulares en los datos de COMPR.AR y BORA, haciendo que cada alerta sea interpretable y auditable.
+
+### Los siete monitores
+
+| Monitor | Poder | Fuente principal |
+|---|---|---|
+| [Monitor Ejecutivo](https://jefaturagabinete-production.up.railway.app) | Ejecutivo | JGM · SGP · Presidencia |
+| [Monitor de Contratos v1](https://gobbocomprartgn-production.up.railway.app) | Ejecutivo | COMPR.AR · TGN |
+| [Monitor de Contratos v2](https://monitorcontratosv2-production-65d2.up.railway.app) | Ejecutivo | BORA + COMPR.AR (XAI) |
+| [Monitor Legislativo — Diputados](https://monitorlegistativo-production.up.railway.app) | Legislativo | Cámara de Diputados |
+| [Monitor Legislativo — Senadores](https://monitorlegistativosenadores-production.up.railway.app) | Legislativo | Senado de la Nación |
+| [Monitor Judicial](https://justicia-production-6a54.up.railway.app) | Judicial | CSJN · Magistratura |
+| [Monitor IRI](https://monitor-production-f053.up.railway.app) | Transversal | Score compuesto IRI |
+
+### Stack tecnológico
