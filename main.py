@@ -1,9 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 import httpx
 import os
 
+@app.get("/en", response_class=HTMLResponse)
+async def landing_en():
+    path = Path("landing_en.html")
+    return HTMLResponse(content=path.read_text(encoding="utf-8"))
 app = FastAPI(title="Mapa de Transparencia del Estado Argentino", version="1.0.0")
 
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
