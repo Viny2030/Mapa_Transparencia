@@ -235,7 +235,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     </div>
     <div class="don-card" style="border-top-color:#e74c3c;">
       <h4>🌐 Desde el Exterior (USD Wire)</h4>
-      <div class="don-row"><div class="don-label">Banco</div><div class="don-value">Banco Santander Montevideo</div></div>
+      <div class="don-row"><div class="don-label">Banco</div><div class="don-value">Banco Santander R�o</div></div>
       <div class="don-row"><div class="don-label">Beneficiario</div><div class="don-value">Vicente Humberto Monteverde</div></div>
       <div class="don-row"><div class="don-label">Dirección</div><div class="don-value">Av. Directorio 3024 PB DTO 04</div></div>
       <div class="don-row"><div class="don-label">Cuenta USD</div><div class="don-value don-highlight">005200183500</div></div>
