@@ -43,6 +43,8 @@ HTML_CONTENT = """<!DOCTYPE html>
   .stat-card{background:white;border-radius:10px;padding:1rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06);}
   .stat-card .num{font-size:1.6rem;font-weight:700;color:var(--azul);}
   .stat-card .label{font-size:.75rem;color:#666;margin-top:.2rem;}
+  .num.loading{color:#ccc;animation:pulse 1.2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
   .poderes{max-width:1100px;margin:0 auto 2rem;padding:0 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;}
   .poder{background:white;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden;}
   .poder-header{padding:1rem 1.2rem;display:flex;align-items:center;gap:.7rem;}
@@ -63,6 +65,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   .mi-desc{font-size:.76rem;color:#777;margin-top:.1rem;}
   .mi-status{font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600;}
   .status-live{background:#d4edda;color:#155724;}
+  .status-down{background:#f8d7da;color:#721c24;}
   .disclaimer{max-width:1100px;margin:0 auto 2rem;padding:0 1rem;}
   .disclaimer-inner{background:#fff8e1;border-left:4px solid #f39c12;border-radius:6px;padding:1rem 1.2rem;font-size:.85rem;color:#555;line-height:1.7;}
   .autor-section{max-width:1100px;margin:0 auto 2rem;padding:0 1rem;}
@@ -116,11 +119,11 @@ HTML_CONTENT = """<!DOCTYPE html>
 </div>
 
 <div class="stats">
-  <div class="stat-card"><div class="num">7</div><div class="label">Monitores activos</div></div>
+  <div class="stat-card"><div class="num loading" id="kpi-monitores">—</div><div class="label">Monitores activos</div></div>
   <div class="stat-card"><div class="num">3</div><div class="label">Poderes del Estado</div></div>
-  <div class="stat-card"><div class="num">$3.8B</div><div class="label">ARS monitoreados</div></div>
-  <div class="stat-card"><div class="num">1.154</div><div class="label">Autoridades</div></div>
-  <div class="stat-card"><div class="num">1.839</div><div class="label">Contratos registrados</div></div>
+  <div class="stat-card"><div class="num loading" id="kpi-organismos">—</div><div class="label">Organismos monitoreados</div></div>
+  <div class="stat-card"><div class="num loading" id="kpi-iri">—</div><div class="label">IRI promedio global</div></div>
+  <div class="stat-card"><div class="num loading" id="kpi-riesgo">—</div><div class="label">En riesgo medio/alto</div></div>
 </div>
 
 <div class="poderes">
@@ -129,15 +132,15 @@ HTML_CONTENT = """<!DOCTYPE html>
     <div class="monitor-list">
       <a class="monitor-item" href="https://jefaturagabinete-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">🏛️</span><div class="mi-info"><div class="mi-title">Monitor Ejecutivo</div><div class="mi-desc">JGM · SGP · Presidencia · Contratos · Nómina · Alertas</div></div>
-        <span class="mi-status status-live">EN VIVO</span>
+        <span class="mi-status" id="st-ejecutivo">EN VIVO</span>
       </a>
       <a class="monitor-item" href="https://gobbocomprartgn-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">Monitor de Contratos v1</div><div class="mi-desc">COMPR.AR · TGN · Análisis de riesgo en tiempo real</div></div>
-        <span class="mi-status status-live">EN VIVO</span>
+        <span class="mi-status" id="st-contratos">EN VIVO</span>
       </a>
       <a class="monitor-item" href="https://monitorcontratosv2-production-65d2.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">📊</span><div class="mi-info"><div class="mi-title">Monitor de Contratos v2</div><div class="mi-desc">BORA + COMPR.AR · Detección de irregularidades XAI</div></div>
-        <span class="mi-status status-live">EN VIVO</span>
+        <span class="mi-status" id="st-contratos_v2">EN VIVO</span>
       </a>
     </div>
   </div>
@@ -147,11 +150,11 @@ HTML_CONTENT = """<!DOCTYPE html>
     <div class="monitor-list">
       <a class="monitor-item" href="https://monitorlegistativo-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">🗳️</span><div class="mi-info"><div class="mi-title">Monitor Legislativo · Diputados</div><div class="mi-desc">ICE · Asistencia · Productividad · Costo per cápita</div></div>
-        <span class="mi-status status-live">EN VIVO</span>
+        <span class="mi-status" id="st-diputados">EN VIVO</span>
       </a>
       <a class="monitor-item" href="https://monitorlegistativosenadores-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">🏅</span><div class="mi-info"><div class="mi-title">Monitor Legislativo · Senadores</div><div class="mi-desc">Participación · Reporte por partido · Indicadores</div></div>
-        <span class="mi-status status-live">EN VIVO</span>
+        <span class="mi-status" id="st-senadores">EN VIVO</span>
       </a>
     </div>
   </div>
@@ -161,7 +164,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     <div class="monitor-list">
       <a class="monitor-item" href="https://justicia-production-6a54.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">Monitor Judicial</div><div class="mi-desc">Corte Suprema · Magistratura · Cámaras · Juzgados · IRA</div></div>
-        <span class="mi-status status-live">EN VIVO</span>
+        <span class="mi-status" id="st-justicia">EN VIVO</span>
       </a>
     </div>
   </div>
@@ -172,7 +175,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       <a class="monitor-item" href="https://monitor-production-f053.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">🚦</span>
         <div class="mi-info"><div class="mi-title">Monitor IRI · Dashboard Central</div><div class="mi-desc">Score compuesto: R_Financiero×35% + R_Contratación×30% + R_Operativo×20% + R_Datos×15%</div></div>
-        <span class="mi-status status-live">EN VIVO</span>
+        <span class="mi-status" id="st-iri">EN VIVO</span>
       </a>
     </div>
   </div>
@@ -252,6 +255,50 @@ HTML_CONTENT = """<!DOCTYPE html>
   <a href="mailto:vhmonte@retina.ar">vhmonte@retina.ar</a>
 </footer>
 
+<script>
+async function cargarKPIs() {
+  try {
+    const [status, resumen] = await Promise.all([
+      fetch('/status').then(r => r.json()),
+      fetch('/iri/resumen').then(r => r.json())
+    ]);
+
+    // Monitores activos y badges
+    const servicios = Object.entries(status);
+    const activos = servicios.filter(([, s]) => s.ok).length;
+    document.getElementById('kpi-monitores').textContent = activos;
+    document.getElementById('kpi-monitores').classList.remove('loading');
+
+    // Actualizar badges EN VIVO / CAIDO
+    servicios.forEach(([nombre, s]) => {
+      const el = document.getElementById('st-' + nombre);
+      if (el) {
+        el.textContent = s.ok ? 'EN VIVO' : 'CAIDO';
+        el.className = 'mi-status ' + (s.ok ? 'status-live' : 'status-down');
+      }
+    });
+
+    // KPIs del IRI
+    const g = resumen.global;
+    document.getElementById('kpi-organismos').textContent = g.total_organismos;
+    document.getElementById('kpi-organismos').classList.remove('loading');
+    document.getElementById('kpi-iri').textContent = g.iri_promedio_global.toFixed(1);
+    document.getElementById('kpi-iri').classList.remove('loading');
+    const enRiesgo = (g.alto_riesgo || 0) + (g.medio_riesgo || 0);
+    document.getElementById('kpi-riesgo').textContent = enRiesgo;
+    document.getElementById('kpi-riesgo').classList.remove('loading');
+
+  } catch(e) {
+    console.warn('KPIs no disponibles:', e);
+    ['kpi-monitores','kpi-organismos','kpi-iri','kpi-riesgo'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = '—'; el.classList.remove('loading'); }
+    });
+  }
+}
+cargarKPIs();
+</script>
+
 </body>
 </html>
 """
@@ -313,4 +360,3 @@ async def iri_resumen():
         r = await client.get(f"{SERVICES['iri']}/resumen")
         r.raise_for_status()
         return r.json()
-
