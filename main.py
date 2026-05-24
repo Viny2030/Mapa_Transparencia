@@ -199,22 +199,6 @@ HTML_CONTENT = """<!DOCTYPE html>
         </div>
         <span class="mi-status status-live" id="st-ajuste">EN VIVO</span>
       </a>
-      <a class="monitor-item" href="https://ajuste-production.up.railway.app/api/social/kpis" target="_blank" rel="noopener">
-        <span class="mi-icon">🏥</span>
-        <div class="mi-info">
-          <div class="mi-title">KPIs Gasto Social 2023 → 2026</div>
-          <div class="mi-desc">Jubilaciones · Sueldos · Obra pública · Empleo público · Salud</div>
-        </div>
-        <span class="mi-status status-live">API</span>
-      </a>
-      <a class="monitor-item" href="https://ajuste-production.up.railway.app/api/v1/analisis/sector" target="_blank" rel="noopener">
-        <span class="mi-icon">🏗️</span>
-        <div class="mi-info">
-          <div class="mi-title">Análisis Sectorial Completo</div>
-          <div class="mi-desc">Variación real IPC · Variación USD · Obra pública · Capital humano · Defensa · Seguridad</div>
-        </div>
-        <span class="mi-status status-live">API</span>
-      </a>
     </div>
   </div>
 </div>
