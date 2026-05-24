@@ -17,6 +17,7 @@ SERVICES = {
     "diputados":    os.getenv("LEGISTATIVO_API_URL", "https://monitorlegistativo-production.up.railway.app"),
     "senadores":    os.getenv("SENADORES_API_URL",   "https://monitorlegistativosenadores-production.up.railway.app"),
     "iri":          os.getenv("IRI_API_URL",         "https://monitor-production-f053.up.railway.app"),
+    "ajuste":       os.getenv("AJUSTE_API_URL",      "https://ajuste-production.up.railway.app"),
 }
 
 HTML_CONTENT = """<!DOCTYPE html>
