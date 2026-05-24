@@ -19,9 +19,9 @@
 
 ### ¿Qué es esto?
 
-**Mapa de Transparencia** es una plataforma de monitoreo algorítmico del Estado argentino en tiempo real. Centraliza siete monitores independientes que cubren los tres poderes del Estado — Ejecutivo, Legislativo y Judicial — más un índice compuesto de riesgo institucional (IRI) desarrollado específicamente para detectar patrones de corrupción en datos públicos.
+**Mapa de Transparencia** es una plataforma de monitoreo algorítmico del Estado argentino en tiempo real. Centraliza **ocho monitores independientes** que cubren los tres poderes del Estado — Ejecutivo, Legislativo y Judicial — más un índice compuesto de riesgo institucional (IRI) y el Monitor de Ajuste Presupuestario (MAP), desarrollados específicamente para detectar patrones de corrupción, licuación y recorte en datos públicos.
 
-El proyecto es de código abierto, académico y sin fines de lucro. Todos los datos provienen de fuentes oficiales del Estado argentino (JGM, COMPR.AR, BORA, Magistratura del Poder Judicial).
+El proyecto es de código abierto, académico y sin fines de lucro. Todos los datos provienen de fuentes oficiales del Estado argentino (JGM, COMPR.AR, BORA, Magistratura del Poder Judicial, Presupuesto Abierto — Ministerio de Economía).
 
 ### El Índice de Riesgo Institucional (IRI)
 
@@ -36,7 +36,7 @@ El IRI es el núcleo metodológico de la plataforma. Es un score compuesto que a
 
 El componente de Riesgo de Contratación utiliza **XAI (Explainable AI)** para identificar patrones irregulares en los datos de COMPR.AR y BORA, haciendo que cada alerta sea interpretable y auditable.
 
-### Los siete monitores
+### Los ocho monitores
 
 | Monitor | Poder | Fuente principal |
 |---|---|---|
@@ -47,5 +47,96 @@ El componente de Riesgo de Contratación utiliza **XAI (Explainable AI)** para i
 | [Monitor Legislativo — Senadores](https://monitorlegistativosenadores-production.up.railway.app) | Legislativo | Senado de la Nación |
 | [Monitor Judicial](https://justicia-production-6a54.up.railway.app) | Judicial | CSJN · Magistratura |
 | [Monitor IRI](https://monitor-production-f053.up.railway.app) | Transversal | Score compuesto IRI |
+| [Monitor de Ajuste Presupuestario (MAP)](https://ajuste-production.up.railway.app) | Transversal | Presupuesto Abierto · MECON · INDEC |
+
+### Monitor de Ajuste Presupuestario (MAP)
+
+El MAP analiza la evolución del gasto público argentino entre 2023 y 2026 en tres dimensiones:
+
+- **① Nominal** — variación en pesos corrientes
+- **② Real (IPC)** — deflactado por inflación acumulada (×10.53 al 2026)
+- **③ USD constantes** — variación en dólares a tipo de cambio de cada período
+
+Cubre los sectores: Jubilaciones, Salud, Capital Humano, Obra Pública, Seguridad, Defensa y Salario Público. La base de datos contiene **560,249 partidas** presupuestarias (ejercicios 2023–2026).
 
 ### Stack tecnológico
+
+- **Backend:** Python 3.13 · FastAPI · SQLAlchemy · PostgreSQL (Railway)
+- **Frontend:** HTML/JS vanilla · Chart.js
+- **Datos:** Presupuesto Abierto (MECON) · BCRA · INDEC · BORA · COMPR.AR · Poder Judicial
+- **Deploy:** Railway (auto-deploy desde GitHub)
+- **Scraping:** GitHub Actions (daily cron)
+
+### Autor
+
+**Ph.D. Vicente Humberto Monteverde**
+Doctor en Ciencias Económicas · Investigador en economía política y fenómenos de corrupción.
+Autor de la teoría de *Transferencia Regresiva de Ingresos*.
+Publicaciones en *Journal of Financial Crime* (Emerald Publishing).
+
+✉ vhmonte@retina.ar · viny01958@gmail.com
+🔗 [github.com/Viny2030](https://github.com/Viny2030)
+
+---
+
+## English
+
+### What is this?
+
+**Transparency Map** is a real-time algorithmic monitoring platform for the Argentine State. It centralizes **eight independent monitors** covering all three branches of government — Executive, Legislative, and Judicial — plus a composite Institutional Risk Index (IRI) and the Budget Adjustment Monitor (MAP), specifically designed to detect corruption patterns, inflation erosion, and real spending cuts in public data.
+
+The project is open source, academic, and non-profit. All data comes from official Argentine government sources (JGM, COMPR.AR, BORA, Judiciary Council, Open Budget — Ministry of Economy).
+
+### The Institutional Risk Index (IRI)
+
+The IRI is the platform's methodological core. It is a composite score aggregating four dimensions of institutional risk:
+
+| Dimension | Weight | Description |
+|---|---|---|
+| Financial Risk | 35% | Anomalies in budget execution and payment flows |
+| Procurement Risk | 30% | Irregularities in public tenders and contracts (XAI) |
+| Operational Risk | 20% | Absenteeism, productivity, and institutional performance |
+| Data Risk | 15% | Quality, completeness, and timeliness of public information |
+
+The Procurement Risk component uses **XAI (Explainable AI)** to identify irregular patterns in COMPR.AR and BORA data, making every alert interpretable and auditable.
+
+### The eight monitors
+
+| Monitor | Branch | Primary source |
+|---|---|---|
+| [Executive Monitor](https://jefaturagabinete-production.up.railway.app) | Executive | JGM · SGP · Presidency |
+| [Contracts Monitor v1](https://gobbocomprartgn-production.up.railway.app) | Executive | COMPR.AR · TGN |
+| [Contracts Monitor v2](https://monitorcontratosv2-production-65d2.up.railway.app) | Executive | BORA + COMPR.AR (XAI) |
+| [Legislative Monitor — Deputies](https://monitorlegistativo-production.up.railway.app) | Legislative | Chamber of Deputies |
+| [Legislative Monitor — Senators](https://monitorlegistativosenadores-production.up.railway.app) | Legislative | Senate |
+| [Judicial Monitor](https://justicia-production-6a54.up.railway.app) | Judicial | CSJN · Judiciary Council |
+| [IRI Dashboard](https://monitor-production-f053.up.railway.app) | Cross-branch | Composite IRI score |
+| [Budget Adjustment Monitor (MAP)](https://ajuste-production.up.railway.app) | Cross-branch | Open Budget · MECON · INDEC |
+
+### Budget Adjustment Monitor (MAP)
+
+The MAP tracks the evolution of Argentine public spending from 2023 to 2026 across three dimensions:
+
+- **① Nominal** — variation in current pesos
+- **② Real (CPI)** — deflated by cumulative inflation (×10.53 by 2026)
+- **③ Constant USD** — variation in dollars at each period's exchange rate
+
+Coverage: Pensions, Health, Human Capital, Public Works, Security, Defense, and Public Wages. The database contains **560,249 budget line items** (fiscal years 2023–2026).
+
+### Tech stack
+
+- **Backend:** Python 3.13 · FastAPI · SQLAlchemy · PostgreSQL (Railway)
+- **Frontend:** Vanilla HTML/JS · Chart.js
+- **Data:** Open Budget (MECON) · BCRA · INDEC · BORA · COMPR.AR · Judiciary
+- **Deploy:** Railway (auto-deploy from GitHub)
+- **Scraping:** GitHub Actions (daily cron)
+
+### Author
+
+**Ph.D. Vicente Humberto Monteverde**
+Doctor of Economic Sciences · Researcher in political economy and corruption phenomena.
+Author of the theory of *Regressive Income Transfer*.
+Publications in the *Journal of Financial Crime* (Emerald Publishing).
+
+✉ vhmonte@retina.ar · viny01958@gmail.com
+🔗 [github.com/Viny2030](https://github.com/Viny2030)
