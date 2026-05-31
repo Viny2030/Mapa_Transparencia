@@ -11,7 +11,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 SERVICES = {
     "contratos":    os.getenv("CONTRATOS_API_URL",   "https://gobbocomprartgn-production.up.railway.app"),
-    "contratos_v2": os.getenv("CONTRATOS_V2_API_URL","https://monitorcontratosv2-production-65d2.up.railway.app"),
+    "contratos_v2": os.getenv("CONTRATOS_V2_API_URL","https://monitorcontratos-production.up.railway.app"),
     "ejecutivo":    os.getenv("EJECUTIVO_API_URL",   "https://jefaturagabinete-production.up.railway.app"),
     "justicia":     os.getenv("JUSTICIA_API_URL",    "https://justicia-production-6a54.up.railway.app"),
     "diputados":    os.getenv("LEGISTATIVO_API_URL", "https://monitorlegistativo-production.up.railway.app"),
@@ -139,7 +139,7 @@ HTML_CONTENT = """<!DOCTYPE html>
         <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">Monitor de Contratos v1</div><div class="mi-desc">COMPR.AR · TGN · Análisis de riesgo en tiempo real</div></div>
         <span class="mi-status" id="st-contratos">EN VIVO</span>
       </a>
-      <a class="monitor-item" href="https://monitorcontratosv2-production-65d2.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://monitorcontratos-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">📊</span><div class="mi-info"><div class="mi-title">Monitor de Contratos v2</div><div class="mi-desc">BORA + COMPR.AR · Detección de irregularidades XAI</div></div>
         <span class="mi-status" id="st-contratos_v2">EN VIVO</span>
       </a>

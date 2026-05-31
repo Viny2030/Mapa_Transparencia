@@ -42,7 +42,7 @@ El componente de Riesgo de Contratación utiliza **XAI (Explainable AI)** para i
 |---|---|---|
 | [Monitor Ejecutivo](https://jefaturagabinete-production.up.railway.app) | Ejecutivo | JGM · SGP · Presidencia |
 | [Monitor de Contratos v1](https://gobbocomprartgn-production.up.railway.app) | Ejecutivo | COMPR.AR · TGN |
-| [Monitor de Contratos v2](https://monitorcontratosv2-production-65d2.up.railway.app) | Ejecutivo | BORA + COMPR.AR (XAI) |
+| [Monitor de Contratos v2](https://monitorcontratos-production.up.railway.app) | Ejecutivo | BORA + COMPR.AR (XAI) |
 | [Monitor Legislativo — Diputados](https://monitorlegistativo-production.up.railway.app) | Legislativo | Cámara de Diputados |
 | [Monitor Legislativo — Senadores](https://monitorlegistativosenadores-production.up.railway.app) | Legislativo | Senado de la Nación |
 | [Monitor Judicial](https://justicia-production-6a54.up.railway.app) | Judicial | CSJN · Magistratura |
@@ -106,7 +106,7 @@ The Procurement Risk component uses **XAI (Explainable AI)** to identify irregul
 |---|---|---|
 | [Executive Monitor](https://jefaturagabinete-production.up.railway.app) | Executive | JGM · SGP · Presidency |
 | [Contracts Monitor v1](https://gobbocomprartgn-production.up.railway.app) | Executive | COMPR.AR · TGN |
-| [Contracts Monitor v2](https://monitorcontratosv2-production-65d2.up.railway.app) | Executive | BORA + COMPR.AR (XAI) |
+| [Contracts Monitor v2](https://monitorcontratos-production.up.railway.app) | Executive | BORA + COMPR.AR (XAI) |
 | [Legislative Monitor — Deputies](https://monitorlegistativo-production.up.railway.app) | Legislative | Chamber of Deputies |
 | [Legislative Monitor — Senators](https://monitorlegistativosenadores-production.up.railway.app) | Legislative | Senate |
 | [Judicial Monitor](https://justicia-production-6a54.up.railway.app) | Judicial | CSJN · Judiciary Council |
