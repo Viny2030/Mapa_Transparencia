@@ -41,6 +41,7 @@
   .branch-leg{color:#50c0f0}
   .branch-jud{color:#a050f0}
   .branch-iri{color:#50f0a0}
+  .branch-intl{color:#f05070}
   .monitor-card h3{font-size:0.95rem;font-weight:600;margin-bottom:0.4rem}
   .monitor-card p{font-size:0.82rem;color:#6a7a9a}
   .live-dot{display:inline-block;width:7px;height:7px;background:#22c55e;border-radius:50%;margin-right:6px;animation:pulse 2s infinite}
@@ -54,6 +55,16 @@
   .author a{color:#4a9eff}
   .disclaimer{background:#0d1218;border-top:1px solid #1a2a3a;padding:2rem;text-align:center;font-size:0.8rem;color:#4a5a7a;max-width:700px;margin:0 auto}
   footer{background:#070b12;border-top:1px solid #111d30;padding:2rem;text-align:center;font-size:0.8rem;color:#4a5a7a}
+  /* MEACI section */
+  .meaci-banner{background:linear-gradient(135deg,#0d1a2e 0%,#0f1f3a 100%);border:1px solid #c0392b;border-radius:16px;padding:2rem;margin-top:2rem}
+  .meaci-banner h3{font-size:1.1rem;font-weight:700;color:#e74c3c;margin-bottom:0.5rem}
+  .meaci-banner p{font-size:0.88rem;color:#9aa3b5;margin-bottom:1rem}
+  .meaci-stats{display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:1.5rem}
+  .meaci-stat{text-align:center}
+  .meaci-stat-num{font-size:1.5rem;font-weight:700;color:#e74c3c}
+  .meaci-stat-label{font-size:0.72rem;color:#6a7a9a;text-transform:uppercase;letter-spacing:0.05em}
+  .btn-meaci{background:#c0392b;color:#fff;padding:0.7rem 1.5rem;border-radius:8px;font-size:0.88rem;font-weight:600;display:inline-block;transition:background 0.2s}
+  .btn-meaci:hover{background:#e74c3c}
 </style>
 </head>
 <body>
@@ -61,18 +72,20 @@
 <section class="hero">
   <div class="badge">🇦🇷 Open GovTech · Argentina</div>
   <h1>Algorithmic monitoring of the<br><span>Argentine State</span> — in real time</h1>
-  <p class="subtitle">7 independent monitors. 3 branches of government. 1 composite risk index. Official public data only. Open source.</p>
+  <p class="subtitle">8 independent monitors. 3 branches of government. 1 composite risk index. International anti-corruption monitor. Official public data only. Open source.</p>
   <div class="cta-row">
     <a href="https://mapatransparencia-production.up.railway.app" class="btn btn-primary" target="_blank">🚀 Open Platform</a>
+    <a href="https://meaci-production.up.railway.app" class="btn btn-primary" style="background:#c0392b" target="_blank">🌍 International Monitor</a>
     <a href="https://mapatransparencia-production.up.railway.app/docs" class="btn btn-secondary" target="_blank">📡 API Docs</a>
     <a href="https://github.com/Viny2030/Mapa_Transparencia" class="btn btn-secondary" target="_blank">⭐ GitHub</a>
   </div>
   <div class="stats">
-    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Active monitors</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Active monitors</div></div>
     <div class="stat"><div class="stat-num">3/3</div><div class="stat-label">Gov. branches</div></div>
     <div class="stat"><div class="stat-num">1,154</div><div class="stat-label">Officials tracked</div></div>
     <div class="stat"><div class="stat-num">1,839</div><div class="stat-label">Contracts</div></div>
-    <div class="stat"><div class="stat-num">$3.8B</div><div class="stat-label">ARS monitored</div></div>
+    <div class="stat"><div class="stat-num">$24.7B</div><div class="stat-label">USD sanctions</div></div>
+    <div class="stat"><div class="stat-num">31</div><div class="stat-label">Intl. MJR cases</div></div>
   </div>
 </section>
 
@@ -152,6 +165,33 @@
       <h3>Budget Adjustment Monitor (MAP)</h3>
       <p>2023 → 2026 · Real spending vs inflation · Social spending KPIs · Sector analysis</p>
     </a>
+    <a href="https://meaci-production.up.railway.app" target="_blank" class="monitor-card" style="border-color:#c0392b;">
+      <div class="monitor-branch branch-intl">🌍 International</div>
+      <h3>MEACI · International Monitor</h3>
+      <p>31 MJR cases · OECD · DOJ · SFO · PNF · Argentine presence · USD 24.7B tracked</p>
+    </a>
+  </div>
+</div>
+</div>
+
+<!-- MEACI Section -->
+<div style="background:#070b12;padding:5rem 2rem">
+<div class="section" style="padding:0">
+  <div class="section-label">International Anti-Corruption</div>
+  <h2>MEACI · International Monitor</h2>
+  <p class="muted">Cross-referencing OECD anti-bribery cases with Argentine public procurement. Identifying sanctioned multinationals that continue operating in the Argentine state.</p>
+  <div class="meaci-banner">
+    <h3>🌍 Monitor of International Anti-Corruption Cases</h3>
+    <p>Tracks MJR (Major Judicial Resolutions) cases from the DOJ, SFO, and PNF. Algorithmically cross-references sanctioned companies with Argentine procurement data (COMPR.AR) and AFIP registry. Updated weekly via automated scrapers.</p>
+    <div class="meaci-stats">
+      <div class="meaci-stat"><div class="meaci-stat-num">31</div><div class="meaci-stat-label">MJR Cases (2008–2026)</div></div>
+      <div class="meaci-stat"><div class="meaci-stat-num">73</div><div class="meaci-stat-label">Total resolutions</div></div>
+      <div class="meaci-stat"><div class="meaci-stat-num">15</div><div class="meaci-stat-label">With AR presence</div></div>
+      <div class="meaci-stat"><div class="meaci-stat-num">$24.7B</div><div class="meaci-stat-label">USD sanctions (2024)</div></div>
+    </div>
+    <a href="https://meaci-production.up.railway.app" class="btn-meaci" target="_blank">🔍 Open MEACI Monitor →</a>
+    &nbsp;&nbsp;
+    <a href="https://meaci-production.up.railway.app/docs" class="btn btn-secondary" style="display:inline-block;padding:0.65rem 1.2rem;font-size:0.85rem" target="_blank">📡 API</a>
   </div>
 </div>
 </div>
@@ -160,12 +200,13 @@
 <div class="section" style="padding:0">
   <div class="section-label">Technology</div>
   <h2>Open source stack</h2>
-  <p class="muted">Built with Python and FastAPI. Deployed on Railway. Data fetched daily from official Argentine government APIs.</p>
+  <p class="muted">Built with Python and FastAPI. Deployed on Railway. Data fetched daily from official Argentine government APIs and international sources (DOJ, SFO, PNF, OECD).</p>
   <div class="stack">
     <span class="pill">Python 3</span>
     <span class="pill">FastAPI 0.115</span>
     <span class="pill">Uvicorn 0.30</span>
     <span class="pill">HTTPX 0.27</span>
+    <span class="pill">PostgreSQL</span>
     <span class="pill">Railway</span>
     <span class="pill">Swagger UI</span>
     <span class="pill">XAI / Explainable AI</span>
@@ -173,6 +214,10 @@
     <span class="pill">COMPR.AR</span>
     <span class="pill">BORA</span>
     <span class="pill">CSJN</span>
+    <span class="pill">DOJ FCPA</span>
+    <span class="pill">SFO DPA</span>
+    <span class="pill">PNF CJIP</span>
+    <span class="pill">OECD</span>
   </div>
 </div>
 </div>
@@ -201,7 +246,7 @@
 </div>
 
 <footer>
-  Mapa de Transparencia · <a href="https://github.com/Viny2030/Mapa_Transparencia" style="color:#4a9eff">github.com/Viny2030</a> · Ph.D. Vicente Humberto Monteverde · v1.0
+  Mapa de Transparencia · <a href="https://github.com/Viny2030/Mapa_Transparencia" style="color:#4a9eff">github.com/Viny2030</a> · Ph.D. Vicente Humberto Monteverde · v1.1
 </footer>
 
 </body>

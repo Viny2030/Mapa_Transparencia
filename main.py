@@ -5,7 +5,7 @@ from pathlib import Path
 import httpx
 import os
 
-app = FastAPI(title="Mapa de Transparencia del Estado Argentino", version="1.0.0")
+app = FastAPI(title="Mapa de Transparencia del Estado Argentino", version="1.1.0")
 
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
@@ -18,6 +18,7 @@ SERVICES = {
     "senadores":    os.getenv("SENADORES_API_URL",   "https://monitorlegistativosenadores-production.up.railway.app"),
     "iri":          os.getenv("IRI_API_URL",         "https://monitor-production-f053.up.railway.app"),
     "ajuste":       os.getenv("AJUSTE_API_URL",      "https://ajuste-production.up.railway.app"),
+    "meaci":        os.getenv("MEACI_API_URL",       "https://meaci-production.up.railway.app"),
 }
 
 HTML_CONTENT = """<!DOCTYPE html>
@@ -37,6 +38,8 @@ HTML_CONTENT = """<!DOCTYPE html>
   nav{background:#003f8a;display:flex;justify-content:center;gap:.5rem;padding:.6rem 1rem;flex-wrap:wrap;}
   nav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.82rem;padding:.3rem .7rem;border-radius:4px;transition:background .2s;}
   nav a:hover{background:rgba(255,255,255,.15);color:white;}
+  nav a.nav-intl{background:rgba(231,76,60,.25);color:#ff9090;border:1px solid rgba(231,76,60,.4);}
+  nav a.nav-intl:hover{background:rgba(231,76,60,.45);color:white;}
   .hero{max-width:900px;margin:2rem auto 0;padding:0 1rem;text-align:center;}
   .hero h2{font-size:1.3rem;color:var(--azul);margin-bottom:.5rem;}
   .hero p{color:#555;font-size:.93rem;line-height:1.6;}
@@ -56,6 +59,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   .poder-legislativo .poder-header{background:linear-gradient(135deg,#7b2d8b,#a855f7);color:white;}
   .poder-judicial .poder-header{background:linear-gradient(135deg,#b5451b,#e8622a);color:white;}
   .poder-iri .poder-header{background:linear-gradient(135deg,#1a1a2e,#16213e);color:white;}
+  .poder-intl .poder-header{background:linear-gradient(135deg,#7b1a1a,#c0392b);color:white;}
   .monitor-list{padding:.8rem;}
   .monitor-item{display:flex;align-items:center;gap:.8rem;padding:.75rem .8rem;border-radius:8px;text-decoration:none;color:var(--texto);transition:background .18s;border-bottom:1px solid #f0f0f0;}
   .monitor-item:last-child{border-bottom:none;}
@@ -67,6 +71,10 @@ HTML_CONTENT = """<!DOCTYPE html>
   .mi-status{font-size:.7rem;padding:.15rem .5rem;border-radius:10px;font-weight:600;}
   .status-live{background:#d4edda;color:#155724;}
   .status-down{background:#f8d7da;color:#721c24;}
+  .meaci-stats-row{display:flex;gap:1rem;flex-wrap:wrap;padding:.5rem .8rem 1rem;border-top:1px solid #f0f0f0;}
+  .meaci-kpi{text-align:center;flex:1;min-width:80px;}
+  .meaci-kpi-num{font-size:1.2rem;font-weight:700;color:#c0392b;}
+  .meaci-kpi-label{font-size:.68rem;color:#999;text-transform:uppercase;letter-spacing:.04em;}
   .disclaimer{max-width:1100px;margin:0 auto 2rem;padding:0 1rem;}
   .disclaimer-inner{background:#fff8e1;border-left:4px solid #f39c12;border-radius:6px;padding:1rem 1.2rem;font-size:.85rem;color:#555;line-height:1.7;}
   .autor-section{max-width:1100px;margin:0 auto 2rem;padding:0 1rem;}
@@ -100,7 +108,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 <header>
   <h1>🗺️ Mapa de Transparencia del Estado Argentino</h1>
   <p>Ph.D. Vicente Humberto Monteverde · Algoritmos contra la Corrupción</p>
-  <span class="badge">v1.0 · Datos públicos oficiales · Actualización diaria</span>
+  <span class="badge">v1.1 · Datos públicos oficiales · Actualización diaria</span>
 </header>
 
 <nav>
@@ -108,6 +116,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   <a href="#legislativo">🏛️ Legislativo</a>
   <a href="#judicial">⚖️ Judicial</a>
   <a href="#iri">🚦 IRI</a>
+  <a href="#meaci" class="nav-intl">🌍 Monitor Internacional</a>
   <a href="#autor">👤 Autor</a>
   <a href="#donacion">💛 Donar</a>
   <a href="/docs">🔧 API</a>
@@ -116,7 +125,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 
 <div class="hero">
   <h2>Monitoreo integral del Estado argentino en tiempo real</h2>
-  <p>Este portal centraliza los monitores de transparencia de los tres poderes del Estado, el sistema de contrataciones públicas y el Índice de Riesgo Institucional (IRI). Todos los datos provienen de fuentes oficiales públicas.</p>
+  <p>Este portal centraliza los monitores de transparencia de los tres poderes del Estado, el sistema de contrataciones públicas, el Índice de Riesgo Institucional (IRI) y el Monitor Internacional de Anticorrupción (MEACI). Todos los datos provienen de fuentes oficiales públicas.</p>
 </div>
 
 <div class="stats">
@@ -125,6 +134,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   <div class="stat-card"><div class="num loading" id="kpi-organismos">—</div><div class="label">Organismos monitoreados</div></div>
   <div class="stat-card"><div class="num loading" id="kpi-iri">—</div><div class="label">IRI promedio global</div></div>
   <div class="stat-card"><div class="num loading" id="kpi-riesgo">—</div><div class="label">En riesgo medio/alto</div></div>
+  <div class="stat-card"><div class="num" style="color:#c0392b;">31</div><div class="label">Casos MJR internacionales</div></div>
 </div>
 
 <div class="poderes">
@@ -133,15 +143,15 @@ HTML_CONTENT = """<!DOCTYPE html>
     <div class="monitor-list">
       <a class="monitor-item" href="https://jefaturagabinete-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">🏛️</span><div class="mi-info"><div class="mi-title">Monitor Ejecutivo</div><div class="mi-desc">JGM · SGP · Presidencia · Contratos · Nómina · Alertas</div></div>
-        <span class="mi-status" id="st-ejecutivo">EN VIVO</span>
+        <span class="mi-status status-live" id="st-ejecutivo">EN VIVO</span>
       </a>
       <a class="monitor-item" href="https://gobbocomprartgn-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">Monitor de Contratos v1</div><div class="mi-desc">COMPR.AR · TGN · Análisis de riesgo en tiempo real</div></div>
-        <span class="mi-status" id="st-contratos">EN VIVO</span>
+        <span class="mi-status status-live" id="st-contratos">EN VIVO</span>
       </a>
       <a class="monitor-item" href="https://monitorcontratos-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">📊</span><div class="mi-info"><div class="mi-title">Monitor de Contratos v2</div><div class="mi-desc">BORA + COMPR.AR · Detección de irregularidades XAI</div></div>
-        <span class="mi-status" id="st-contratos_v2">EN VIVO</span>
+        <span class="mi-status status-live" id="st-contratos_v2">EN VIVO</span>
       </a>
     </div>
   </div>
@@ -151,11 +161,11 @@ HTML_CONTENT = """<!DOCTYPE html>
     <div class="monitor-list">
       <a class="monitor-item" href="https://monitorlegistativo-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">🗳️</span><div class="mi-info"><div class="mi-title">Monitor Legislativo · Diputados</div><div class="mi-desc">ICE · Asistencia · Productividad · Costo per cápita</div></div>
-        <span class="mi-status" id="st-diputados">EN VIVO</span>
+        <span class="mi-status status-live" id="st-diputados">EN VIVO</span>
       </a>
       <a class="monitor-item" href="https://monitorlegistativosenadores-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">🏅</span><div class="mi-info"><div class="mi-title">Monitor Legislativo · Senadores</div><div class="mi-desc">Participación · Reporte por partido · Indicadores</div></div>
-        <span class="mi-status" id="st-senadores">EN VIVO</span>
+        <span class="mi-status status-live" id="st-senadores">EN VIVO</span>
       </a>
     </div>
   </div>
@@ -165,7 +175,7 @@ HTML_CONTENT = """<!DOCTYPE html>
     <div class="monitor-list">
       <a class="monitor-item" href="https://justicia-production-6a54.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">Monitor Judicial</div><div class="mi-desc">Corte Suprema · Magistratura · Cámaras · Juzgados · IRA</div></div>
-        <span class="mi-status" id="st-justicia">EN VIVO</span>
+        <span class="mi-status status-live" id="st-justicia">EN VIVO</span>
       </a>
     </div>
   </div>
@@ -176,7 +186,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       <a class="monitor-item" href="https://monitor-production-f053.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">🚦</span>
         <div class="mi-info"><div class="mi-title">Monitor IRI · Dashboard Central</div><div class="mi-desc">Score compuesto: R_Financiero×35% + R_Contratación×30% + R_Operativo×20% + R_Datos×15%</div></div>
-        <span class="mi-status" id="st-iri">EN VIVO</span>
+        <span class="mi-status status-live" id="st-iri">EN VIVO</span>
       </a>
     </div>
   </div>
@@ -186,20 +196,39 @@ HTML_CONTENT = """<!DOCTYPE html>
   <div class="poder" id="ajuste" style="grid-column:1/-1;border-top:3px solid #5b2d8e;">
     <div class="poder-header" style="background:linear-gradient(135deg,#3d1e6e,#5b2d8e);color:white;">
       <span class="icon">📊</span>
-      <div>
-        <h3>Monitor de Ajuste Presupuestario (MAP)</h3>
-        <p>Presupuesto 2023 → 2026 · Nominal · Real (IPC) · USD constantes</p>
-      </div>
+      <div><h3>Monitor de Ajuste Presupuestario (MAP)</h3><p>Presupuesto 2023 → 2026 · Nominal · Real (IPC) · USD constantes</p></div>
     </div>
     <div class="monitor-list">
       <a class="monitor-item" href="https://ajuste-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">📉</span>
-        <div class="mi-info">
-          <div class="mi-title">Dashboard Principal · Ajuste por Sector</div>
-          <div class="mi-desc">Ranking de programas · Por inciso · Evolución real · Licuación vs recorte · Sectores sociales</div>
-        </div>
+        <div class="mi-info"><div class="mi-title">Dashboard Principal · Ajuste por Sector</div><div class="mi-desc">Ranking de programas · Por inciso · Evolución real · Licuación vs recorte · Sectores sociales</div></div>
         <span class="mi-status status-live" id="st-ajuste">EN VIVO</span>
       </a>
+    </div>
+  </div>
+</div>
+
+<div class="poderes" style="margin-top:1.5rem;">
+  <div class="poder poder-intl" id="meaci" style="grid-column:1/-1;border-top:3px solid #c0392b;">
+    <div class="poder-header">
+      <span class="icon">🌍</span>
+      <div><h3>Monitor Internacional de Anticorrupción (MEACI)</h3><p>OCDE · DOJ · SFO · PNF · Presencia Argentina · Actualización semanal</p></div>
+    </div>
+    <div class="monitor-list">
+      <a class="monitor-item" href="https://meaci-production.up.railway.app" target="_blank" rel="noopener">
+        <span class="mi-icon">🔍</span>
+        <div class="mi-info">
+          <div class="mi-title">MEACI · Monitor de Casos MJR Internacionales</div>
+          <div class="mi-desc">Cruza casos de corrupción internacional (DOJ · SFO · PNF) con contrataciones públicas argentinas (COMPR.AR) y registro AFIP</div>
+        </div>
+        <span class="mi-status status-live" id="st-meaci">EN VIVO</span>
+      </a>
+    </div>
+    <div class="meaci-stats-row">
+      <div class="meaci-kpi"><div class="meaci-kpi-num">31</div><div class="meaci-kpi-label">Casos MJR (2008–2026)</div></div>
+      <div class="meaci-kpi"><div class="meaci-kpi-num">73</div><div class="meaci-kpi-label">Resoluciones totales</div></div>
+      <div class="meaci-kpi"><div class="meaci-kpi-num">15</div><div class="meaci-kpi-label">Con presencia en AR</div></div>
+      <div class="meaci-kpi"><div class="meaci-kpi-num">USD 24.7B</div><div class="meaci-kpi-label">Sanciones totales 2024</div></div>
     </div>
   </div>
 </div>
@@ -207,7 +236,7 @@ HTML_CONTENT = """<!DOCTYPE html>
 <div class="disclaimer">
   <div class="disclaimer-inner">
     ⚠️ <strong>Nota:</strong> Esta herramienta es de carácter <strong>experimental y académico</strong>.
-    Los datos provienen de fuentes públicas oficiales del Estado argentino.
+    Los datos provienen de fuentes públicas oficiales del Estado argentino y organismos internacionales.
     Los resultados son <strong>indicadores algorítmicos de riesgo</strong> — no implican juicio de valor,
     acusación ni determinación de responsabilidad sobre ninguna empresa, organismo o persona.
     El objetivo es promover la <strong>transparencia y el debate informado</strong> sobre el gasto público.
@@ -286,13 +315,11 @@ async function cargarKPIs() {
       fetch('/iri/resumen').then(r => r.json())
     ]);
 
-    // Monitores activos y badges
     const servicios = Object.entries(status);
     const activos = servicios.filter(([, s]) => s.ok).length;
     document.getElementById('kpi-monitores').textContent = activos;
     document.getElementById('kpi-monitores').classList.remove('loading');
 
-    // Actualizar badges EN VIVO / CAIDO
     servicios.forEach(([nombre, s]) => {
       const el = document.getElementById('st-' + nombre);
       if (el) {
@@ -301,7 +328,6 @@ async function cargarKPIs() {
       }
     });
 
-    // KPIs del IRI
     const g = resumen.global;
     document.getElementById('kpi-organismos').textContent = g.total_organismos;
     document.getElementById('kpi-organismos').classList.remove('loading');
