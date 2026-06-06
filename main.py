@@ -243,6 +243,28 @@ HTML_CONTENT = """<!DOCTYPE html>
   </div>
 </div>
 
+<div class="disclaimer" id="marco-legal">
+  <div class="disclaimer-inner" style="background:#e8f4fd;border-left-color:#003f8a;font-size:.82rem;">
+    <strong>⚖️ Marco Legal y Transparencia</strong><br><br>
+    Los datos publicados en este portal provienen exclusivamente de fuentes oficiales del Estado argentino.
+    Su reutilización está amparada por la <strong>Ley 27.275 de Acceso a la Información Pública</strong>,
+    que obliga a los organismos públicos a publicar activamente la información que producen, obtienen, transforman o controlan,
+    y por el <strong>Decreto 1172/2003</strong> sobre libre acceso a la información pública en el Poder Ejecutivo Nacional.<br><br>
+    En relación con la <strong>Ley 25.326 de Protección de Datos Personales</strong>, este portal procesa únicamente
+    información de funcionarios públicos en ejercicio de sus funciones, excluida del ámbito de protección individual
+    conforme al art. 2 de dicha ley y a la doctrina consolidada de la <strong>Agencia de Acceso a la Información Pública (AAIP)</strong>.
+    Los datos curriculares de magistrados corresponden a declaración obligatoria ante el Consejo de la Magistratura (Ley 27.275, art. 16).
+    Los CUIT de personas jurídicas son datos fiscales públicos no alcanzados por la Ley 25.326.<br><br>
+    Las sanciones internacionales exhibidas corresponden a resoluciones firmes de organismos judiciales o regulatorios extranjeros
+    de acceso público (<strong>DOJ · SFO · PNF · OCDE · Banco Mundial</strong>). Su cruce con el registro COMPR.AR tiene
+    exclusivamente fines de análisis de riesgo académico y no implica imputación de responsabilidad en jurisdicción argentina.<br><br>
+    Los indicadores, índices y alertas son el resultado de <strong>análisis algorítmico sobre datos oficiales</strong> y no constituyen
+    imputaciones, acusaciones ni determinaciones de responsabilidad penal, civil o administrativa.
+    No reemplazan los mecanismos formales de control del Estado (AGN · SIGEN · Ministerio Público Fiscal).
+    Para consultas sobre el tratamiento de datos: <a href="mailto:vhmonte@retina.ar" style="color:#003f8a;">vhmonte@retina.ar</a>
+  </div>
+</div>
+
 <div class="autor-section" id="autor">
   <div class="autor-card">
     <div>
