@@ -29,12 +29,12 @@ HTML_CONTENT = """<!DOCTYPE html>
 <title>Mapa de Transparencia · Estado Argentino</title>
 
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HXN5QSTRS1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
+  gtag('config', 'G-HXN5QSTRS1');
 </script>
 
 <style>
