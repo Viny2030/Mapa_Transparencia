@@ -27,6 +27,16 @@ HTML_CONTENT = """<!DOCTYPE html>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Mapa de Transparencia · Estado Argentino</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+
 <style>
   :root { --azul:#003f8a; --gris:#f4f6f9; --verde:#27ae60; --amarillo:#f39c12; --rojo:#e74c3c; --texto:#1a1a2e; }
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -383,6 +393,12 @@ async def home():
 @app.get("/en", response_class=HTMLResponse)
 async def landing_en():
     path = Path("landing_en.html")
+    return HTMLResponse(content=path.read_text(encoding="utf-8"))
+
+
+@app.get("/google2e07fafd6389e31a.html", response_class=HTMLResponse)
+async def google_verification():
+    path = Path("google2e07fafd6389e31a.html")
     return HTMLResponse(content=path.read_text(encoding="utf-8"))
 
 
