@@ -108,8 +108,9 @@ HTML_CONTENT = """<!DOCTYPE html>
   .don-label{font-size:.7rem;text-transform:uppercase;color:#999;letter-spacing:.05em;font-weight:600;}
   .don-value{font-size:.88rem;font-weight:600;color:var(--texto);font-family:monospace;}
   .don-highlight{color:#27ae60;}
-  footer{text-align:center;padding:1.5rem;font-size:.8rem;color:#888;border-top:1px solid #e0e0e0;background:white;}
+  footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;padding:1.5rem;font-size:.8rem;color:#888;border-top:1px solid #e0e0e0;background:white;text-align:left;}
   footer a{color:var(--azul);text-decoration:none;}
+  @media(max-width:640px){footer{justify-content:center;text-align:center;}}
   @media(max-width:640px){.autor-card{grid-template-columns:1fr;text-align:center;}.autor-mails{justify-content:center;}header h1{font-size:1.4rem;}}
 </style>
 </head>
@@ -333,10 +334,13 @@ HTML_CONTENT = """<!DOCTYPE html>
 </div>
 
 <footer>
-  Mapa de Transparencia ·
-  <a href="https://github.com/Viny2030/Mapa_Transparencia" target="_blank">github.com/Viny2030</a> ·
-  Ph.D. Vicente Humberto Monteverde ·
-  <a href="mailto:vhmonte@retina.ar">vhmonte@retina.ar</a>
+  <span>&copy; 2026 Vicente H. Monteverde | Mapa de Transparencia del Estado Argentino. Todos los derechos reservados.</span>
+  <span>
+    Mapa de Transparencia ·
+    <a href="https://github.com/Viny2030/Mapa_Transparencia" target="_blank">github.com/Viny2030</a> ·
+    Ph.D. Vicente Humberto Monteverde ·
+    <a href="mailto:vhmonte@retina.ar">vhmonte@retina.ar</a>
+  </span>
 </footer>
 
 <script>
