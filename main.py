@@ -19,7 +19,7 @@ SERVICES = {
     "iri":          os.getenv("IRI_API_URL",         "https://monitor-production-f053.up.railway.app"),
     "ajuste":       os.getenv("AJUSTE_API_URL",      "https://ajuste-production.up.railway.app"),
     "meaci":        os.getenv("MEACI_API_URL",       "https://meaci-production.up.railway.app"),
-    "ddjj":         os.getenv("DDJJ_API_URL",        "https://decla-production.up.railway.app"),
+    "ddjj":         os.getenv("DECLA_API_URL",       "https://decla-production.up.railway.app"),
 }
 
 HTML_CONTENT = """<!DOCTYPE html>
