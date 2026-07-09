@@ -19,6 +19,7 @@ SERVICES = {
     "iri":          os.getenv("IRI_API_URL",         "https://monitor-production-f053.up.railway.app"),
     "ajuste":       os.getenv("AJUSTE_API_URL",      "https://ajuste-production.up.railway.app"),
     "meaci":        os.getenv("MEACI_API_URL",       "https://meaci-production.up.railway.app"),
+    "ddjj":         os.getenv("DDJJ_API_URL",        "https://decla-production.up.railway.app"),
 }
 
 HTML_CONTENT = """<!DOCTYPE html>
@@ -70,6 +71,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   .poder-judicial .poder-header{background:linear-gradient(135deg,#b5451b,#e8622a);color:white;}
   .poder-iri .poder-header{background:linear-gradient(135deg,#1a1a2e,#16213e);color:white;}
   .poder-intl .poder-header{background:linear-gradient(135deg,#7b1a1a,#c0392b);color:white;}
+  .poder-ddjj .poder-header{background:linear-gradient(135deg,#0d5c46,#149e78);color:white;}
   .monitor-list{padding:.8rem;}
   .monitor-item{display:flex;align-items:center;gap:.8rem;padding:.75rem .8rem;border-radius:8px;text-decoration:none;color:var(--texto);transition:background .18s;border-bottom:1px solid #f0f0f0;}
   .monitor-item:last-child{border-bottom:none;}
@@ -126,6 +128,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   <a href="#ejecutivo">⚡ Ejecutivo</a>
   <a href="#legislativo">🏛️ Legislativo</a>
   <a href="#judicial">⚖️ Judicial</a>
+  <a href="#ddjj">📜 DDJJ</a>
   <a href="#iri">🚦 IRI</a>
   <a href="#meaci" class="nav-intl">🌍 Monitor Internacional</a>
   <a href="#autor">👤 Autor</a>
@@ -187,6 +190,24 @@ HTML_CONTENT = """<!DOCTYPE html>
       <a class="monitor-item" href="https://justicia-production-6a54.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">Monitor Judicial</div><div class="mi-desc">Corte Suprema · Magistratura · Cámaras · Juzgados · IRA</div></div>
         <span class="mi-status status-live" id="st-justicia">EN VIVO</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="poder poder-ddjj" id="ddjj">
+    <div class="poder-header"><span class="icon">📜</span><div><h3>Declaraciones Juradas Patrimoniales (DDJJ)</h3><p>Funcionarios · Legisladores · Jueces · Score de riesgo IVPI</p></div></div>
+    <div class="monitor-list">
+      <a class="monitor-item" href="https://decla-production.up.railway.app" target="_blank" rel="noopener">
+        <span class="mi-icon">🏛️</span><div class="mi-info"><div class="mi-title">DDJJ · Funcionarios (Ejecutivo)</div><div class="mi-desc">Patrimonio 2022–2024 · IVPI · 12 indicadores internacionales</div></div>
+        <span class="mi-status status-live" id="st-ddjj-eje">EN VIVO</span>
+      </a>
+      <a class="monitor-item" href="https://decla-production.up.railway.app" target="_blank" rel="noopener">
+        <span class="mi-icon">📋</span><div class="mi-info"><div class="mi-title">DDJJ · Legisladores</div><div class="mi-desc">Diputados y senadores · Ranking por bloque y cámara</div></div>
+        <span class="mi-status status-live" id="st-ddjj-leg">EN VIVO</span>
+      </a>
+      <a class="monitor-item" href="https://decla-production.up.railway.app" target="_blank" rel="noopener">
+        <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">DDJJ · Jueces</div><div class="mi-desc">Nómina judicial · Consulta directa al Consejo de la Magistratura</div></div>
+        <span class="mi-status status-live" id="st-ddjj-jud">EN VIVO</span>
       </a>
     </div>
   </div>
@@ -361,6 +382,16 @@ async function cargarKPIs() {
       if (el) {
         el.textContent = s.ok ? 'EN VIVO' : 'CAIDO';
         el.className = 'mi-status ' + (s.ok ? 'status-live' : 'status-down');
+      }
+      // El monitor DDJJ tiene 3 badges (eje/leg/jud) que comparten el mismo servicio
+      if (nombre === 'ddjj') {
+        ['st-ddjj-eje', 'st-ddjj-leg', 'st-ddjj-jud'].forEach(id => {
+          const el2 = document.getElementById(id);
+          if (el2) {
+            el2.textContent = s.ok ? 'EN VIVO' : 'CAIDO';
+            el2.className = 'mi-status ' + (s.ok ? 'status-live' : 'status-down');
+          }
+        });
       }
     });
 
