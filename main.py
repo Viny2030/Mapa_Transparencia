@@ -18,6 +18,7 @@ SERVICES = {
     "senadores":    os.getenv("SENADORES_API_URL",   "https://monitorlegistativosenadores-production.up.railway.app"),
     "iri":          os.getenv("IRI_API_URL",         "https://monitor-production-f053.up.railway.app"),
     "ajuste":       os.getenv("AJUSTE_API_URL",      "https://ajuste-production.up.railway.app"),
+    "corrupcion_estrategica": os.getenv("CORRUPCION_ESTRATEGICA_API_URL", "https://corrupcionestrategica-production.up.railway.app"),
     "meaci":        os.getenv("MEACI_API_URL",       "https://meaci-production.up.railway.app"),
     "ddjj":         os.getenv("DECLA_API_URL",       "https://decla-production.up.railway.app"),
 }
@@ -235,6 +236,22 @@ HTML_CONTENT = """<!DOCTYPE html>
         <span class="mi-icon">📉</span>
         <div class="mi-info"><div class="mi-title">Dashboard Principal · Ajuste por Sector</div><div class="mi-desc">Ranking de programas · Por inciso · Evolución real · Licuación vs recorte · Sectores sociales</div></div>
         <span class="mi-status status-live" id="st-ajuste">EN VIVO</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="poderes" style="margin-top:1.5rem;">
+  <div class="poder" id="corrupcion_estrategica" style="grid-column:1/-1;border-top:3px solid #b5651d;">
+    <div class="poder-header" style="background:linear-gradient(135deg,#5c3a00,#b5651d);color:white;">
+      <span class="icon">🕸️</span>
+      <div><h3>Monitor de Corrupción Estratégica</h3><p>Análisis de patrones estructurales y redes de riesgo en la corrupción pública</p></div>
+    </div>
+    <div class="monitor-list">
+      <a class="monitor-item" href="https://corrupcionestrategica-production.up.railway.app" target="_blank" rel="noopener">
+        <span class="mi-icon">🕸️</span>
+        <div class="mi-info"><div class="mi-title">Monitor de Corrupción Estratégica</div><div class="mi-desc">Detección de patrones estructurales y redes de riesgo en la corrupción pública</div></div>
+        <span class="mi-status status-live" id="st-corrupcion_estrategica">EN VIVO</span>
       </a>
     </div>
   </div>
