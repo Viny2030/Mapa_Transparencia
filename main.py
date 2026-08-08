@@ -1,3 +1,6 @@
+import asyncio
+import time
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -464,16 +467,32 @@ def servicios():
     return {"servicios": [{"id": k, "url": v} for k, v in SERVICES.items()]}
 
 
+_STATUS_CACHE = {"data": None, "ts": 0.0}
+_STATUS_CACHE_TTL = 30  # segundos — evita golpear a los 11 servicios en cada carga de pagina
+
+
+async def _check_one(client: httpx.AsyncClient, nombre: str, url: str) -> tuple[str, dict]:
+    try:
+        r = await client.get(url)
+        return nombre, {"url": url, "status": r.status_code, "ok": r.status_code < 400}
+    except Exception as e:
+        return nombre, {"url": url, "status": None, "ok": False, "error": str(e)}
+
+
 @app.get("/status")
 async def status():
-    resultados = {}
+    now = time.time()
+    if _STATUS_CACHE["data"] is not None and (now - _STATUS_CACHE["ts"]) < _STATUS_CACHE_TTL:
+        return _STATUS_CACHE["data"]
+
     async with httpx.AsyncClient(timeout=5) as client:
-        for nombre, url in SERVICES.items():
-            try:
-                r = await client.get(url)
-                resultados[nombre] = {"url": url, "status": r.status_code, "ok": r.status_code < 400}
-            except Exception as e:
-                resultados[nombre] = {"url": url, "status": None, "ok": False, "error": str(e)}
+        pares = await asyncio.gather(
+            *[_check_one(client, nombre, url) for nombre, url in SERVICES.items()]
+        )
+    resultados = dict(pares)
+
+    _STATUS_CACHE["data"] = resultados
+    _STATUS_CACHE["ts"] = now
     return resultados
 
 
