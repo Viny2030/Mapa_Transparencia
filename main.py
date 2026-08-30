@@ -248,12 +248,12 @@ HTML_CONTENT = """<!DOCTYPE html>
   <div class="poder" id="corrupcion_estrategica" style="grid-column:1/-1;border-top:3px solid #b5651d;">
     <div class="poder-header" style="background:linear-gradient(135deg,#5c3a00,#b5651d);color:white;">
       <span class="icon">🕸️</span>
-      <div><h3>Monitor de Corrupción Estratégica</h3><p>Análisis de patrones estructurales y redes de riesgo en la corrupción pública</p></div>
+      <div><h3>Vectores de Influencia Estatal Extranjera</h3><p>Framework NEST de corrupción estratégica · China · Rusia · 18 vectores investigados</p></div>
     </div>
     <div class="monitor-list">
       <a class="monitor-item" href="https://corrupcionestrategica-production.up.railway.app" target="_blank" rel="noopener">
         <span class="mi-icon">🕸️</span>
-        <div class="mi-info"><div class="mi-title">Monitor de Corrupción Estratégica</div><div class="mi-desc">Detección de patrones estructurales y redes de riesgo en la corrupción pública</div></div>
+        <div class="mi-info"><div class="mi-title">Vectores de Influencia Estatal Extranjera</div><div class="mi-desc">Clasifica casos de influencia de China y Rusia sobre decisiones públicas argentinas (nuclear, litio, puertos, banca, defensa) bajo el framework NEST de corrupción estratégica</div></div>
         <span class="mi-status status-live" id="st-corrupcion_estrategica">EN VIVO</span>
       </a>
     </div>
