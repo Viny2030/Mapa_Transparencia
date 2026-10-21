@@ -1,7 +1,7 @@
 import asyncio
 import time
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pathlib import Path
@@ -13,17 +13,17 @@ app = FastAPI(title="Mapa de Transparencia del Estado Argentino", version="1.1.0
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 SERVICES = {
-    "contratos":    os.getenv("CONTRATOS_API_URL",   "https://gobbocomprartgn-production.up.railway.app"),
-    "contratos_v2": os.getenv("CONTRATOS_V2_API_URL","https://monitorcontratos-production.up.railway.app"),
-    "ejecutivo":    os.getenv("EJECUTIVO_API_URL",   "https://jefaturagabinete-production.up.railway.app"),
-    "justicia":     os.getenv("JUSTICIA_API_URL",    "https://justicia-production-6a54.up.railway.app"),
-    "diputados":    os.getenv("LEGISTATIVO_API_URL", "https://monitorlegistativo-production.up.railway.app"),
-    "senadores":    os.getenv("SENADORES_API_URL",   "https://monitorlegistativosenadores-production.up.railway.app"),
-    "iri":          os.getenv("IRI_API_URL",         "https://monitor-production-f053.up.railway.app"),
-    "ajuste":       os.getenv("AJUSTE_API_URL",      "https://ajuste-production.up.railway.app"),
+    "contratos":    os.getenv("CONTRATOS_API_URL",   "https://comprar.ecosistematransparencia.com.ar"),
+    "contratos_v2": os.getenv("CONTRATOS_V2_API_URL","https://contratos.ecosistematransparencia.com.ar"),
+    "ejecutivo":    os.getenv("EJECUTIVO_API_URL",   "https://jefatura.ecosistematransparencia.com.ar"),
+    "justicia":     os.getenv("JUSTICIA_API_URL",    "https://justicia.ecosistematransparencia.com.ar"),
+    "diputados":    os.getenv("LEGISTATIVO_API_URL", "https://legislativo.ecosistematransparencia.com.ar"),
+    "senadores":    os.getenv("SENADORES_API_URL",   "https://senadores.ecosistematransparencia.com.ar"),
+    "iri":          os.getenv("IRI_API_URL",         "https://monitor.ecosistematransparencia.com.ar"),
+    "ajuste":       os.getenv("AJUSTE_API_URL",      "https://ajuste.ecosistematransparencia.com.ar"),
     "corrupcion_estrategica": os.getenv("CORRUPCION_ESTRATEGICA_API_URL", "https://corrupcionestrategica-production.up.railway.app"),
-    "meaci":        os.getenv("MEACI_API_URL",       "https://meaci-production.up.railway.app"),
-    "ddjj":         os.getenv("DECLA_API_URL",       "https://decla-production.up.railway.app"),
+    "meaci":        os.getenv("MEACI_API_URL",       "https://meaci.ecosistematransparencia.com.ar"),
+    "ddjj":         os.getenv("DECLA_API_URL",       "https://decla.ecosistematransparencia.com.ar"),
 }
 
 HTML_CONTENT = """<!DOCTYPE html>
@@ -159,15 +159,15 @@ HTML_CONTENT = """<!DOCTYPE html>
   <div class="poder poder-ejecutivo" id="ejecutivo">
     <div class="poder-header"><span class="icon">⚡</span><div><h3>Poder Ejecutivo Nacional</h3><p>JGM · SGP · Presidencia · Contratos</p></div></div>
     <div class="monitor-list">
-      <a class="monitor-item" href="https://jefaturagabinete-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://jefatura.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">🏛️</span><div class="mi-info"><div class="mi-title">Monitor Ejecutivo</div><div class="mi-desc">JGM · SGP · Presidencia · Contratos · Nómina · Alertas</div></div>
         <span class="mi-status status-live" id="st-ejecutivo">EN VIVO</span>
       </a>
-      <a class="monitor-item" href="https://gobbocomprartgn-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://comprar.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">Monitor de Contratos v1</div><div class="mi-desc">COMPR.AR · TGN · Análisis de riesgo en tiempo real</div></div>
         <span class="mi-status status-live" id="st-contratos">EN VIVO</span>
       </a>
-      <a class="monitor-item" href="https://monitorcontratos-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://contratos.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">📊</span><div class="mi-info"><div class="mi-title">Monitor de Contratos v2</div><div class="mi-desc">BORA + COMPR.AR · Detección de irregularidades XAI</div></div>
         <span class="mi-status status-live" id="st-contratos_v2">EN VIVO</span>
       </a>
@@ -177,11 +177,11 @@ HTML_CONTENT = """<!DOCTYPE html>
   <div class="poder poder-legislativo" id="legislativo">
     <div class="poder-header"><span class="icon">🏛️</span><div><h3>Poder Legislativo Nacional</h3><p>Cámara de Diputados · Senado</p></div></div>
     <div class="monitor-list">
-      <a class="monitor-item" href="https://monitorlegistativo-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://legislativo.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">🗳️</span><div class="mi-info"><div class="mi-title">Monitor Legislativo · Diputados</div><div class="mi-desc">ICE · Asistencia · Productividad · Costo per cápita</div></div>
         <span class="mi-status status-live" id="st-diputados">EN VIVO</span>
       </a>
-      <a class="monitor-item" href="https://monitorlegistativosenadores-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://senadores.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">🏅</span><div class="mi-info"><div class="mi-title">Monitor Legislativo · Senadores</div><div class="mi-desc">Participación · Reporte por partido · Indicadores</div></div>
         <span class="mi-status status-live" id="st-senadores">EN VIVO</span>
       </a>
@@ -191,7 +191,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   <div class="poder poder-judicial" id="judicial">
     <div class="poder-header"><span class="icon">⚖️</span><div><h3>Poder Judicial de la Nación</h3><p>CSJN · Magistratura · Juzgados federales</p></div></div>
     <div class="monitor-list">
-      <a class="monitor-item" href="https://justicia-production-6a54.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://justicia.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">Monitor Judicial</div><div class="mi-desc">Corte Suprema · Magistratura · Cámaras · Juzgados · IRA</div></div>
         <span class="mi-status status-live" id="st-justicia">EN VIVO</span>
       </a>
@@ -201,15 +201,15 @@ HTML_CONTENT = """<!DOCTYPE html>
   <div class="poder poder-ddjj" id="ddjj">
     <div class="poder-header"><span class="icon">📜</span><div><h3>Declaraciones Juradas Patrimoniales (DDJJ)</h3><p>Funcionarios · Legisladores · Jueces · Score de riesgo IVPI</p></div></div>
     <div class="monitor-list">
-      <a class="monitor-item" href="https://decla-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://decla.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">🏛️</span><div class="mi-info"><div class="mi-title">DDJJ · Funcionarios (Ejecutivo)</div><div class="mi-desc">Patrimonio 2022–2024 · IVPI · 12 indicadores internacionales</div></div>
         <span class="mi-status status-live" id="st-ddjj-eje">EN VIVO</span>
       </a>
-      <a class="monitor-item" href="https://decla-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://decla.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">📋</span><div class="mi-info"><div class="mi-title">DDJJ · Legisladores</div><div class="mi-desc">Diputados y senadores · Ranking por bloque y cámara</div></div>
         <span class="mi-status status-live" id="st-ddjj-leg">EN VIVO</span>
       </a>
-      <a class="monitor-item" href="https://decla-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://decla.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">⚖️</span><div class="mi-info"><div class="mi-title">DDJJ · Jueces</div><div class="mi-desc">Nómina judicial · Consulta directa al Consejo de la Magistratura</div></div>
         <span class="mi-status status-live" id="st-ddjj-jud">EN VIVO</span>
       </a>
@@ -219,7 +219,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   <div class="poder poder-iri" id="iri" style="grid-column:1/-1;">
     <div class="poder-header"><span class="icon">🚦</span><div><h3>Índice de Riesgo Institucional (IRI)</h3><p>Semáforo de integridad pública · Score compuesto</p></div></div>
     <div class="monitor-list">
-      <a class="monitor-item" href="https://monitor-production-f053.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://monitor.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">🚦</span>
         <div class="mi-info"><div class="mi-title">Monitor IRI · Dashboard Central</div><div class="mi-desc">Score compuesto: R_Financiero×35% + R_Contratación×30% + R_Operativo×20% + R_Datos×15%</div></div>
         <span class="mi-status status-live" id="st-iri">EN VIVO</span>
@@ -235,7 +235,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       <div><h3>Monitor de Ajuste Presupuestario (MAP)</h3><p>Presupuesto 2023 → 2026 · Nominal · Real (IPC) · USD constantes</p></div>
     </div>
     <div class="monitor-list">
-      <a class="monitor-item" href="https://ajuste-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://ajuste.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">📉</span>
         <div class="mi-info"><div class="mi-title">Dashboard Principal · Ajuste por Sector</div><div class="mi-desc">Ranking de programas · Por inciso · Evolución real · Licuación vs recorte · Sectores sociales</div></div>
         <span class="mi-status status-live" id="st-ajuste">EN VIVO</span>
@@ -267,7 +267,7 @@ HTML_CONTENT = """<!DOCTYPE html>
       <div><h3>Monitor Internacional de Anticorrupción (MEACI)</h3><p>OCDE · DOJ · SFO · PNF · Presencia Argentina · Actualización semanal</p></div>
     </div>
     <div class="monitor-list">
-      <a class="monitor-item" href="https://meaci-production.up.railway.app" target="_blank" rel="noopener">
+      <a class="monitor-item" href="https://meaci.ecosistematransparencia.com.ar" target="_blank" rel="noopener">
         <span class="mi-icon">🔍</span>
         <div class="mi-info">
           <div class="mi-title">MEACI · Monitor de Casos MJR Internacionales</div>
@@ -386,12 +386,15 @@ HTML_CONTENT = """<!DOCTYPE html>
 
 <script>
 async function cargarKPIs() {
-  try {
-    const [status, resumen] = await Promise.all([
-      fetch('/status').then(r => r.json()),
-      fetch('/iri/resumen').then(r => r.json())
-    ]);
+  // Estado y resumen IRI se cargan por separado: si uno falla, el otro igual se muestra
+  const [stRes, irRes] = await Promise.allSettled([
+    fetch('/status').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+    fetch('/iri/resumen').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  ]);
 
+  try {
+    if (stRes.status !== 'fulfilled') throw stRes.reason;
+    const status = stRes.value;
     const servicios = Object.entries(status);
     const activos = servicios.filter(([, s]) => s.ok).length;
     document.getElementById('kpi-monitores').textContent = activos;
@@ -414,8 +417,15 @@ async function cargarKPIs() {
         });
       }
     });
+  } catch(e) {
+    console.warn('Estado de monitores no disponible:', e);
+    const el = document.getElementById('kpi-monitores');
+    if (el) { el.textContent = '—'; el.classList.remove('loading'); }
+  }
 
-    const g = resumen.global;
+  try {
+    if (irRes.status !== 'fulfilled') throw irRes.reason;
+    const g = irRes.value.global;
     document.getElementById('kpi-organismos').textContent = g.total_organismos;
     document.getElementById('kpi-organismos').classList.remove('loading');
     document.getElementById('kpi-iri').textContent = g.iri_promedio_global.toFixed(1);
@@ -425,8 +435,8 @@ async function cargarKPIs() {
     document.getElementById('kpi-riesgo').classList.remove('loading');
 
   } catch(e) {
-    console.warn('KPIs no disponibles:', e);
-    ['kpi-monitores','kpi-organismos','kpi-iri','kpi-riesgo'].forEach(id => {
+    console.warn('KPIs IRI no disponibles:', e);
+    ['kpi-organismos','kpi-iri','kpi-riesgo'].forEach(id => {
       const el = document.getElementById(id);
       if (el) { el.textContent = '—'; el.classList.remove('loading'); }
     });
@@ -485,7 +495,7 @@ async def status():
     if _STATUS_CACHE["data"] is not None and (now - _STATUS_CACHE["ts"]) < _STATUS_CACHE_TTL:
         return _STATUS_CACHE["data"]
 
-    async with httpx.AsyncClient(timeout=5) as client:
+    async with httpx.AsyncClient(timeout=5, follow_redirects=True) as client:
         pares = await asyncio.gather(
             *[_check_one(client, nombre, url) for nombre, url in SERVICES.items()]
         )
@@ -496,25 +506,26 @@ async def status():
     return resultados
 
 
+async def _proxy_iri(path: str, params: dict | None = None):
+    try:
+        async with httpx.AsyncClient(timeout=10, follow_redirects=True) as client:
+            r = await client.get(f"{SERVICES['iri']}{path}", params=params)
+            r.raise_for_status()
+            return r.json()
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Monitor IRI no disponible: {e}")
+
+
 @app.get("/iri/datos")
 async def iri_datos():
-    async with httpx.AsyncClient(timeout=10) as client:
-        r = await client.get(f"{SERVICES['iri']}/datos")
-        r.raise_for_status()
-        return r.json()
+    return await _proxy_iri("/datos")
 
 
 @app.get("/iri/top-riesgo")
 async def iri_top(n: int = 10):
-    async with httpx.AsyncClient(timeout=10) as client:
-        r = await client.get(f"{SERVICES['iri']}/top-riesgo", params={"n": n})
-        r.raise_for_status()
-        return r.json()
+    return await _proxy_iri("/top-riesgo", {"n": n})
 
 
 @app.get("/iri/resumen")
 async def iri_resumen():
-    async with httpx.AsyncClient(timeout=10) as client:
-        r = await client.get(f"{SERVICES['iri']}/resumen")
-        r.raise_for_status()
-        return r.json()
+    return await _proxy_iri("/resumen")
