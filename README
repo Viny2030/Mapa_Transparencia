@@ -19,7 +19,7 @@
 
 ### ¿Qué es esto?
 
-**Mapa de Transparencia** es una plataforma de monitoreo algorítmico del Estado argentino en tiempo real. Centraliza **ocho monitores independientes** que cubren los tres poderes del Estado — Ejecutivo, Legislativo y Judicial — más un índice compuesto de riesgo institucional (IRI) y el Monitor de Ajuste Presupuestario (MAP), desarrollados específicamente para detectar patrones de corrupción, licuación y recorte en datos públicos.
+**Mapa de Transparencia** es una plataforma de monitoreo algorítmico del Estado argentino en tiempo real. Centraliza **11 monitores independientes** que cubren los tres poderes del Estado — Ejecutivo, Legislativo y Judicial — más un índice compuesto de riesgo institucional (IRI) y el Monitor de Ajuste Presupuestario (MAP), desarrollados específicamente para detectar patrones de corrupción, licuación y recorte en datos públicos.
 
 El proyecto es de código abierto, académico y sin fines de lucro. Todos los datos provienen de fuentes oficiales del Estado argentino (JGM, COMPR.AR, BORA, Magistratura del Poder Judicial, Presupuesto Abierto — Ministerio de Economía).
 
@@ -36,18 +36,24 @@ El IRI es el núcleo metodológico de la plataforma. Es un score compuesto que a
 
 El componente de Riesgo de Contratación utiliza **XAI (Explainable AI)** para identificar patrones irregulares en los datos de COMPR.AR y BORA, haciendo que cada alerta sea interpretable y auditable.
 
-### Los ocho monitores
+### Los sitios, organizados en capas
 
-| Monitor | Poder | Fuente principal |
-|---|---|---|
-| [Monitor Ejecutivo](https://jefaturagabinete-production.up.railway.app) | Ejecutivo | JGM · SGP · Presidencia |
-| [Monitor de Contratos v1](https://gobbocomprartgn-production.up.railway.app) | Ejecutivo | COMPR.AR · TGN |
-| [Monitor de Contratos v2](https://monitorcontratos-production.up.railway.app) | Ejecutivo | BORA + COMPR.AR (XAI) |
-| [Monitor Legislativo — Diputados](https://monitorlegistativo-production.up.railway.app) | Legislativo | Cámara de Diputados |
-| [Monitor Legislativo — Senadores](https://monitorlegistativosenadores-production.up.railway.app) | Legislativo | Senado de la Nación |
-| [Monitor Judicial](https://justicia-production-6a54.up.railway.app) | Judicial | CSJN · Magistratura |
-| [Monitor IRI](https://monitor-production-f053.up.railway.app) | Transversal | Score compuesto IRI |
-| [Monitor de Ajuste Presupuestario (MAP)](https://ajuste-production.up.railway.app) | Transversal | Presupuesto Abierto · MECON · INDEC |
+El ecosistema tiene **12 sitios** ordenados en capas según qué tan cerca están del dato original. Detalle completo, conexiones entre sitios y ficha de cada uno en el **[Manual](https://mapa.ecosistematransparencia.com.ar/manual)** y el **[grafo de relaciones](https://mapa.ecosistematransparencia.com.ar/grafo)**.
+
+| Capa | Sitio | Qué hace | Fuente principal |
+|---|---|---|---|
+| Portal | [Mapa](https://mapa.ecosistematransparencia.com.ar) | Integra todos los sitios, estado en vivo, validación cruzada diaria | Los propios sitios |
+| 1 · Contratos y Ejecutivo | [Comprar](https://comprar.ecosistematransparencia.com.ar) | Contratos v1: adjudicaciones BORA cruzadas con COMPR.AR y TGN | BORA · COMPR.AR · TGN |
+| 1 · Contratos y Ejecutivo | [Contratos](https://contratos.ecosistematransparencia.com.ar) | Contratos v2: riesgo XAI por organismo y proveedor | BORA · COMPR.AR · TGN |
+| 1 · Contratos y Ejecutivo | [Jefatura](https://jefatura.ecosistematransparencia.com.ar) | Monitor Ejecutivo: JGM · SGP · Presidencia, nómina y alertas | Mapa del Estado · COMPR.AR · BORA |
+| 2 · Análisis transversal | [Monitor IRI](https://monitor.ecosistematransparencia.com.ar) | Índice de Riesgo Institucional por organismo | Justicia · Diputados · Senadores · COMPR.AR |
+| 2 · Análisis transversal | [MEACI](https://meaci.ecosistematransparencia.com.ar) | Empresas sancionadas en casos internacionales de corrupción | OCDE · DOJ · SFO · PNF |
+| 2 · Análisis transversal | [Ajuste](https://ajuste.ecosistematransparencia.com.ar) | Ajuste presupuestario (MAP) nominal, real y en USD | Presupuesto Abierto · MECON · BCRA · BORA |
+| 3 · Patrimonio y Justicia | [Decla](https://decla.ecosistematransparencia.com.ar) | Declaraciones juradas patrimoniales, IVPI, conflicto de interés | Oficina Anticorrupción · BCRA |
+| 3 · Patrimonio y Justicia | [Justicia](https://justicia.ecosistematransparencia.com.ar) | Monitor Judicial: CSJN, Magistratura, juzgados | datos.jus.gob.ar · CSJN · PJN |
+| 4 · Poder Legislativo | [Diputados](https://legislativo.ecosistematransparencia.com.ar) | Monitor Legislativo de la Cámara de Diputados | HCDN |
+| 4 · Poder Legislativo | [Senadores](https://senadores.ecosistematransparencia.com.ar) | Monitor del Senado | Senado · ArgentinaDatos |
+| Satélite | [Vectores](https://corrupcionestrategica-production.up.railway.app) | Influencia estatal extranjera (corrupción estratégica) | Casos con fuentes públicas |
 
 ### Monitor de Ajuste Presupuestario (MAP)
 
@@ -83,7 +89,7 @@ Publicaciones en *Journal of Financial Crime* (Emerald Publishing).
 
 ### What is this?
 
-**Transparency Map** is a real-time algorithmic monitoring platform for the Argentine State. It centralizes **eight independent monitors** covering all three branches of government — Executive, Legislative, and Judicial — plus a composite Institutional Risk Index (IRI) and the Budget Adjustment Monitor (MAP), specifically designed to detect corruption patterns, inflation erosion, and real spending cuts in public data.
+**Transparency Map** is a real-time algorithmic monitoring platform for the Argentine State. It centralizes **11 independent monitors** covering all three branches of government — Executive, Legislative, and Judicial — plus a composite Institutional Risk Index (IRI) and the Budget Adjustment Monitor (MAP), specifically designed to detect corruption patterns, inflation erosion, and real spending cuts in public data.
 
 The project is open source, academic, and non-profit. All data comes from official Argentine government sources (JGM, COMPR.AR, BORA, Judiciary Council, Open Budget — Ministry of Economy).
 
@@ -100,18 +106,24 @@ The IRI is the platform's methodological core. It is a composite score aggregati
 
 The Procurement Risk component uses **XAI (Explainable AI)** to identify irregular patterns in COMPR.AR and BORA data, making every alert interpretable and auditable.
 
-### The eight monitors
+### The sites, organised in layers
 
-| Monitor | Branch | Primary source |
-|---|---|---|
-| [Executive Monitor](https://jefaturagabinete-production.up.railway.app) | Executive | JGM · SGP · Presidency |
-| [Contracts Monitor v1](https://gobbocomprartgn-production.up.railway.app) | Executive | COMPR.AR · TGN |
-| [Contracts Monitor v2](https://monitorcontratos-production.up.railway.app) | Executive | BORA + COMPR.AR (XAI) |
-| [Legislative Monitor — Deputies](https://monitorlegistativo-production.up.railway.app) | Legislative | Chamber of Deputies |
-| [Legislative Monitor — Senators](https://monitorlegistativosenadores-production.up.railway.app) | Legislative | Senate |
-| [Judicial Monitor](https://justicia-production-6a54.up.railway.app) | Judicial | CSJN · Judiciary Council |
-| [IRI Dashboard](https://monitor-production-f053.up.railway.app) | Cross-branch | Composite IRI score |
-| [Budget Adjustment Monitor (MAP)](https://ajuste-production.up.railway.app) | Cross-branch | Open Budget · MECON · INDEC |
+The ecosystem has **12 sites** arranged in layers by how close they are to the original data. Full details, the connections between sites and a profile of each in the **[Manual](https://mapa.ecosistematransparencia.com.ar/en/manual)** and the **[relationship graph](https://mapa.ecosistematransparencia.com.ar/grafo?lang=en)**.
+
+| Layer | Site | What it does | Primary source |
+|---|---|---|---|
+| Portal | [Mapa](https://mapa.ecosistematransparencia.com.ar/en) | Integrates every site, live status, daily cross-validation | The sites themselves |
+| 1 · Procurement & Executive | [Comprar](https://comprar.ecosistematransparencia.com.ar) | Contracts v1: BORA awards cross-checked with COMPR.AR and TGN | BORA · COMPR.AR · TGN |
+| 1 · Procurement & Executive | [Contratos](https://contratos.ecosistematransparencia.com.ar) | Contracts v2: XAI risk by agency and supplier | BORA · COMPR.AR · TGN |
+| 1 · Procurement & Executive | [Jefatura](https://jefatura.ecosistematransparencia.com.ar) | Executive monitor: JGM · SGP · Presidency, roster and alerts | Mapa del Estado · COMPR.AR · BORA |
+| 2 · Cross-cutting analysis | [IRI Monitor](https://monitor.ecosistematransparencia.com.ar) | Institutional Risk Index per agency | Judiciary · Deputies · Senators · COMPR.AR |
+| 2 · Cross-cutting analysis | [MEACI](https://meaci.ecosistematransparencia.com.ar) | Companies sanctioned in international corruption cases | OECD · DOJ · SFO · PNF |
+| 2 · Cross-cutting analysis | [Ajuste](https://ajuste.ecosistematransparencia.com.ar) | Budget adjustment (MAP) in nominal, real and USD terms | Open Budget · MECON · BCRA · BORA |
+| 3 · Assets & Judiciary | [Decla](https://decla.ecosistematransparencia.com.ar) | Asset declarations, IVPI, conflicts of interest | Anti-Corruption Office · BCRA |
+| 3 · Assets & Judiciary | [Justicia](https://justicia.ecosistematransparencia.com.ar) | Judicial monitor: Supreme Court, Judicial Council, courts | datos.jus.gob.ar · CSJN · PJN |
+| 4 · Legislative branch | [Deputies](https://legislativo.ecosistematransparencia.com.ar) | Chamber of Deputies legislative monitor | HCDN |
+| 4 · Legislative branch | [Senators](https://senadores.ecosistematransparencia.com.ar) | Senate monitor | Senate · ArgentinaDatos |
+| Satellite | [Vectores](https://corrupcionestrategica-production.up.railway.app) | Foreign state influence (strategic corruption) | Cases with public sources |
 
 ### Budget Adjustment Monitor (MAP)
 

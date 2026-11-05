@@ -3,7 +3,7 @@
 # (ver scripts/validar_ecosistema.py).
 #
 # Corre a las 13:00 ART, después de las corridas diarias de Comprar
-# (08:30 + reintento 12:30) y Contratos (08:00).
+# (08:30 + reintento 12:30) y Contratos (09:30 + reintento 12:30).
 # NO commitea nada: los commits automáticos disparan redeploys en Railway.
 # El reporte queda en el resumen del job y como artifact descargable.
 # Si algún control FALLA, abre un issue (o comenta en el abierto).
