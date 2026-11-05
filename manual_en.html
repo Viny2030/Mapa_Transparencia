@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecosystem Manual · Transparency Map</title>
+<style>
+:root{--azul:#003f8a;--gris:#f4f6f9;--texto:#1a1a2e;--sub:#5b6474;--borde:#e2e6ee;
+  --c0:#003f8a;--c1:#0b6e4f;--c2:#b45309;--c3:#7c3aed;--c4:#be185d;--sat:#475569}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--gris);color:var(--texto);line-height:1.65}
+header{background:linear-gradient(135deg,#003f8a,#005bb5);color:#fff;padding:1.8rem 16px;text-align:center}
+header h1{font-size:1.7rem}
+header p{opacity:.88;margin-top:.35rem;font-size:.95rem}
+header nav{margin-top:.8rem;display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap}
+header nav a{color:#fff;text-decoration:none;font-size:.82rem;padding:.25rem .75rem;border:1px solid rgba(255,255,255,.35);border-radius:14px}
+header nav a:hover{background:rgba(255,255,255,.15)}
+.cuerpo{max-width:1000px;margin:0 auto;padding:1.5rem 16px 3rem}
+.indice{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:1rem 1.3rem;margin-bottom:1.5rem}
+.indice h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--sub);margin-bottom:.4rem}
+.indice ol{columns:2;column-gap:2rem;padding-left:1.2rem;font-size:.9rem}
+@media(max-width:640px){.indice ol{columns:1}}
+.indice a{color:var(--azul);text-decoration:none}
+section{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.3rem}
+section h2{font-size:1.25rem;color:var(--azul);margin-bottom:.7rem}
+section h3{font-size:1rem;margin:1.1rem 0 .35rem}
+section p,section li{font-size:.93rem}
+section p+p{margin-top:.6rem}
+section ul,section ol{padding-left:1.3rem;margin:.4rem 0}
+section li{margin:.2rem 0}
+code{font-family:Consolas,monospace;font-size:.85em;background:#eef2f7;padding:.05rem .35rem;border-radius:4px}
+.tabla{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.86rem;margin:.6rem 0}
+th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--borde);vertical-align:top}
+th{background:#f1f5fb;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:var(--sub)}
+.capa{display:inline-block;font-size:.7rem;font-weight:700;color:#fff;border-radius:10px;padding:.08rem .55rem;white-space:nowrap}
+.k0{background:var(--c0)}.k1{background:var(--c1)}.k2{background:var(--c2)}.k3{background:var(--c3)}.k4{background:var(--c4)}.ks{background:var(--sat)}
+.grafo{width:100%;height:560px;border:1px solid var(--borde);border-radius:10px;margin-top:.6rem}
+.fichas{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem}
+@media(max-width:760px){.fichas{grid-template-columns:1fr}}
+.ficha{border:1px solid var(--borde);border-left:5px solid var(--c);border-radius:10px;padding:1rem 1.1rem}
+.ficha h3{margin:0 0 .15rem;font-size:1.02rem}
+.ficha .url{font-size:.8rem;word-break:break-all}
+.ficha .url a{color:var(--azul)}
+.ficha dl{margin-top:.5rem;font-size:.86rem}
+.ficha dt{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin-top:.5rem}
+.ficha dd{margin:0}
+.nota{background:#fff8e1;border-left:4px solid #f39c12;border-radius:6px;padding:.8rem 1rem;font-size:.88rem;margin-top:.8rem}
+.ok{background:#ecfdf3;border-left:4px solid #16a34a;border-radius:6px;padding:.8rem 1rem;font-size:.88rem;margin-top:.8rem}
+.paso{counter-increment:paso}
+.recorrido{border:1px solid var(--borde);border-radius:10px;padding:.9rem 1.1rem;margin-top:.8rem}
+.recorrido h3{margin-top:0}
+footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>📖 Transparency Ecosystem Manual</h1>
+  <p>The layers, the 12 sites and how they connect · Version 1.0 · November 2026</p>
+  <nav>
+    <a href="/en">🗺️ Home</a>
+    <a href="/grafo?lang=en">🕸️ Interactive graph</a>
+    <a href="/manual">🇦🇷 Español</a>
+  </nav>
+</header>
+
+<div class="cuerpo">
+
+<nav class="indice" aria-label="Contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#que-es">What the ecosystem is</a></li>
+    <li><a href="#capas">Layered architecture</a></li>
+    <li><a href="#grafo">Relationship graph</a></li>
+    <li><a href="#conexiones">Every connection, one by one</a></li>
+    <li><a href="#fichas">Site profiles</a></li>
+    <li><a href="#verificacion">How figures are verified</a></li>
+    <li><a href="#recorridos">Investigation walkthroughs</a></li>
+    <li><a href="#limitaciones">Known limitations</a></li>
+    <li><a href="#glosario">Glossary</a></li>
+    <li><a href="#legal">Legal framework and disclaimer</a></li>
+  </ol>
+</nav>
+
+<section id="que-es">
+  <h2>1. What the ecosystem is</h2>
+  <p>The Transparency Ecosystem is a set of <strong>12 sites</strong> that monitor the Argentine State using official public data: public procurement, the Executive's staff roster, the budget, asset declarations, the Judiciary, Congress and international corruption cases. Each site works on its own, but many <strong>query each other</strong>: a supplier found in Contracts is checked against MEACI's sanctioned list; Decla's asset declarations are cross-checked against Contracts' awards; the IRI Monitor builds its index from Judiciary, Deputies, Senators and Contracts data.</p>
+  <p>This manual explains <strong>which layer each site belongs to, what it does, where its data comes from and what it connects to</strong>, so the whole ecosystem can be navigated and every figure traced back to its source.</p>
+  <p>All sites live under the <code>ecosistematransparencia.com.ar</code> domain (for example <code>contratos.ecosistematransparencia.com.ar</code>) and update automatically.</p>
+</section>
+
+<section id="capas">
+  <h2>2. Layered architecture</h2>
+  <p>Sites are arranged in layers according to <strong>how close they are to the original data</strong>. Lower layers pull directly from official sources; upper layers combine what others produce.</p>
+  <div class="tabla"><table>
+    <thead><tr><th>Layer</th><th>Sites</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td><span class="capa k0">Portal</span></td><td>Mapa</td><td>Integrates everything: links the sites, shows their live status and headline indicators. Runs the daily cross-validation.</td></tr>
+      <tr><td><span class="capa k1">Layer 1</span></td><td>Comprar · Contratos · Jefatura</td><td><strong>Procurement and Executive sources.</strong> Ingest raw data (Official Gazette, COMPR.AR, Treasury, Mapa del Estado) and normalise it. The base every other layer builds on.</td></tr>
+      <tr><td><span class="capa k2">Layer 2</span></td><td>IRI Monitor · MEACI · Ajuste</td><td><strong>Cross-cutting analysis.</strong> Combine sources into indices or reference lists: the Institutional Risk Index, the list of internationally sanctioned companies and the real-terms evolution of the budget.</td></tr>
+      <tr><td><span class="capa k3">Layer 3</span></td><td>Decla · Justicia</td><td><strong>Assets and Judiciary.</strong> Asset declarations of officials, legislators and judges, and the functioning of the Judiciary.</td></tr>
+      <tr><td><span class="capa k4">Layer 4</span></td><td>Deputies · Senators</td><td><strong>Legislative branch.</strong> Composition, attendance, votes, productivity and cost of both chambers.</td></tr>
+      <tr><td><span class="capa ks">Satellite</span></td><td>Vectores</td><td>Research module on foreign state influence (strategic corruption). Runs separately and is planned to feed the IRI.</td></tr>
+    </tbody>
+  </table></div>
+  <p>The layer numbering matches the <strong>site control and verification checklist</strong>, so the manual and the checklist can be read together.</p>
+</section>
+
+<section id="grafo">
+  <h2>3. Relationship graph</h2>
+  <p>The graph shows every site as a node, arranged by layer, and every real connection between them as a line. Click a site to see its profile and highlight its connections; turn on <em>Show official sources</em> to see which agency each piece of data comes from. It also has its own page: <a href="/grafo?lang=en">/grafo</a>.</p>
+  <iframe class="grafo" src="/grafo?embed=1&amp;lang=en" title="Ecosystem relationship graph" loading="lazy"></iframe>
+  <ul>
+    <li><strong style="color:#0f766e">Green:</strong> data exchange (one site uses another's data).</li>
+    <li><strong style="color:#c2410c">Orange:</strong> CUIT cross-check (one site checks suppliers or officials against another's list).</li>
+    <li><strong style="color:#7c3aed">Dashed violet:</strong> planned integration, not connected yet.</li>
+    <li><strong style="color:#64748b">Dotted grey:</strong> navigation between sites.</li>
+    <li><strong style="color:#003f8a">Faint blue:</strong> the Mapa links to and monitors every site.</li>
+  </ul>
+</section>
+
+<section id="conexiones">
+  <h2>4. Every connection, one by one</h2>
+  <p>Surveyed from each repository's code on 2026-11-05. Read “A → B” as “A uses data from B”.</p>
+  <div class="tabla"><table>
+    <thead><tr><th>#</th><th>Connection</th><th>Type</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Comprar ↔ Contratos</td><td>Data</td><td>Both process the same Official Gazette awards. The daily cross-validation checks they match day by day, to the peso.</td></tr>
+      <tr><td>2</td><td>Comprar → MEACI</td><td>CUIT check</td><td>Flags suppliers whose CUIT belongs to an internationally sanctioned company; also checks MEACI is reachable.</td></tr>
+      <tr><td>3</td><td>Contratos → MEACI</td><td>CUIT check</td><td>Same as above, via <code>/api/cruce-cuits-bulk</code>.</td></tr>
+      <tr><td>4</td><td>Jefatura → MEACI</td><td>CUIT check</td><td>Queries MEACI's list live (6-hour cache) to flag Cabinet Office suppliers.</td></tr>
+      <tr><td>5</td><td>Decla → Contratos</td><td>CUIT check</td><td>Detects conflicts of interest: officials' and their companies' CUITs against Official Gazette awards (red alert).</td></tr>
+      <tr><td>6</td><td>IRI Monitor → Justicia</td><td>Data</td><td>Judges and vacancies for the financial, operational and data components of judicial bodies' IRI.</td></tr>
+      <tr><td>7</td><td>IRI Monitor → Deputies</td><td>Data</td><td>Blocs and real HCDN KPIs for the Chamber's IRI.</td></tr>
+      <tr><td>8</td><td>IRI Monitor → Senators</td><td>Data</td><td>Roster and average participation for the Senate's IRI.</td></tr>
+      <tr><td>9</td><td>IRI Monitor → Contratos</td><td>Data</td><td>Procurement risk per agency (currently computed from COMPR.AR 2020-2021 data; see <a href="#limitaciones">limitations</a>).</td></tr>
+      <tr><td>10</td><td>Senators → Deputies</td><td>Navigation</td><td>“Deputies” button in the Senate menu.</td></tr>
+      <tr><td>11</td><td>Mapa → all</td><td>Integration</td><td>Links the 11 sites, checks their live status (<code>/status</code>), shows the global IRI (<code>/iri/*</code>) and MEACI KPIs.</td></tr>
+      <tr><td>12</td><td>Vectores ⇢ IRI Monitor</td><td>Planned</td><td>Feed the IRI's <em>R_International</em> dimension. Not connected yet.</td></tr>
+      <tr><td>13</td><td>MEACI ⇢ IRI Monitor</td><td>Planned</td><td>Contribute international alerts to the IRI. Not connected yet.</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Ajuste</strong> and <strong>Justicia</strong> do not query other sites: they are fed only by official sources (Justicia is, however, queried by the IRI Monitor).</p>
+</section>
+
+<section id="fichas">
+  <h2>5. Site profiles</h2>
+  <div class="fichas">
+
+    <div class="ficha" style="--c:var(--c0)">
+      <h3>🗺️ Transparency Map</h3><span class="capa k0">Portal</span>
+      <div class="url"><a href="https://mapa.ecosistematransparencia.com.ar/en" target="_blank" rel="noopener">mapa.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Ecosystem home page: groups the monitors by branch of government, shows whether each site is online and presents the global IRI and MEACI KPIs.</dd>
+        <dt>Answers</dt><dd>Which monitors exist and which are running? What is the overall institutional risk level?</dd>
+        <dt>Data</dt><dd>The ecosystem sites themselves (live status, 30 s cache).</dd>
+        <dt>Updates</dt><dd>Live. Figure cross-validation Mon–Fri 13:00 ART.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c1)">
+      <h3>⚖️ Comprar · Contracts v1</h3><span class="capa k1">Layer 1</span>
+      <div class="url"><a href="https://comprar.ecosistematransparencia.com.ar" target="_blank" rel="noopener">comprar.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Every day it takes the Official Gazette's awards, cross-checks them with COMPR.AR and Treasury payments, and classifies decisions under the Corruptive Phenomena Theory (regressive income transfers).</dd>
+        <dt>Answers</dt><dd>What was awarded today, to whom and for how much? Was it paid? Is the supplier sanctioned abroad?</dd>
+        <dt>Sources</dt><dd>Official Gazette (3rd section) · COMPR.AR · TGN.</dd>
+        <dt>Updates</dt><dd>Mon–Fri 08:30 ART, retried at 12:30 if the Gazette was down.</dd>
+        <dt>Connections</dt><dd>↔ Contratos (same data) · → MEACI (CUIT check).</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c1)">
+      <h3>📊 Contratos · Contracts v2</h3><span class="capa k1">Layer 1</span>
+      <div class="url"><a href="https://contratos.ecosistematransparencia.com.ar" target="_blank" rel="noopener">contratos.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Second version of the contracts monitor: accumulates awards with explainable risk analysis (XAI), by agency and supplier, with CSV downloads.</dd>
+        <dt>Answers</dt><dd>How much did each agency award? Which suppliers concentrate contracts? Which were paid by the Treasury?</dd>
+        <dt>Sources</dt><dd>Official Gazette · COMPR.AR · TGN.</dd>
+        <dt>Updates</dt><dd>Mon–Fri 08:00 ART (single run, no retry).</dd>
+        <dt>Connections</dt><dd>↔ Comprar · → MEACI (CUIT check) · ← queried by Decla and the IRI Monitor.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c1)">
+      <h3>🏛️ Jefatura · Executive monitor</h3><span class="capa k1">Layer 1</span>
+      <div class="url"><a href="https://jefatura.ecosistematransparencia.com.ar" target="_blank" rel="noopener">jefatura.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Cabinet Office, General Secretariat and Presidency: officials and staff roster, each jurisdiction's contracts and conflict-of-interest alerts (kinship, companies, cash flow).</dd>
+        <dt>Answers</dt><dd>Who holds each post? What was contracted and with whom? Are there links between officials and suppliers?</dd>
+        <dt>Sources</dt><dd>Mapa del Estado · COMPR.AR / datos.gob.ar · Official Gazette.</dd>
+        <dt>Updates</dt><dd>Daily workflows for sources, roster and cross-checks.</dd>
+        <dt>Connections</dt><dd>→ MEACI (live CUIT check).</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c2)">
+      <h3>🚦 IRI Monitor</h3><span class="capa k2">Layer 2</span>
+      <div class="url"><a href="https://monitor.ecosistematransparencia.com.ar" target="_blank" rel="noopener">monitor.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Computes the Institutional Risk Index for 82 agencies: <code>IRI = 35% financial + 30% procurement + 20% operational + 15% data</code>, and places them on a traffic light (low, medium, high, partial data).</dd>
+        <dt>Answers</dt><dd>Which agencies carry the highest institutional risk? In which component?</dd>
+        <dt>Sources</dt><dd>Justicia, Deputies and Senators (via their published data) · COMPR.AR 2020-2021 (datos.gob.ar).</dd>
+        <dt>Updates</dt><dd>Daily refresh.</dd>
+        <dt>Connections</dt><dd>→ Justicia · → Deputies · → Senators · → Contratos · ← shown by the Mapa.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c2)">
+      <h3>🌍 MEACI</h3><span class="capa k2">Layer 2</span>
+      <div class="url"><a href="https://meaci.ecosistematransparencia.com.ar" target="_blank" rel="noopener">meaci.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Monitor of Argentine-present companies in international cases: 31 multijurisdictional foreign-bribery cases (OECD), 73 resolutions, sanctioned companies and their Argentine subsidiaries with CUIT.</dd>
+        <dt>Answers</dt><dd>Which companies operating in Argentina were sanctioned abroad, where and for how much?</dd>
+        <dt>Sources</dt><dd>OECD 2026 report on multijurisdictional resolutions · DOJ (FCPA) · SFO (UK) · PNF (France).</dd>
+        <dt>Updates</dt><dd>Daily news check; new cases are loaded only after verification.</dd>
+        <dt>Connections</dt><dd>← Comprar, Contratos and Jefatura check their suppliers against its CUIT list · ← the Mapa shows its KPIs.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c2)">
+      <h3>📉 Ajuste · MAP</h3><span class="capa k2">Layer 2</span>
+      <div class="url"><a href="https://ajuste.ecosistematransparencia.com.ar" target="_blank" rel="noopener">ajuste.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Budget Adjustment Monitor: 2023→2026 budget in nominal pesos, real terms (CPI) and constant dollars; programme ranking, analysis by spending item, inflation erosion versus cuts, and social sectors.</dd>
+        <dt>Answers</dt><dd>How much was each programme cut in real terms? Was the adjustment a cut or inflation?</dd>
+        <dt>Sources</dt><dd>Open Budget / MECON · Official Gazette (administrative decisions and decrees) · Central Bank (CPI and FX).</dd>
+        <dt>Updates</dt><dd>Gazette 03:00, budget 08:00 and its own figure audit 10:30 ART.</dd>
+        <dt>Connections</dt><dd>Independent: fed only by official sources.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c3)">
+      <h3>📜 Decla · Asset declarations</h3><span class="capa k3">Layer 3</span>
+      <div class="url"><a href="https://decla.ecosistematransparencia.com.ar" target="_blank" rel="noopener">decla.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Asset declarations of officials, legislators and judges: evolution in USD, IVPI, opacity (cash), offshore assets, risk score and 12 international indicators; conflict-of-interest and revolving-door checks.</dd>
+        <dt>Answers</dt><dd>How much did an official's wealth grow relative to declared income? Did any of their companies contract with the State?</dd>
+        <dt>Sources</dt><dd>Anti-Corruption Office (datos.jus.gob.ar) · Central Bank · Contratos · COMPR.AR.</dd>
+        <dt>Updates</dt><dd>Daily pipeline.</dd>
+        <dt>Connections</dt><dd>→ Contratos (CUIT check of officials and companies).</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c3)">
+      <h3>⚖️ Justicia · Judicial monitor</h3><span class="capa k3">Layer 3</span>
+      <div class="url"><a href="https://justicia.ecosistematransparencia.com.ar" target="_blank" rel="noopener">justicia.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Supreme Court, Judicial Council, appeal courts and federal courts: judges, vacancies, judicial efficiency and risk index per body; Judiciary budget.</dd>
+        <dt>Answers</dt><dd>How many vacancies are there and where? How efficient is each jurisdiction? How much is allocated to the Judiciary?</dd>
+        <dt>Sources</dt><dd>datos.jus.gob.ar · Supreme Court (CSJN) · PJN statistics.</dd>
+        <dt>Updates</dt><dd>Daily scrapers.</dd>
+        <dt>Connections</dt><dd>← the IRI Monitor uses its judges and vacancies data.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c4)">
+      <h3>🗳️ Deputies · Legislative monitor</h3><span class="capa k4">Layer 4</span>
+      <div class="url"><a href="https://legislativo.ecosistematransparencia.com.ar" target="_blank" rel="noopener">legislativo.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>257 deputies: composition by bloc and district, fragmentation, renewal, attendance, productivity, per-capita cost and Chamber budget.</dd>
+        <dt>Answers</dt><dd>How is the Chamber composed? Who attends and who produces? How much does each deputy cost?</dd>
+        <dt>Sources</dt><dd>HCDN (open data and votes) · Open Budget.</dd>
+        <dt>Updates</dt><dd>Daily monitor.</dd>
+        <dt>Connections</dt><dd>← the IRI Monitor uses its blocs and KPIs · ← Senators links to this site.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c4)">
+      <h3>🏅 Senators · Senate monitor</h3><span class="capa k4">Layer 4</span>
+      <div class="url"><a href="https://senadores.ecosistematransparencia.com.ar" target="_blank" rel="noopener">senadores.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>What it does</dt><dd>72 senators: participation, votes, report by party and province, parliamentary salary and asset declarations.</dd>
+        <dt>Answers</dt><dd>Who takes part in votes? How does each bloc vote? How much does a senator earn?</dd>
+        <dt>Sources</dt><dd>National Senate · ArgentinaDatos (API).</dd>
+        <dt>Updates</dt><dd>Daily monitor.</dd>
+        <dt>Connections</dt><dd>→ Deputies (navigation) · ← the IRI Monitor uses its roster and participation.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--sat)">
+      <h3>🕸️ Vectores · Strategic corruption</h3><span class="capa ks">Satellite</span>
+      <div class="url"><a href="https://corrupcionestrategica-production.up.railway.app" target="_blank" rel="noopener">corrupcionestrategica-production.up.railway.app</a></div>
+      <dl>
+        <dt>What it does</dt><dd>Classifies cases of foreign state influence (China, Russia) on Argentine public decisions —nuclear, lithium, ports, banking, defence— using the NEST strategic-corruption framework rubric. A triage tool, not an accusation tool.</dd>
+        <dt>Answers</dt><dd>Which foreign-influence cases warrant follow-up and how urgently?</dd>
+        <dt>Sources</dt><dd>Cases investigated with public sources cited in each vector.</dd>
+        <dt>Updates</dt><dd>Weekly robot.</dd>
+        <dt>Connections</dt><dd>⇢ IRI Monitor (planned, not connected yet).</dd>
+      </dl>
+    </div>
+
+  </div>
+</section>
+
+<section id="verificacion">
+  <h2>6. How figures are verified</h2>
+  <p>Two automated checks run every working day, independent of each site's own code:</p>
+  <h3>Ecosystem cross-validation (Mapa)</h3>
+  <p>A script (<code>scripts/validar_ecosistema.py</code> in the Mapa repository) queries the production APIs Mon–Fri at 13:00 ART and checks:</p>
+  <ol>
+    <li><strong>Comprar ↔ Contratos:</strong> the same Official Gazette awards per day, with the same amount.</li>
+    <li><strong>Contratos, internal consistency:</strong> the summary total matches the sum by agency, and what share of awards carries an amount.</li>
+    <li><strong>MEACI ↔ Contratos and Comprar:</strong> all three sites recognise the same sanctioned-CUIT list, and whether those companies actually appear as suppliers.</li>
+    <li><strong>IRI Monitor:</strong> how many agencies have the procurement component and from which year that data is.</li>
+    <li><strong>Ajuste:</strong> the result of its own audit (below).</li>
+    <li><strong>Freshness:</strong> the data date of each site.</li>
+  </ol>
+  <p>Each check ends as OK, warning or failure. Any failure automatically opens a GitHub issue; every run's report is in the repository's <em>Actions</em> tab.</p>
+  <h3>Ajuste figure audit</h3>
+  <p>Ajuste independently recomputes the deflator and average exchange rate from the Central Bank API, checks that the latest CPI is no older than 75 days, that the budget total does not drop more than 10% overnight (a sign of an incomplete file, not a cut) and that no regulation disappears. It runs at 10:30 ART.</p>
+  <div class="ok"><strong>First run (2026-11-05):</strong> 12 checks OK, 4 warnings, 0 failures. Comprar and Contratos matched to the peso from 2 to 4 November; the three sanctioned lists are identical; Ajuste's audit passed on recent days.</div>
+  <h3>Manual verification</h3>
+  <p>To review a site by hand: open it with <kbd>Ctrl</kbd>+<kbd>F5</kbd>, find the update date in the header or footer, check that indicator cards are not at 0 and tables have rows, and open the console (<kbd>F12</kbd>) to look for red errors.</p>
+</section>
+
+<section id="recorridos">
+  <h2>7. Investigation walkthroughs</h2>
+  <p>Examples of using several sites together to answer a question.</p>
+  <div class="recorrido">
+    <h3>A · Who is this State supplier?</h3>
+    <ol>
+      <li><strong>Contratos:</strong> search the supplier by name or CUIT; see how much and with which agencies it contracted.</li>
+      <li><strong>Comprar:</strong> see the award in the Official Gazette and whether the Treasury has paid it.</li>
+      <li><strong>MEACI:</strong> check whether the CUIT belongs to a company sanctioned abroad.</li>
+      <li><strong>Decla:</strong> check whether any official declares a stake in that company (conflict-of-interest alert).</li>
+    </ol>
+  </div>
+  <div class="recorrido">
+    <h3>B · Is this official's wealth reasonable?</h3>
+    <ol>
+      <li><strong>Decla:</strong> open the profile (<em>Ver</em>): evolution in USD, IVPI, cash and offshore assets.</li>
+      <li><strong>Jefatura</strong> (if in the Executive): see their post and area in the roster.</li>
+      <li><strong>Contratos:</strong> check whether their companies received awards.</li>
+    </ol>
+  </div>
+  <div class="recorrido">
+    <h3>C · Which agency is riskiest, and why?</h3>
+    <ol>
+      <li><strong>Mapa / IRI Monitor:</strong> see the ranking and the heaviest component.</li>
+      <li>Depending on the area: <strong>Justicia</strong> (vacancies, efficiency), <strong>Deputies</strong> or <strong>Senators</strong> (attendance, productivity) or <strong>Contratos</strong> (the agency's awards).</li>
+      <li><strong>Ajuste:</strong> see how its budget evolved in real terms.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="limitaciones">
+  <h2>8. Known limitations</h2>
+  <p>Found by the cross-validation and the site checks of 4–5 November 2026:</p>
+  <ul>
+    <li><strong>MEACI alerts:</strong> alerts tagged <code>contratos_v2</code> mean the sanctioned company has a <em>presence in Argentina</em>; none of the 13 sanctioned CUITs currently appears as a supplier in Contratos.</li>
+    <li><strong>Contratos total amount:</strong> only part of the awards report an amount, so the peso total is a floor, not the total awarded.</li>
+    <li><strong>IRI procurement risk:</strong> computed for 25 of 82 agencies, from COMPR.AR 2020-2021 data.</li>
+    <li><strong>Contratos has no retry:</strong> it runs once at 08:00; if the Official Gazette was down, that day has no awards until the next run (Comprar does retry).</li>
+    <li><strong>Planned integrations:</strong> MEACI and Vectores do not feed the IRI yet.</li>
+  </ul>
+</section>
+
+<section id="glosario">
+  <h2>9. Glossary</h2>
+  <div class="tabla"><table><tbody>
+    <tr><th>BORA</th><td>Official Gazette of the Argentine Republic. Its 3rd section publishes procurement notices and awards.</td></tr>
+    <tr><th>COMPR.AR</th><td>The national public administration's electronic procurement system.</td></tr>
+    <tr><th>TGN</th><td>National Treasury: records actual payments to suppliers.</td></tr>
+    <tr><th>CUIT</th><td>Argentine tax identification number; identifies companies and people in cross-checks.</td></tr>
+    <tr><th>IRI</th><td>Institutional Risk Index: 0–100 score per agency combining financial, procurement, operational and data risk.</td></tr>
+    <tr><th>IVPI</th><td>Unjustified Wealth Variation Index: how many times the wealth increase exceeds declared income. Does not imply wrongdoing.</td></tr>
+    <tr><th>MJR</th><td>Multijurisdictional resolution: a foreign-bribery case resolved in more than one country (OECD report).</td></tr>
+    <tr><th>DA / DNU</th><td>Administrative decision / Decree of necessity and urgency; instruments that modify the budget.</td></tr>
+    <tr><th>OA</th><td>Anti-Corruption Office: publishes asset declarations.</td></tr>
+    <tr><th>HCDN</th><td>National Chamber of Deputies.</td></tr>
+    <tr><th>XAI</th><td>Explainable AI: the system shows why it flags a risk.</td></tr>
+    <tr><th>NEST</th><td>Analytical framework for detecting and assessing strategic corruption by foreign states.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="legal">
+  <h2>10. Legal framework and disclaimer</h2>
+  <p>All data comes from official public sources. Its reuse is covered by <strong>Law 27,275</strong> on Access to Public Information and <strong>Decree 1172/2003</strong>. Information on public officials in the exercise of their duties is processed in accordance with Law 25,326 and AAIP doctrine.</p>
+  <div class="nota">⚠️ Indicators, indices and alerts are <strong>algorithmic risk results</strong> for academic and transparency purposes. They imply no value judgement, accusation or determination of responsibility regarding any person, company or agency.</div>
+</section>
+
+</div>
+<footer>Ph.D. Vicente Humberto Monteverde · Algorithms against Corruption · Transparency Ecosystem of the Argentine State</footer>
+<script>
+// Ajusta el alto del grafo incluido a su contenido real.
+addEventListener('message', e => {
+  if (e.origin !== location.origin || !e.data || !e.data.grafoAltura) return;
+  const f = document.querySelector('iframe.grafo');
+  if (f) f.style.height = (e.data.grafoAltura + 4) + 'px';
+});
+</script>
+</body>
+</html>
