@@ -1,0 +1,66 @@
+# .github/workflows/validacion_cruzada.yml
+# Validación cruzada diaria de cifras entre sitios del ecosistema
+# (ver scripts/validar_ecosistema.py).
+#
+# Corre a las 13:00 ART, después de las corridas diarias de Comprar
+# (08:30 + reintento 12:30) y Contratos (08:00).
+# NO commitea nada: los commits automáticos disparan redeploys en Railway.
+# El reporte queda en el resumen del job y como artifact descargable.
+# Si algún control FALLA, abre un issue (o comenta en el abierto).
+
+name: Validación cruzada del ecosistema
+
+on:
+  schedule:
+    - cron: "0 16 * * 1-5"   # 13:00 ART, lunes a viernes
+  workflow_dispatch:
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Validar
+        id: validar
+        continue-on-error: true
+        run: python scripts/validar_ecosistema.py --dias 4 --reporte reporte.md
+
+      - name: Resumen del job
+        if: always()
+        run: cat reporte.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Guardar reporte
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: validacion-${{ github.run_id }}
+          path: reporte.md
+          retention-days: 30
+
+      - name: Abrir o actualizar issue si hubo fallas
+        if: steps.validar.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITULO="Validación cruzada: hay controles en FALLA"
+          NUM=$(gh issue list --state open --search "in:title \"$TITULO\"" --json number --jq '.[0].number')
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body-file reporte.md
+          else
+            gh issue create --title "$TITULO" --body-file reporte.md
+          fi
+
+      - name: Marcar el job en rojo si hubo fallas
+        if: steps.validar.outcome == 'failure'
+        run: exit 1
