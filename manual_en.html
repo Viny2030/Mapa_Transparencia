@@ -178,7 +178,7 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
         <dt>What it does</dt><dd>Second version of the contracts monitor: accumulates awards with explainable risk analysis (XAI), by agency and supplier, with CSV downloads.</dd>
         <dt>Answers</dt><dd>How much did each agency award? Which suppliers concentrate contracts? Which were paid by the Treasury?</dd>
         <dt>Sources</dt><dd>Official Gazette · COMPR.AR · TGN.</dd>
-        <dt>Updates</dt><dd>Mon–Fri 08:00 ART (single run, no retry).</dd>
+        <dt>Updates</dt><dd>Mon–Fri 09:30 ART (runner in Argentina), retried at 12:30 if the Gazette was down.</dd>
         <dt>Connections</dt><dd>↔ Comprar · → MEACI (CUIT check) · ← queried by Decla and the IRI Monitor.</dd>
       </dl>
     </div>
@@ -352,7 +352,7 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
     <li><strong>MEACI alerts:</strong> alerts tagged <code>contratos_v2</code> mean the sanctioned company has a <em>presence in Argentina</em>; none of the 13 sanctioned CUITs currently appears as a supplier in Contratos.</li>
     <li><strong>Contratos total amount:</strong> only part of the awards report an amount, so the peso total is a floor, not the total awarded.</li>
     <li><strong>IRI procurement risk:</strong> computed for 25 of 82 agencies, from COMPR.AR 2020-2021 data.</li>
-    <li><strong>Contratos has no retry:</strong> it runs once at 08:00; if the Official Gazette was down, that day has no awards until the next run (Comprar does retry).</li>
+    <li><strong>Different schedules:</strong> Comprar processes the Gazette at 08:30 and Contratos at 09:30; in between, Contratos does not yet show the day's awards. The cross-validation runs at 13:00, once both have finished.</li>
     <li><strong>Planned integrations:</strong> MEACI and Vectores do not feed the IRI yet.</li>
   </ul>
 </section>

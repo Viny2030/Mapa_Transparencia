@@ -178,7 +178,7 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
         <dt>Qué hace</dt><dd>Segunda versión del monitor de contratos: acumula las adjudicaciones con análisis de riesgo explicable (XAI), por organismo y por proveedor, con descargas en CSV.</dd>
         <dt>Responde</dt><dd>¿Cuánto adjudicó cada organismo? ¿Qué proveedores concentran contratos? ¿Cuáles cobraron en la TGN?</dd>
         <dt>Fuentes</dt><dd>Boletín Oficial · COMPR.AR · TGN.</dd>
-        <dt>Actualización</dt><dd>Lun–vie 08:00 ART (una corrida, sin reintento).</dd>
+        <dt>Actualización</dt><dd>Lun–vie 09:30 ART (runner en Argentina), con reintento 12:30 si el Boletín no respondió.</dd>
         <dt>Conexiones</dt><dd>↔ Comprar · → MEACI (cruce de CUIT) · ← Decla y Monitor IRI lo consultan.</dd>
       </dl>
     </div>
@@ -352,7 +352,7 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
     <li><strong>Alertas de MEACI:</strong> las alertas etiquetadas <code>contratos_v2</code> indican que la empresa sancionada tiene <em>presencia en Argentina</em>; ninguna de las 13 CUIT sancionadas figura hoy como proveedora en Contratos.</li>
     <li><strong>Monto total de Contratos:</strong> sólo una parte de las adjudicaciones informa monto, por lo que el total en pesos es un piso, no el total adjudicado.</li>
     <li><strong>Riesgo de contratación del IRI:</strong> calculado para 25 de 82 organismos y con datos COMPR.AR 2020-2021.</li>
-    <li><strong>Contratos sin reintento:</strong> corre una sola vez a las 08:00; si el Boletín Oficial no respondió, ese día queda sin adjudicaciones hasta la corrida siguiente (Comprar sí reintenta).</li>
+    <li><strong>Horarios distintos:</strong> Comprar procesa el Boletín a las 08:30 y Contratos a las 09:30; entre esos horarios Contratos todavía no muestra las adjudicaciones del día. La validación cruzada corre a las 13:00, cuando ambos ya terminaron.</li>
     <li><strong>Integraciones planificadas:</strong> MEACI y Vectores todavía no alimentan el IRI.</li>
   </ul>
 </section>
