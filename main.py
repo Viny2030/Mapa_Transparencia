@@ -137,6 +137,8 @@ HTML_CONTENT = """<!DOCTYPE html>
   <a href="#meaci" class="nav-intl">🌍 Monitor Internacional</a>
   <a href="#autor">👤 Autor</a>
   <a href="#donacion">💛 Donar</a>
+  <a href="/manual">📖 Manual</a>
+  <a href="/grafo">🕸️ Grafo</a>
   <a href="/docs">🔧 API</a>
   <a href="/en">🇺🇸 English</a>
 </nav>
@@ -457,8 +459,30 @@ async def home():
 
 @app.get("/en", response_class=HTMLResponse)
 async def landing_en():
-    path = Path("landing_en.html")
-    return HTMLResponse(content=path.read_text(encoding="utf-8"))
+    return _pagina("landing_en.html")
+
+
+_BASE_DIR = Path(__file__).resolve().parent
+
+
+def _pagina(nombre: str) -> HTMLResponse:
+    return HTMLResponse(content=(_BASE_DIR / nombre).read_text(encoding="utf-8"))
+
+
+@app.get("/grafo", response_class=HTMLResponse)
+async def grafo():
+    """Grafo interactivo de relaciones entre sitios (?lang=en para inglés)."""
+    return _pagina("grafo.html")
+
+
+@app.get("/manual", response_class=HTMLResponse)
+async def manual():
+    return _pagina("manual.html")
+
+
+@app.get("/en/manual", response_class=HTMLResponse)
+async def manual_en():
+    return _pagina("manual_en.html")
 
 
 @app.get("/google2e07fafd6389e31a.html", response_class=HTMLResponse)

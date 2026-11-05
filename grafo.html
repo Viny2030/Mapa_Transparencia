@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grafo de relaciones · Mapa de Transparencia</title>
+<style>
+:root{
+  --azul:#003f8a; --gris:#f4f6f9; --texto:#1a1a2e; --sub:#5b6474; --borde:#e2e6ee;
+  --c0:#003f8a; --c1:#0b6e4f; --c2:#b45309; --c3:#7c3aed; --c4:#be185d; --sat:#475569; --fu:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--gris);color:var(--texto)}
+body.embebido header,body.embebido .pie{display:none}
+header{background:linear-gradient(135deg,#003f8a,#005bb5);color:#fff;padding:1.2rem 1rem;text-align:center}
+header h1{font-size:1.4rem}
+header p{font-size:.85rem;opacity:.85;margin-top:.3rem}
+header nav{margin-top:.6rem;display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap}
+header nav a{color:#fff;text-decoration:none;font-size:.8rem;padding:.25rem .7rem;border:1px solid rgba(255,255,255,.35);border-radius:14px}
+header nav a:hover{background:rgba(255,255,255,.15)}
+.wrap{max-width:1200px;margin:1rem auto;padding:0 16px;display:grid;grid-template-columns:1fr 320px;gap:1rem}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.lienzo{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:.6rem;overflow:hidden}
+.controles{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;font-size:.8rem;color:var(--sub);padding:.2rem .4rem .6rem}
+.controles label{display:flex;gap:.3rem;align-items:center;cursor:pointer}
+svg{width:100%;height:auto;display:block}
+.nodo{cursor:pointer}
+.nodo rect{stroke-width:2;transition:opacity .2s}
+.nodo text{pointer-events:none;font-size:15px;font-weight:700}
+.nodo .sub{font-size:11.5px;font-weight:400;fill:var(--sub)}
+.arista{fill:none;stroke-width:2;transition:opacity .2s}
+.arista.plan{stroke-dasharray:6 5}
+.arista.nav{stroke-dasharray:2 4}
+.arista.mapa{stroke:#003f8a;stroke-width:1.2;opacity:.13}
+.arista.fuente{stroke:#94a3b8;stroke-width:1.2;opacity:.55}
+.atenuado{opacity:.08 !important}
+.resaltado{opacity:1 !important}
+.etq-capa{font-size:11px;font-weight:700;letter-spacing:.06em;fill:#94a3b8;text-transform:uppercase}
+.panel{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:1rem;font-size:.86rem;line-height:1.55;align-self:start;position:sticky;top:1rem}
+.panel h2{font-size:1.05rem;margin-bottom:.2rem}
+.panel .capa{display:inline-block;font-size:.7rem;font-weight:700;color:#fff;border-radius:10px;padding:.1rem .55rem;margin-bottom:.6rem}
+.panel h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin:.8rem 0 .25rem}
+.panel ul{padding-left:1.1rem}
+.panel li{margin:.15rem 0}
+.panel a.ir{display:inline-block;margin-top:.8rem;background:var(--azul);color:#fff;text-decoration:none;padding:.4rem .8rem;border-radius:6px;font-size:.8rem}
+.panel .vacio{color:var(--sub)}
+.leyenda{display:grid;grid-template-columns:1fr 1fr;gap:.25rem .8rem;font-size:.75rem;color:var(--sub);margin-top:.4rem}
+.leyenda span{display:flex;align-items:center;gap:.35rem}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.ln{width:22px;height:0;border-top:2px solid #334155;display:inline-block}
+.tip{position:fixed;pointer-events:none;background:#1a1a2e;color:#fff;font-size:.75rem;padding:.35rem .55rem;border-radius:6px;max-width:280px;opacity:0;transition:opacity .12s;z-index:9}
+.pie{text-align:center;font-size:.75rem;color:var(--sub);padding:1rem}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="t-titulo">Grafo de relaciones del ecosistema</h1>
+  <p id="t-sub">Cada nodo es un sitio; cada línea, un intercambio real de datos encontrado en el código. Hacé clic en un sitio para ver su ficha.</p>
+  <nav>
+    <a href="/" id="t-portada">🗺️ Portada</a>
+    <a href="/manual" id="t-manual">📖 Manual</a>
+    <a href="#" id="t-idioma">🇺🇸 English</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="lienzo">
+    <div class="controles">
+      <label><input type="checkbox" id="chk-fuentes"> <span id="t-fuentes">Mostrar fuentes oficiales</span></label>
+      <label><input type="checkbox" id="chk-mapa" checked> <span id="t-mapa">Mostrar integración del Mapa</span></label>
+    </div>
+    <svg id="grafo" viewBox="0 0 1000 700" role="img" aria-labelledby="t-titulo"></svg>
+  </div>
+  <aside class="panel" id="panel"></aside>
+</div>
+<div class="tip" id="tip"></div>
+<p class="pie" id="t-pie">Relevado del código de los repositorios el 05/11/2026. Las líneas punteadas largas son integraciones planificadas que todavía no están conectadas.</p>
+
+<script>
+const LANG = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'es';
+if (new URLSearchParams(location.search).get('embed') === '1') document.body.classList.add('embebido');
+const T = (o) => (o && typeof o === 'object' && 'es' in o) ? o[LANG] : o;
+const D = 'ecosistematransparencia.com.ar';
+
+const CAPAS = {
+  0:{es:'Portal integrador',en:'Integrating portal',c:'--c0'},
+  1:{es:'Capa 1 · Fuentes de contratos y Ejecutivo',en:'Layer 1 · Procurement & Executive sources',c:'--c1'},
+  2:{es:'Capa 2 · Análisis transversal',en:'Layer 2 · Cross-cutting analysis',c:'--c2'},
+  3:{es:'Capa 3 · Patrimonio y Justicia',en:'Layer 3 · Assets & Judiciary',c:'--c3'},
+  4:{es:'Capa 4 · Poder Legislativo',en:'Layer 4 · Legislative branch',c:'--c4'},
+  s:{es:'Módulo satélite',en:'Satellite module',c:'--sat'},
+  f:{es:'Fuente oficial externa',en:'External official source',c:'--fu'},
+};
+
+const NODOS = [
+  {id:'mapa',capa:0,x:500,y:52,nom:'Mapa',sub:{es:'Portal',en:'Portal'},url:`https://mapa.${D}`,
+   desc:{es:'Portada que reúne los monitores, muestra su estado en vivo y los indicadores principales.',en:'Home page that gathers every monitor, shows its live status and headline indicators.'},
+   fuentes:{es:['Estado de los 11 sitios (/status)','Monitor IRI (proxy /iri/*)','KPIs de MEACI'],en:['Status of the 11 sites (/status)','IRI Monitor (proxy /iri/*)','MEACI KPIs']},
+   act:{es:'En vivo (caché 30 s). Validación cruzada diaria lun–vie 13:00 ART.',en:'Live (30 s cache). Daily cross-validation Mon–Fri 13:00 ART.'}},
+
+  {id:'comprar',capa:1,x:150,y:190,nom:'Comprar',sub:{es:'Contratos v1',en:'Contracts v1'},url:`https://comprar.${D}`,
+   desc:{es:'Adjudicaciones del Boletín Oficial cruzadas con COMPR.AR y pagos de la TGN; detecta transferencias regresivas (Teoría de Fenómenos Corruptivos).',en:'Official Gazette awards cross-checked with COMPR.AR and Treasury (TGN) payments; flags regressive transfers (Corruptive Phenomena Theory).'},
+   fuentes:{es:['Boletín Oficial (BORA), 3.ª sección','COMPR.AR','Tesorería General de la Nación (TGN)'],en:['Official Gazette (BORA), 3rd section','COMPR.AR','National Treasury (TGN)']},
+   act:{es:'Lun–vie 08:30 ART, reintento 12:30 si el BORA no respondió.',en:'Mon–Fri 08:30 ART, retry 12:30 if BORA was down.'}},
+  {id:'contratos',capa:1,x:150,y:320,nom:'Contratos',sub:{es:'Contratos v2 · XAI',en:'Contracts v2 · XAI'},url:`https://contratos.${D}`,
+   desc:{es:'Versión 2 del monitor de contratos: adjudicaciones BORA + COMPR.AR + TGN con análisis de riesgo explicable, por organismo y proveedor.',en:'Contracts monitor v2: BORA + COMPR.AR + TGN awards with explainable risk analysis, by agency and supplier.'},
+   fuentes:{es:['Boletín Oficial (BORA)','COMPR.AR','TGN'],en:['Official Gazette (BORA)','COMPR.AR','TGN']},
+   act:{es:'Lun–vie 08:00 ART (sin reintento).',en:'Mon–Fri 08:00 ART (no retry).'}},
+  {id:'jefatura',capa:1,x:150,y:450,nom:'Jefatura',sub:{es:'Monitor Ejecutivo',en:'Executive monitor'},url:`https://jefatura.${D}`,
+   desc:{es:'Jefatura de Gabinete, Secretaría General y Presidencia: nómina de autoridades y personal, contratos y alertas de conflicto de interés.',en:'Cabinet Office, General Secretariat and Presidency: officials and staff roster, contracts and conflict-of-interest alerts.'},
+   fuentes:{es:['Mapa del Estado (nómina)','COMPR.AR / datos.gob.ar','Boletín Oficial'],en:['Mapa del Estado (roster)','COMPR.AR / datos.gob.ar','Official Gazette']},
+   act:{es:'Workflows diarios de fuentes, nómina y cruces.',en:'Daily workflows for sources, roster and cross-checks.'}},
+
+  {id:'monitor',capa:2,x:390,y:190,nom:'Monitor IRI',sub:{es:'Índice de Riesgo Institucional',en:'Institutional Risk Index'},url:`https://monitor.${D}`,
+   desc:{es:'Semáforo de integridad por organismo. IRI = 35 % riesgo financiero + 30 % contratación + 20 % operativo + 15 % datos.',en:'Integrity traffic light per agency. IRI = 35% financial + 30% procurement + 20% operational + 15% data risk.'},
+   fuentes:{es:['Justicia (magistrados, vacantes)','Diputados (bloques, KPIs HCDN)','Senadores (nómina, participación)','COMPR.AR 2020-2021 (datos.gob.ar)'],en:['Judiciary (judges, vacancies)','Deputies (blocs, HCDN KPIs)','Senators (roster, participation)','COMPR.AR 2020-2021 (datos.gob.ar)']},
+   act:{es:'Refresh diario.',en:'Daily refresh.'}},
+  {id:'meaci',capa:2,x:390,y:320,nom:'MEACI',sub:{es:'Casos internacionales',en:'International cases'},url:`https://meaci.${D}`,
+   desc:{es:'Empresas con presencia en Argentina sancionadas en casos multijurisdiccionales de soborno transnacional (31 casos OCDE). Publica la lista de CUIT que usan los demás sitios.',en:'Companies present in Argentina sanctioned in multijurisdictional foreign-bribery cases (31 OECD cases). Publishes the CUIT list other sites check against.'},
+   fuentes:{es:['Informe OCDE 2026 (MJR)','DOJ (FCPA), SFO, PNF'],en:['OECD 2026 report (MJR)','DOJ (FCPA), SFO, PNF']},
+   act:{es:'Revisión diaria de novedades; casos nuevos sólo tras verificación.',en:'Daily news check; new cases only after verification.'}},
+  {id:'ajuste',capa:2,x:390,y:450,nom:'Ajuste',sub:{es:'Ajuste presupuestario (MAP)',en:'Budget adjustment (MAP)'},url:`https://ajuste.${D}`,
+   desc:{es:'Presupuesto 2023→2026 en nominal, real (IPC) y USD constantes; decretos y decisiones administrativas que lo modifican.',en:'2023→2026 budget in nominal, real (CPI) and constant USD terms; decrees and administrative decisions that modify it.'},
+   fuentes:{es:['Presupuesto Abierto / MECON','Boletín Oficial (DA y DNU)','BCRA (IPC y tipo de cambio)'],en:['Open Budget / MECON','Official Gazette (DA & DNU)','Central Bank (CPI & FX)']},
+   act:{es:'BORA 03:00, presupuesto 08:00, auditoría propia de cifras 10:30 ART.',en:'BORA 03:00, budget 08:00, own figure audit 10:30 ART.'}},
+
+  {id:'decla',capa:3,x:630,y:300,nom:'Decla',sub:{es:'DDJJ patrimoniales',en:'Asset declarations'},url:`https://decla.${D}`,
+   desc:{es:'Declaraciones juradas de funcionarios, legisladores y jueces: evolución patrimonial en USD, IVPI, opacidad, fuga y 12 indicadores internacionales.',en:'Asset declarations of officials, legislators and judges: wealth evolution in USD, IVPI, opacity, offshore and 12 international indicators.'},
+   fuentes:{es:['Oficina Anticorrupción (datos.jus.gob.ar)','BCRA (tipo de cambio)','Contratos (adjudicaciones BORA)','COMPR.AR'],en:['Anti-Corruption Office (datos.jus.gob.ar)','Central Bank (FX)','Contracts (BORA awards)','COMPR.AR']},
+   act:{es:'Pipeline diario.',en:'Daily pipeline.'}},
+  {id:'justicia',capa:3,x:630,y:450,nom:'Justicia',sub:{es:'Monitor Judicial',en:'Judicial monitor'},url:`https://justicia.${D}`,
+   desc:{es:'Corte Suprema, Consejo de la Magistratura, cámaras y juzgados federales: magistrados, vacantes, eficiencia y presupuesto.',en:'Supreme Court, Judicial Council, appeal courts and federal courts: judges, vacancies, efficiency and budget.'},
+   fuentes:{es:['datos.jus.gob.ar','CSJN','Estadísticas PJN'],en:['datos.jus.gob.ar','Supreme Court (CSJN)','PJN statistics']},
+   act:{es:'Scrapers diarios.',en:'Daily scrapers.'}},
+
+  {id:'legislativo',capa:4,x:860,y:190,nom:'Diputados',sub:{es:'Monitor Legislativo',en:'Legislative monitor'},url:`https://legislativo.${D}`,
+   desc:{es:'257 diputados: composición por bloque y distrito, asistencia, productividad, costo per cápita y presupuesto de la Cámara.',en:'257 deputies: composition by bloc and district, attendance, productivity, per-capita cost and Chamber budget.'},
+   fuentes:{es:['HCDN (datos.hcdn.gob.ar, votaciones)','Presupuesto Abierto'],en:['HCDN (datos.hcdn.gob.ar, votes)','Open Budget']},
+   act:{es:'Monitor diario.',en:'Daily monitor.'}},
+  {id:'senadores',capa:4,x:860,y:340,nom:'Senadores',sub:{es:'Monitor del Senado',en:'Senate monitor'},url:`https://senadores.${D}`,
+   desc:{es:'72 senadores: participación, votaciones, reporte por partido, dieta y DDJJ.',en:'72 senators: participation, votes, party report, salary and asset declarations.'},
+   fuentes:{es:['Senado de la Nación','ArgentinaDatos (API)'],en:['National Senate','ArgentinaDatos (API)']},
+   act:{es:'Monitor diario.',en:'Daily monitor.'}},
+
+  {id:'vectores',capa:'s',x:860,y:480,nom:'Vectores',sub:{es:'Corrupción estratégica',en:'Strategic corruption'},url:'https://corrupcionestrategica-production.up.railway.app',
+   desc:{es:'Clasifica casos de influencia estatal extranjera (China, Rusia) sobre decisiones públicas argentinas con el framework NEST.',en:'Classifies cases of foreign state influence (China, Russia) on Argentine public decisions using the NEST framework.'},
+   fuentes:{es:['Casos investigados con fuentes públicas citadas'],en:['Cases investigated with cited public sources']},
+   act:{es:'Robot semanal.',en:'Weekly robot.'}},
+];
+
+// Dos filas de fuentes, ordenadas aprox. por la columna de los sitios que alimentan.
+const FUENTES = [
+  ['f_bora','BORA',75,615],['f_comprar','COMPR.AR',190,615],['f_tgn','TGN',290,615],['f_mecon',{es:'MECON / Presupuesto',en:'MECON / Budget'},430,615],
+  ['f_bcra','BCRA',560,615],['f_oa',{es:'OA · DDJJ',en:'OA · Declarations'},675,615],['f_hcdn','HCDN',800,615],
+  ['f_mde',{es:'Mapa del Estado',en:'Mapa del Estado'},110,665],['f_ocde',{es:'OCDE · DOJ · SFO · PNF',en:'OECD · DOJ · SFO · PNF'},330,665],
+  ['f_jus',{es:'CSJN · PJN · datos.jus',en:'CSJN · PJN · datos.jus'},590,665],['f_senado',{es:'Senado · ArgentinaDatos',en:'Senate · ArgentinaDatos'},845,665],
+].map(([id,nom,x,y]) => ({id,capa:'f',x,y,nom,fuente:true}));
+
+// tipo: datos | cruce | nav | plan | mapa | fuente
+const ARISTAS = [
+  ['comprar','contratos','datos',{es:'Mismas adjudicaciones del BORA; la validación cruzada diaria comprueba que coincidan día por día y en monto.',en:'Same BORA awards; the daily cross-validation checks they match day by day and in amount.'}],
+  ['jefatura','meaci','cruce',{es:'Consulta en vivo la lista de CUIT sancionadas de MEACI (caché 6 h) para marcar proveedores.',en:'Queries MEACI\'s sanctioned-CUIT list live (6 h cache) to flag suppliers.'}],
+  ['comprar','meaci','cruce',{es:'Cruza CUIT de proveedores contra las sancionadas de MEACI y controla que MEACI esté disponible.',en:'Checks supplier CUITs against MEACI\'s sanctioned list and that MEACI is reachable.'}],
+  ['contratos','meaci','cruce',{es:'Cruza CUIT de proveedores contra las sancionadas de MEACI (/api/cruce-cuits-bulk).',en:'Checks supplier CUITs against MEACI\'s sanctioned list (/api/cruce-cuits-bulk).'}],
+  ['decla','contratos','cruce',{es:'Cruce de conflicto de interés: CUIT de funcionarios y sus sociedades × adjudicaciones del BORA.',en:'Conflict-of-interest check: officials\' CUITs and their companies × BORA awards.'}, -75],
+  ['monitor','justicia','datos',{es:'Toma magistrados y vacantes para el riesgo financiero, operativo y de datos.',en:'Pulls judges and vacancies for financial, operational and data risk.'}],
+  ['monitor','legislativo','datos',{es:'Toma bloques y KPIs reales de la HCDN.',en:'Pulls blocs and real HCDN KPIs.'}],
+  ['monitor','senadores','datos',{es:'Toma la nómina y la participación promedio de senadores.',en:'Pulls the senators roster and average participation.'}],
+  ['monitor','contratos','datos',{es:'Riesgo de contratación por organismo (hoy con datos COMPR.AR 2020-2021).',en:'Procurement risk per agency (currently COMPR.AR 2020-2021 data).'}],
+  ['senadores','legislativo','nav',{es:'Navegación cruzada: botón “Diputados”.',en:'Cross navigation: “Deputies” button.'}],
+  ['vectores','monitor','plan',{es:'Planificado: alimentar la dimensión R_Internacional del IRI. Todavía no conectado.',en:'Planned: feed the IRI R_International dimension. Not connected yet.'}],
+  ['meaci','monitor','plan',{es:'Planificado: aportar alertas internacionales al IRI. Todavía no conectado.',en:'Planned: contribute international alerts to the IRI. Not connected yet.'}],
+  ...NODOS.filter(n => n.id !== 'mapa').map(n => ['mapa', n.id, 'mapa',
+     n.id === 'monitor' ? {es:'Muestra el IRI global (proxy /iri/*) y el estado del sitio.',en:'Shows the global IRI (proxy /iri/*) and site status.'}
+   : n.id === 'meaci'   ? {es:'Muestra los KPIs de MEACI y el estado del sitio.',en:'Shows MEACI KPIs and site status.'}
+   : {es:'Enlace y estado en vivo del sitio.',en:'Link and live status of the site.'}]),
+  ...[['f_bora',['comprar','contratos','jefatura','ajuste']],['f_comprar',['comprar','contratos','jefatura','decla','monitor']],['f_tgn',['comprar','contratos']],
+      ['f_mde',['jefatura']],['f_mecon',['ajuste','legislativo']],['f_bcra',['ajuste','decla']],['f_oa',['decla']],['f_jus',['justicia','decla']],
+      ['f_hcdn',['legislativo']],['f_senado',['senadores']],['f_ocde',['meaci']]]
+     .flatMap(([f, ds]) => ds.map(d => [f, d, 'fuente', {es:'Fuente oficial',en:'Official source'}])),
+];
+
+const COLOR_ARISTA = {datos:'#0f766e', cruce:'#c2410c', nav:'#64748b', plan:'#7c3aed', mapa:'#003f8a', fuente:'#94a3b8'};
+const TXT = {
+  titulo:{es:'Grafo de relaciones del ecosistema',en:'Ecosystem relationship graph'},
+  sub:{es:'Cada nodo es un sitio; cada línea, un intercambio real de datos encontrado en el código. Hacé clic en un sitio para ver su ficha.',en:'Each node is a site; each line is a real data exchange found in the code. Click a site to see its profile.'},
+  portada:{es:'🗺️ Portada',en:'🗺️ Home'}, manual:{es:'📖 Manual',en:'📖 Manual'}, idioma:{es:'🇺🇸 English',en:'🇦🇷 Español'},
+  fuentes:{es:'Mostrar fuentes oficiales',en:'Show official sources'}, mapa:{es:'Mostrar integración del Mapa',en:'Show Mapa integration'},
+  pie:{es:'Relevado del código de los repositorios el 05/11/2026. Las líneas punteadas largas son integraciones planificadas que todavía no están conectadas.',en:'Surveyed from the repositories\' code on 2026-11-05. Long-dashed lines are planned integrations not yet connected.'},
+  ayuda:{es:'Hacé clic en un sitio para ver qué hace, de dónde toma los datos y con quién se conecta.',en:'Click a site to see what it does, where its data comes from and what it connects to.'},
+  leyenda:{es:'Leyenda',en:'Legend'}, l_datos:{es:'Intercambio de datos',en:'Data exchange'}, l_cruce:{es:'Cruce de CUIT',en:'CUIT cross-check'},
+  l_nav:{es:'Navegación',en:'Navigation'}, l_plan:{es:'Planificado',en:'Planned'}, l_mapa:{es:'Integración del Mapa',en:'Mapa integration'}, l_fuente:{es:'Fuente oficial',en:'Official source'},
+  queHace:{es:'Qué hace',en:'What it does'}, deDonde:{es:'De dónde toma los datos',en:'Data sources'}, act:{es:'Actualización',en:'Updates'},
+  conex:{es:'Conexiones',en:'Connections'}, ir:{es:'Abrir el sitio ↗',en:'Open site ↗'}, sin:{es:'Sin conexiones con otros sitios: se alimenta sólo de fuentes oficiales.',en:'No links to other sites: fed only by official sources.'},
+  usa:{es:'usa →',en:'uses →'}, usadoPor:{es:'← lo usa',en:'← used by'},
+};
+const t = k => TXT[k][LANG];
+
+document.documentElement.lang = LANG;
+for (const k of ['titulo','sub','portada','manual','fuentes','mapa','pie']) document.getElementById('t-'+k).textContent = t(k);
+document.getElementById('t-idioma').textContent = t('idioma');
+document.getElementById('t-idioma').href = LANG === 'en' ? '?' : '?lang=en';
+document.getElementById('t-portada').href = LANG === 'en' ? '/en' : '/';
+document.getElementById('t-manual').href = LANG === 'en' ? '/en/manual' : '/manual';
+document.title = t('titulo') + ' · Mapa de Transparencia';
+
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs={}, parent) => { const e = document.createElementNS(NS, tag); for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v); if (parent) parent.appendChild(e); return e; };
+const svg = document.getElementById('grafo');
+const TODOS = [...NODOS, ...FUENTES];
+const POR_ID = Object.fromEntries(TODOS.map(n => [n.id, n]));
+const W = n => n.fuente ? Math.max(64, String(T(n.nom)).length * 7 + 22) : 150, H = n => n.fuente ? 30 : 52;
+
+const defs = el('defs', {}, svg);
+for (const [tipo, color] of Object.entries(COLOR_ARISTA)) {
+  const m = el('marker', {id:'fl-'+tipo, viewBox:'0 0 10 10', refX:9, refY:5, markerWidth:7, markerHeight:7, orient:'auto-start-reverse'}, defs);
+  el('path', {d:'M0,0 L10,5 L0,10 z', fill:color}, m);
+}
+
+// Encabezados de columna
+[[150,1],[390,2],[630,3],[860,4]].forEach(([x,c]) => {
+  const txt = el('text', {x, y:128, 'text-anchor':'middle', class:'etq-capa'}, svg);
+  txt.textContent = (LANG==='en'?'Layer ':'Capa ') + c;
+});
+
+// Punto de borde del rectángulo de un nodo hacia otro punto
+function borde(n, hacia) {
+  const dx = hacia.x - n.x, dy = hacia.y - n.y, w = W(n)/2 + 3, h = H(n)/2 + 3;
+  const s = Math.min(w / Math.abs(dx || 1e-9), h / Math.abs(dy || 1e-9));
+  return {x: n.x + dx*s, y: n.y + dy*s};
+}
+
+const gAristas = el('g', {}, svg), gNodos = el('g', {}, svg);
+const aristasEl = ARISTAS.map(([a, b, tipo, txt, curvaFija]) => {
+  const A = POR_ID[a], B = POR_ID[b];
+  const p1 = borde(A, B), p2 = borde(B, A);
+  const mx = (p1.x+p2.x)/2, my = (p1.y+p2.y)/2;
+  const curva = curvaFija ?? ((tipo === 'plan' || tipo === 'nav') ? 40 : (tipo === 'mapa' || tipo === 'fuente') ? 0 : 18);
+  const nx = -(p2.y-p1.y), ny = p2.x-p1.x, len = Math.hypot(nx, ny) || 1;
+  const cx = mx + nx/len*curva, cy = my + ny/len*curva;
+  const path = el('path', {d:`M${p1.x},${p1.y} Q${cx},${cy} ${p2.x},${p2.y}`, class:'arista '+tipo, stroke:COLOR_ARISTA[tipo],
+    'marker-end': (tipo==='mapa'||tipo==='fuente') ? '' : `url(#fl-${tipo})`, 'marker-start': (tipo==='datos'&&a==='comprar') ? `url(#fl-${tipo})` : ''}, gAristas);
+  // zona de hover más ancha
+  const hit = el('path', {d:path.getAttribute('d'), stroke:'transparent', 'stroke-width':12, fill:'none'}, gAristas);
+  hit.addEventListener('mousemove', ev => mostrarTip(ev, `<b>${T(POR_ID[a].nom)} → ${T(POR_ID[b].nom)}</b><br>${T(txt)}`));
+  hit.addEventListener('mouseleave', ocultarTip);
+  return {a, b, tipo, txt, path, hit};
+});
+
+const nodosEl = TODOS.map(n => {
+  const g = el('g', {class:'nodo', tabindex:0, role:'button', 'aria-label':T(n.nom)}, gNodos);
+  const col = css(CAPAS[n.capa].c);
+  el('rect', {x:n.x-W(n)/2, y:n.y-H(n)/2, width:W(n), height:H(n), rx:n.fuente?15:10, fill: n.fuente ? '#f1f5f9' : '#fff', stroke:col}, g);
+  if (!n.fuente) el('rect', {x:n.x-W(n)/2, y:n.y-H(n)/2, width:6, height:H(n), rx:3, fill:col, stroke:'none'}, g);
+  const t1 = el('text', {x:n.x, y: n.fuente ? n.y+4 : n.y-3, 'text-anchor':'middle', fill: n.fuente ? '#475569' : col, style: n.fuente ? 'font-size:12px;font-weight:600' : ''}, g);
+  t1.textContent = T(n.nom);
+  if (!n.fuente) { const t2 = el('text', {x:n.x, y:n.y+14, 'text-anchor':'middle', class:'sub'}, g); t2.textContent = T(n.sub); }
+  g.addEventListener('click', () => seleccionar(n.id));
+  g.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); seleccionar(n.id); } });
+  return {n, g};
+});
+
+const tip = document.getElementById('tip');
+function mostrarTip(ev, html) { tip.innerHTML = html; tip.style.opacity = 1; tip.style.left = Math.min(ev.clientX + 12, innerWidth - 290) + 'px'; tip.style.top = (ev.clientY + 12) + 'px'; }
+function ocultarTip() { tip.style.opacity = 0; }
+
+const chkF = document.getElementById('chk-fuentes'), chkM = document.getElementById('chk-mapa');
+let seleccion = null;
+
+function visible(tipoOId) {
+  if (tipoOId === 'fuente') return chkF.checked;
+  if (tipoOId === 'mapa') return chkM.checked;
+  return true;
+}
+function aplicar() {
+  svg.setAttribute('viewBox', `0 0 1000 ${chkF.checked ? 700 : 530}`);
+  for (const {n, g} of nodosEl) g.style.display = n.fuente && !chkF.checked ? 'none' : '';
+  const vecinos = new Set(seleccion ? [seleccion] : []);
+  for (const e of aristasEl) {
+    const ver = visible(e.tipo);
+    e.path.style.display = e.hit.style.display = ver ? '' : 'none';
+    const toca = seleccion && (e.a === seleccion || e.b === seleccion);
+    if (toca && ver) { vecinos.add(e.a); vecinos.add(e.b); }
+    e.path.classList.toggle('atenuado', !!seleccion && !toca);
+    e.path.classList.toggle('resaltado', !!toca);
+  }
+  for (const {n, g} of nodosEl) g.classList.toggle('atenuado', !!seleccion && !vecinos.has(n.id));
+}
+
+function seleccionar(id) {
+  seleccion = (seleccion === id) ? null : id;
+  aplicar();
+  pintarPanel();
+}
+
+function pintarPanel() {
+  const p = document.getElementById('panel');
+  const ley = `<h3>${t('leyenda')}</h3><div class="leyenda">
+    ${[0,1,2,3,4,'s'].map(c => `<span><i class="sw" style="background:${css(CAPAS[c].c)}"></i>${T(CAPAS[c]).replace(/^Capa \d · |^Layer \d · /,'')}</span>`).join('')}
+    ${['datos','cruce','nav','plan','mapa','fuente'].map(k => `<span><i class="ln" style="border-top-color:${COLOR_ARISTA[k]};border-top-style:${k==='plan'?'dashed':k==='nav'?'dotted':'solid'}"></i>${t('l_'+k)}</span>`).join('')}
+  </div>`;
+  if (!seleccion) { p.innerHTML = `<p class="vacio">${t('ayuda')}</p>${ley}`; return; }
+  const n = POR_ID[seleccion];
+  const col = css(CAPAS[n.capa].c);
+  if (n.fuente) {
+    const usan = ARISTAS.filter(e => e[0] === n.id).map(e => T(POR_ID[e[1]].nom));
+    p.innerHTML = `<h2>${T(n.nom)}</h2><span class="capa" style="background:${col}">${T(CAPAS.f)}</span>
+      <h3>${t('usadoPor')}</h3><ul>${usan.map(u => `<li>${u}</li>`).join('')}</ul>${ley}`;
+    return;
+  }
+  const conex = ARISTAS.filter(e => (e[0] === n.id || e[1] === n.id) && e[2] !== 'mapa' && e[2] !== 'fuente');
+  const li = conex.map(([a, b, tipo, txt]) => {
+    const otro = a === n.id ? b : a, dir = a === n.id ? t('usa') : t('usadoPor');
+    return `<li><b style="color:${COLOR_ARISTA[tipo]}">${dir} ${T(POR_ID[otro].nom)}</b>${tipo==='plan' ? ' <i>('+t('l_plan').toLowerCase()+')</i>' : ''}: ${T(txt)}</li>`;
+  }).join('');
+  p.innerHTML = `<h2>${T(n.nom)}</h2><span class="capa" style="background:${col}">${T(CAPAS[n.capa])}</span>
+    <h3>${t('queHace')}</h3><p>${T(n.desc)}</p>
+    <h3>${t('deDonde')}</h3><ul>${T(n.fuentes).map(f => `<li>${f}</li>`).join('')}</ul>
+    <h3>${t('act')}</h3><p>${T(n.act)}</p>
+    <h3>${t('conex')}</h3>${li ? `<ul>${li}</ul>` : `<p class="vacio">${t('sin')}</p>`}
+    <a class="ir" href="${n.url}" target="_blank" rel="noopener">${t('ir')}</a>${ley}`;
+}
+
+chkF.addEventListener('change', aplicar);
+chkM.addEventListener('change', aplicar);
+const inicial = new URLSearchParams(location.search).get('nodo');
+if (inicial && POR_ID[inicial]) seleccion = inicial;
+aplicar(); pintarPanel();
+
+// En modo embebido (iframe del manual) informa su altura para que el padre la ajuste.
+if (document.body.classList.contains('embebido') && window.parent !== window) {
+  const avisar = () => parent.postMessage({grafoAltura: Math.ceil(document.querySelector('.wrap').getBoundingClientRect().bottom + 16)}, location.origin);
+  new ResizeObserver(avisar).observe(document.body);
+  avisar();
+}
+</script>
+</body>
+</html>

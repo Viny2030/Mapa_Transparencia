@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual del Ecosistema · Mapa de Transparencia</title>
+<style>
+:root{--azul:#003f8a;--gris:#f4f6f9;--texto:#1a1a2e;--sub:#5b6474;--borde:#e2e6ee;
+  --c0:#003f8a;--c1:#0b6e4f;--c2:#b45309;--c3:#7c3aed;--c4:#be185d;--sat:#475569}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--gris);color:var(--texto);line-height:1.65}
+header{background:linear-gradient(135deg,#003f8a,#005bb5);color:#fff;padding:1.8rem 16px;text-align:center}
+header h1{font-size:1.7rem}
+header p{opacity:.88;margin-top:.35rem;font-size:.95rem}
+header nav{margin-top:.8rem;display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap}
+header nav a{color:#fff;text-decoration:none;font-size:.82rem;padding:.25rem .75rem;border:1px solid rgba(255,255,255,.35);border-radius:14px}
+header nav a:hover{background:rgba(255,255,255,.15)}
+.cuerpo{max-width:1000px;margin:0 auto;padding:1.5rem 16px 3rem}
+.indice{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:1rem 1.3rem;margin-bottom:1.5rem}
+.indice h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--sub);margin-bottom:.4rem}
+.indice ol{columns:2;column-gap:2rem;padding-left:1.2rem;font-size:.9rem}
+@media(max-width:640px){.indice ol{columns:1}}
+.indice a{color:var(--azul);text-decoration:none}
+section{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:1.4rem 1.5rem;margin-bottom:1.3rem}
+section h2{font-size:1.25rem;color:var(--azul);margin-bottom:.7rem}
+section h3{font-size:1rem;margin:1.1rem 0 .35rem}
+section p,section li{font-size:.93rem}
+section p+p{margin-top:.6rem}
+section ul,section ol{padding-left:1.3rem;margin:.4rem 0}
+section li{margin:.2rem 0}
+code{font-family:Consolas,monospace;font-size:.85em;background:#eef2f7;padding:.05rem .35rem;border-radius:4px}
+.tabla{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.86rem;margin:.6rem 0}
+th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--borde);vertical-align:top}
+th{background:#f1f5fb;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;color:var(--sub)}
+.capa{display:inline-block;font-size:.7rem;font-weight:700;color:#fff;border-radius:10px;padding:.08rem .55rem;white-space:nowrap}
+.k0{background:var(--c0)}.k1{background:var(--c1)}.k2{background:var(--c2)}.k3{background:var(--c3)}.k4{background:var(--c4)}.ks{background:var(--sat)}
+.grafo{width:100%;height:560px;border:1px solid var(--borde);border-radius:10px;margin-top:.6rem}
+.fichas{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem}
+@media(max-width:760px){.fichas{grid-template-columns:1fr}}
+.ficha{border:1px solid var(--borde);border-left:5px solid var(--c);border-radius:10px;padding:1rem 1.1rem}
+.ficha h3{margin:0 0 .15rem;font-size:1.02rem}
+.ficha .url{font-size:.8rem;word-break:break-all}
+.ficha .url a{color:var(--azul)}
+.ficha dl{margin-top:.5rem;font-size:.86rem}
+.ficha dt{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin-top:.5rem}
+.ficha dd{margin:0}
+.nota{background:#fff8e1;border-left:4px solid #f39c12;border-radius:6px;padding:.8rem 1rem;font-size:.88rem;margin-top:.8rem}
+.ok{background:#ecfdf3;border-left:4px solid #16a34a;border-radius:6px;padding:.8rem 1rem;font-size:.88rem;margin-top:.8rem}
+.paso{counter-increment:paso}
+.recorrido{border:1px solid var(--borde);border-radius:10px;padding:.9rem 1.1rem;margin-top:.8rem}
+.recorrido h3{margin-top:0}
+footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>📖 Manual del Ecosistema de Transparencia</h1>
+  <p>Las capas, los 12 sitios y cómo se conectan entre sí · Versión 1.0 · noviembre 2026</p>
+  <nav>
+    <a href="/">🗺️ Portada</a>
+    <a href="/grafo">🕸️ Grafo interactivo</a>
+    <a href="/en/manual">🇺🇸 English</a>
+  </nav>
+</header>
+
+<div class="cuerpo">
+
+<nav class="indice" aria-label="Índice">
+  <h2>Contenido</h2>
+  <ol>
+    <li><a href="#que-es">Qué es el ecosistema</a></li>
+    <li><a href="#capas">Arquitectura en capas</a></li>
+    <li><a href="#grafo">Grafo de relaciones</a></li>
+    <li><a href="#conexiones">Las conexiones, una por una</a></li>
+    <li><a href="#fichas">Ficha de cada sitio</a></li>
+    <li><a href="#verificacion">Cómo se verifican las cifras</a></li>
+    <li><a href="#recorridos">Recorridos de investigación</a></li>
+    <li><a href="#limitaciones">Limitaciones conocidas</a></li>
+    <li><a href="#glosario">Glosario</a></li>
+    <li><a href="#legal">Marco legal y aviso</a></li>
+  </ol>
+</nav>
+
+<section id="que-es">
+  <h2>1. Qué es el ecosistema</h2>
+  <p>El Ecosistema de Transparencia es un conjunto de <strong>12 sitios</strong> que monitorean el Estado argentino con datos públicos oficiales: contrataciones, nómina del Ejecutivo, presupuesto, declaraciones juradas, Poder Judicial, Congreso y casos internacionales de corrupción. Cada sitio funciona solo, pero muchos <strong>se consultan entre sí</strong>: un proveedor detectado en Contratos se cruza con la lista de sancionadas de MEACI; las declaraciones juradas de Decla se cruzan con las adjudicaciones de Contratos; el Monitor IRI arma su índice con datos de Justicia, Diputados, Senadores y Contratos.</p>
+  <p>Este manual explica <strong>en qué capa está cada sitio, qué hace, de dónde saca los datos y con quién se conecta</strong>, para que se pueda recorrer el ecosistema completo y entender de dónde sale cada cifra.</p>
+  <p>Todos los sitios cuelgan del dominio <code>ecosistematransparencia.com.ar</code> (por ejemplo <code>contratos.ecosistematransparencia.com.ar</code>) y se actualizan de forma automática.</p>
+</section>
+
+<section id="capas">
+  <h2>2. Arquitectura en capas</h2>
+  <p>Los sitios se ordenan en capas según <strong>qué tan cerca están del dato original</strong>. Las capas de abajo toman datos directamente de fuentes oficiales; las de arriba combinan lo que producen otras.</p>
+  <div class="tabla"><table>
+    <thead><tr><th>Capa</th><th>Sitios</th><th>Rol</th></tr></thead>
+    <tbody>
+      <tr><td><span class="capa k0">Portal</span></td><td>Mapa</td><td>Integra todo: enlaza los sitios, muestra su estado en vivo y los indicadores principales. Corre la validación cruzada diaria.</td></tr>
+      <tr><td><span class="capa k1">Capa 1</span></td><td>Comprar · Contratos · Jefatura</td><td><strong>Fuentes de contratos y del Ejecutivo.</strong> Toman los datos crudos (Boletín Oficial, COMPR.AR, Tesorería, Mapa del Estado) y los normalizan. Son la base que usan las demás capas.</td></tr>
+      <tr><td><span class="capa k2">Capa 2</span></td><td>Monitor IRI · MEACI · Ajuste</td><td><strong>Análisis transversal.</strong> Cruzan fuentes para producir índices o listas de referencia: el Índice de Riesgo Institucional, la lista de empresas sancionadas internacionalmente y la evolución real del presupuesto.</td></tr>
+      <tr><td><span class="capa k3">Capa 3</span></td><td>Decla · Justicia</td><td><strong>Patrimonio y Poder Judicial.</strong> Declaraciones juradas de funcionarios, legisladores y jueces, y el funcionamiento del Poder Judicial.</td></tr>
+      <tr><td><span class="capa k4">Capa 4</span></td><td>Diputados · Senadores</td><td><strong>Poder Legislativo.</strong> Composición, asistencia, votaciones, productividad y costo de ambas cámaras.</td></tr>
+      <tr><td><span class="capa ks">Satélite</span></td><td>Vectores</td><td>Módulo de investigación sobre influencia estatal extranjera (corrupción estratégica). Funciona aparte y está previsto que alimente el IRI.</td></tr>
+    </tbody>
+  </table></div>
+  <p>La numeración de capas es la misma que usa la <strong>planilla de control y verificación de sitios</strong>, de modo que el manual y la planilla se pueden leer juntos.</p>
+</section>
+
+<section id="grafo">
+  <h2>3. Grafo de relaciones</h2>
+  <p>El grafo muestra cada sitio como un nodo, ordenado por capa, y cada conexión real entre ellos como una línea. Hacé clic en un sitio para ver su ficha y resaltar sus conexiones; activá <em>Mostrar fuentes oficiales</em> para ver de qué organismo sale cada dato. También está en una página propia: <a href="/grafo">/grafo</a>.</p>
+  <iframe class="grafo" src="/grafo?embed=1" title="Grafo de relaciones del ecosistema" loading="lazy"></iframe>
+  <ul>
+    <li><strong style="color:#0f766e">Verde:</strong> intercambio de datos (un sitio usa los datos de otro).</li>
+    <li><strong style="color:#c2410c">Naranja:</strong> cruce de CUIT (un sitio verifica proveedores o funcionarios contra la lista de otro).</li>
+    <li><strong style="color:#7c3aed">Violeta punteado:</strong> integración planificada, todavía no conectada.</li>
+    <li><strong style="color:#64748b">Gris punteado:</strong> navegación entre sitios.</li>
+    <li><strong style="color:#003f8a">Azul tenue:</strong> el Mapa enlaza y monitorea a todos.</li>
+  </ul>
+</section>
+
+<section id="conexiones">
+  <h2>4. Las conexiones, una por una</h2>
+  <p>Relevadas del código de cada repositorio el 05/11/2026. Se lee “A → B” como “A usa datos de B”.</p>
+  <div class="tabla"><table>
+    <thead><tr><th>#</th><th>Conexión</th><th>Tipo</th><th>Para qué sirve</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Comprar ↔ Contratos</td><td>Datos</td><td>Ambos procesan las mismas adjudicaciones del Boletín Oficial. La validación cruzada diaria comprueba que coincidan día por día y peso por peso.</td></tr>
+      <tr><td>2</td><td>Comprar → MEACI</td><td>Cruce de CUIT</td><td>Marca a los proveedores cuyo CUIT pertenece a una empresa sancionada internacionalmente; además controla que MEACI esté disponible.</td></tr>
+      <tr><td>3</td><td>Contratos → MEACI</td><td>Cruce de CUIT</td><td>Igual que el anterior, vía <code>/api/cruce-cuits-bulk</code>.</td></tr>
+      <tr><td>4</td><td>Jefatura → MEACI</td><td>Cruce de CUIT</td><td>Consulta en vivo la lista de MEACI (con caché de 6 horas) para marcar proveedores de la Jefatura de Gabinete.</td></tr>
+      <tr><td>5</td><td>Decla → Contratos</td><td>Cruce de CUIT</td><td>Detecta conflicto de interés: CUIT de funcionarios y de sus sociedades contra las adjudicaciones del Boletín Oficial (alerta roja).</td></tr>
+      <tr><td>6</td><td>Monitor IRI → Justicia</td><td>Datos</td><td>Magistrados y vacantes para los componentes financiero, operativo y de datos del IRI de los organismos judiciales.</td></tr>
+      <tr><td>7</td><td>Monitor IRI → Diputados</td><td>Datos</td><td>Bloques y KPIs reales de la HCDN para el IRI de la Cámara.</td></tr>
+      <tr><td>8</td><td>Monitor IRI → Senadores</td><td>Datos</td><td>Nómina y participación promedio para el IRI del Senado.</td></tr>
+      <tr><td>9</td><td>Monitor IRI → Contratos</td><td>Datos</td><td>Riesgo de contratación por organismo (hoy calculado con datos COMPR.AR 2020-2021; ver <a href="#limitaciones">limitaciones</a>).</td></tr>
+      <tr><td>10</td><td>Senadores → Diputados</td><td>Navegación</td><td>Botón “Diputados” en el menú del Senado.</td></tr>
+      <tr><td>11</td><td>Mapa → todos</td><td>Integración</td><td>Enlaza los 11 sitios, chequea su estado en vivo (<code>/status</code>), muestra el IRI global (<code>/iri/*</code>) y los KPIs de MEACI.</td></tr>
+      <tr><td>12</td><td>Vectores ⇢ Monitor IRI</td><td>Planificado</td><td>Alimentar la dimensión <em>R_Internacional</em> del IRI. Todavía no conectado.</td></tr>
+      <tr><td>13</td><td>MEACI ⇢ Monitor IRI</td><td>Planificado</td><td>Aportar alertas internacionales al IRI. Todavía no conectado.</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Ajuste</strong> y <strong>Justicia</strong> no consultan a otros sitios: se alimentan sólo de fuentes oficiales (Justicia sí es consultado por el Monitor IRI).</p>
+</section>
+
+<section id="fichas">
+  <h2>5. Ficha de cada sitio</h2>
+  <div class="fichas">
+
+    <div class="ficha" style="--c:var(--c0)">
+      <h3>🗺️ Mapa de Transparencia</h3><span class="capa k0">Portal</span>
+      <div class="url"><a href="https://mapa.ecosistematransparencia.com.ar" target="_blank" rel="noopener">mapa.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Portada del ecosistema: reúne los monitores por poder del Estado, muestra si cada sitio está en línea y presenta el IRI global y los KPIs de MEACI.</dd>
+        <dt>Responde</dt><dd>¿Qué monitores hay y cuáles están funcionando? ¿Cuál es el nivel de riesgo institucional global?</dd>
+        <dt>Datos</dt><dd>Los propios sitios del ecosistema (estado en vivo, caché de 30 s).</dd>
+        <dt>Actualización</dt><dd>En vivo. Validación cruzada de cifras lun–vie 13:00 ART.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c1)">
+      <h3>⚖️ Comprar · Contratos v1</h3><span class="capa k1">Capa 1</span>
+      <div class="url"><a href="https://comprar.ecosistematransparencia.com.ar" target="_blank" rel="noopener">comprar.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Toma cada día las adjudicaciones del Boletín Oficial, las cruza con COMPR.AR y con los pagos de la Tesorería, y clasifica las decisiones según la Teoría de Fenómenos Corruptivos (transferencias regresivas de ingresos).</dd>
+        <dt>Responde</dt><dd>¿Qué se adjudicó hoy, a quién y por cuánto? ¿Se pagó? ¿El proveedor está sancionado en el exterior?</dd>
+        <dt>Fuentes</dt><dd>Boletín Oficial (3.ª sección) · COMPR.AR · TGN.</dd>
+        <dt>Actualización</dt><dd>Lun–vie 08:30 ART, con reintento 12:30 si el Boletín no respondió.</dd>
+        <dt>Conexiones</dt><dd>↔ Contratos (mismos datos) · → MEACI (cruce de CUIT).</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c1)">
+      <h3>📊 Contratos · Contratos v2</h3><span class="capa k1">Capa 1</span>
+      <div class="url"><a href="https://contratos.ecosistematransparencia.com.ar" target="_blank" rel="noopener">contratos.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Segunda versión del monitor de contratos: acumula las adjudicaciones con análisis de riesgo explicable (XAI), por organismo y por proveedor, con descargas en CSV.</dd>
+        <dt>Responde</dt><dd>¿Cuánto adjudicó cada organismo? ¿Qué proveedores concentran contratos? ¿Cuáles cobraron en la TGN?</dd>
+        <dt>Fuentes</dt><dd>Boletín Oficial · COMPR.AR · TGN.</dd>
+        <dt>Actualización</dt><dd>Lun–vie 08:00 ART (una corrida, sin reintento).</dd>
+        <dt>Conexiones</dt><dd>↔ Comprar · → MEACI (cruce de CUIT) · ← Decla y Monitor IRI lo consultan.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c1)">
+      <h3>🏛️ Jefatura · Monitor Ejecutivo</h3><span class="capa k1">Capa 1</span>
+      <div class="url"><a href="https://jefatura.ecosistematransparencia.com.ar" target="_blank" rel="noopener">jefatura.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Jefatura de Gabinete, Secretaría General y Presidencia: nómina de autoridades y personal, contratos de cada jurisdicción y alertas de conflicto de interés (parentesco, sociedades, flujo de fondos).</dd>
+        <dt>Responde</dt><dd>¿Quiénes ocupan cada cargo? ¿Qué se contrató y con quién? ¿Hay vínculos entre funcionarios y proveedores?</dd>
+        <dt>Fuentes</dt><dd>Mapa del Estado · COMPR.AR / datos.gob.ar · Boletín Oficial.</dd>
+        <dt>Actualización</dt><dd>Workflows diarios de fuentes, nómina y cruces.</dd>
+        <dt>Conexiones</dt><dd>→ MEACI (cruce de CUIT en vivo).</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c2)">
+      <h3>🚦 Monitor IRI</h3><span class="capa k2">Capa 2</span>
+      <div class="url"><a href="https://monitor.ecosistematransparencia.com.ar" target="_blank" rel="noopener">monitor.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Calcula el Índice de Riesgo Institucional de 82 organismos: <code>IRI = 35 % financiero + 30 % contratación + 20 % operativo + 15 % datos</code>, y los ubica en un semáforo (bajo, medio, alto, dato parcial).</dd>
+        <dt>Responde</dt><dd>¿Qué organismos tienen mayor riesgo institucional? ¿En qué componente?</dd>
+        <dt>Fuentes</dt><dd>Justicia, Diputados y Senadores (vía sus datos publicados) · COMPR.AR 2020-2021 (datos.gob.ar).</dd>
+        <dt>Actualización</dt><dd>Refresh diario.</dd>
+        <dt>Conexiones</dt><dd>→ Justicia · → Diputados · → Senadores · → Contratos · ← Mapa lo muestra.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c2)">
+      <h3>🌍 MEACI</h3><span class="capa k2">Capa 2</span>
+      <div class="url"><a href="https://meaci.ecosistematransparencia.com.ar" target="_blank" rel="noopener">meaci.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Monitor de Empresas Argentinas en Casos Internacionales: 31 casos multijurisdiccionales de soborno transnacional (OCDE), 73 resoluciones, empresas sancionadas y sus filiales en Argentina con CUIT.</dd>
+        <dt>Responde</dt><dd>¿Qué empresas con presencia en el país fueron sancionadas en el exterior, dónde y por cuánto?</dd>
+        <dt>Fuentes</dt><dd>Informe OCDE 2026 sobre resoluciones multijurisdiccionales · DOJ (FCPA) · SFO (Reino Unido) · PNF (Francia).</dd>
+        <dt>Actualización</dt><dd>Revisión diaria de novedades; los casos nuevos se cargan sólo después de verificarlos.</dd>
+        <dt>Conexiones</dt><dd>← Comprar, Contratos y Jefatura cruzan sus proveedores contra su lista de CUIT · ← Mapa muestra sus KPIs.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c2)">
+      <h3>📉 Ajuste · MAP</h3><span class="capa k2">Capa 2</span>
+      <div class="url"><a href="https://ajuste.ecosistematransparencia.com.ar" target="_blank" rel="noopener">ajuste.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Monitor de Ajuste Presupuestario: presupuesto 2023→2026 en pesos nominales, reales (IPC) y dólares constantes; ranking de programas, análisis por inciso, licuación frente a recorte y sectores sociales.</dd>
+        <dt>Responde</dt><dd>¿Cuánto se recortó cada programa en términos reales? ¿El ajuste fue por recorte o por inflación?</dd>
+        <dt>Fuentes</dt><dd>Presupuesto Abierto / MECON · Boletín Oficial (decisiones administrativas y DNU) · BCRA (IPC y tipo de cambio).</dd>
+        <dt>Actualización</dt><dd>BORA 03:00, presupuesto 08:00 y auditoría propia de cifras 10:30 ART.</dd>
+        <dt>Conexiones</dt><dd>Independiente: se alimenta sólo de fuentes oficiales.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c3)">
+      <h3>📜 Decla · DDJJ</h3><span class="capa k3">Capa 3</span>
+      <div class="url"><a href="https://decla.ecosistematransparencia.com.ar" target="_blank" rel="noopener">decla.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Declaraciones juradas patrimoniales de funcionarios, legisladores y jueces: evolución en USD, IVPI, opacidad (efectivo), fuga (bienes en el exterior), score de riesgo y 12 indicadores internacionales; cruces de conflicto de interés y puertas giratorias.</dd>
+        <dt>Responde</dt><dd>¿Cuánto creció el patrimonio de un funcionario frente a sus ingresos? ¿Alguna de sus sociedades contrató con el Estado?</dd>
+        <dt>Fuentes</dt><dd>Oficina Anticorrupción (datos.jus.gob.ar) · BCRA · Contratos · COMPR.AR.</dd>
+        <dt>Actualización</dt><dd>Pipeline diario.</dd>
+        <dt>Conexiones</dt><dd>→ Contratos (cruce de CUIT de funcionarios y sociedades).</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c3)">
+      <h3>⚖️ Justicia · Monitor Judicial</h3><span class="capa k3">Capa 3</span>
+      <div class="url"><a href="https://justicia.ecosistematransparencia.com.ar" target="_blank" rel="noopener">justicia.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Corte Suprema, Consejo de la Magistratura, cámaras y juzgados federales: magistrados, vacantes, eficiencia judicial e índice de riesgo por órgano; presupuesto del Poder Judicial.</dd>
+        <dt>Responde</dt><dd>¿Cuántas vacantes hay y dónde? ¿Qué tan eficiente es cada fuero? ¿Cuánto se le asigna al Poder Judicial?</dd>
+        <dt>Fuentes</dt><dd>datos.jus.gob.ar · CSJN · estadísticas del PJN.</dd>
+        <dt>Actualización</dt><dd>Scrapers diarios.</dd>
+        <dt>Conexiones</dt><dd>← Monitor IRI usa sus datos de magistrados y vacantes.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c4)">
+      <h3>🗳️ Diputados · Monitor Legislativo</h3><span class="capa k4">Capa 4</span>
+      <div class="url"><a href="https://legislativo.ecosistematransparencia.com.ar" target="_blank" rel="noopener">legislativo.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>257 diputados: composición por bloque y distrito, fragmentación, renovación, asistencia, productividad, costo per cápita y presupuesto de la Cámara.</dd>
+        <dt>Responde</dt><dd>¿Cómo está compuesta la Cámara? ¿Quién asiste y quién produce? ¿Cuánto cuesta cada diputado?</dd>
+        <dt>Fuentes</dt><dd>HCDN (datos abiertos y votaciones) · Presupuesto Abierto.</dd>
+        <dt>Actualización</dt><dd>Monitor diario.</dd>
+        <dt>Conexiones</dt><dd>← Monitor IRI usa sus bloques y KPIs · ← Senadores enlaza a este sitio.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--c4)">
+      <h3>🏅 Senadores · Monitor del Senado</h3><span class="capa k4">Capa 4</span>
+      <div class="url"><a href="https://senadores.ecosistematransparencia.com.ar" target="_blank" rel="noopener">senadores.ecosistematransparencia.com.ar</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>72 senadores: participación, votaciones, reporte por partido y provincia, dieta parlamentaria y declaraciones juradas.</dd>
+        <dt>Responde</dt><dd>¿Quién participa en las votaciones? ¿Cómo vota cada bloque? ¿Cuánto cobra un senador?</dd>
+        <dt>Fuentes</dt><dd>Senado de la Nación · ArgentinaDatos (API).</dd>
+        <dt>Actualización</dt><dd>Monitor diario.</dd>
+        <dt>Conexiones</dt><dd>→ Diputados (navegación) · ← Monitor IRI usa su nómina y participación.</dd>
+      </dl>
+    </div>
+
+    <div class="ficha" style="--c:var(--sat)">
+      <h3>🕸️ Vectores · Corrupción estratégica</h3><span class="capa ks">Satélite</span>
+      <div class="url"><a href="https://corrupcionestrategica-production.up.railway.app" target="_blank" rel="noopener">corrupcionestrategica-production.up.railway.app</a></div>
+      <dl>
+        <dt>Qué hace</dt><dd>Clasifica casos de influencia estatal extranjera (China, Rusia) sobre decisiones públicas argentinas —nuclear, litio, puertos, banca, defensa— con la rúbrica del framework NEST de corrupción estratégica. Es una herramienta de priorización, no de acusación.</dd>
+        <dt>Responde</dt><dd>¿Qué casos de influencia extranjera ameritan seguimiento y con qué urgencia?</dd>
+        <dt>Fuentes</dt><dd>Casos investigados con fuentes públicas citadas en cada vector.</dd>
+        <dt>Actualización</dt><dd>Robot semanal.</dd>
+        <dt>Conexiones</dt><dd>⇢ Monitor IRI (planificado, todavía no conectado).</dd>
+      </dl>
+    </div>
+
+  </div>
+</section>
+
+<section id="verificacion">
+  <h2>6. Cómo se verifican las cifras</h2>
+  <p>Hay dos controles automáticos que corren todos los días hábiles, independientes del código de cada sitio:</p>
+  <h3>Validación cruzada del ecosistema (Mapa)</h3>
+  <p>Un script (<code>scripts/validar_ecosistema.py</code> en el repositorio del Mapa) consulta las APIs en producción de lun–vie a las 13:00 ART y controla:</p>
+  <ol>
+    <li><strong>Comprar ↔ Contratos:</strong> que tengan las mismas adjudicaciones del Boletín Oficial por día y con el mismo monto.</li>
+    <li><strong>Contratos, coherencia interna:</strong> que el total del resumen coincida con la suma por organismo, y qué porcentaje de adjudicaciones tiene monto.</li>
+    <li><strong>MEACI ↔ Contratos y Comprar:</strong> que los tres sitios reconozcan la misma lista de CUIT sancionadas, y si esas empresas figuran de verdad como proveedoras.</li>
+    <li><strong>Monitor IRI:</strong> cuántos organismos tienen el componente de contratación con dato y de qué año son esos datos.</li>
+    <li><strong>Ajuste:</strong> el resultado de su auditoría propia (abajo).</li>
+    <li><strong>Frescura:</strong> la fecha de los datos de cada sitio.</li>
+  </ol>
+  <p>Cada control termina en OK, advertencia o falla. Si hay alguna falla se abre un <em>issue</em> automáticamente en GitHub; el reporte de cada corrida queda en la pestaña <em>Actions</em> del repositorio.</p>
+  <h3>Auditoría de cifras de Ajuste</h3>
+  <p>Ajuste recalcula por su cuenta el deflactor y el tipo de cambio promedio desde la API del BCRA, controla que el último IPC no tenga más de 75 días, que el total del presupuesto no caiga más de un 10 % de un día para otro (señal de un archivo incompleto, no de un recorte) y que ninguna norma desaparezca. Corre a las 10:30 ART.</p>
+  <div class="ok"><strong>Primera corrida (05/11/2026):</strong> 12 controles OK, 4 advertencias, 0 fallas. Comprar y Contratos coincidieron al peso del 2 al 4 de noviembre; las tres listas de sancionadas son idénticas; la auditoría de Ajuste pasó los últimos días.</div>
+  <h3>Verificación manual</h3>
+  <p>Para revisar un sitio a mano: abrirlo con <kbd>Ctrl</kbd>+<kbd>F5</kbd>, buscar la fecha de actualización en el encabezado o pie, revisar que las tarjetas de indicadores no estén en 0, que las tablas tengan filas, y abrir la consola (<kbd>F12</kbd>) para ver si hay errores en rojo.</p>
+</section>
+
+<section id="recorridos">
+  <h2>7. Recorridos de investigación</h2>
+  <p>Ejemplos de cómo usar varios sitios juntos para responder una pregunta.</p>
+  <div class="recorrido">
+    <h3>A · ¿Quién es este proveedor del Estado?</h3>
+    <ol>
+      <li><strong>Contratos:</strong> buscar el proveedor por nombre o CUIT; ver cuánto y con qué organismos contrató.</li>
+      <li><strong>Comprar:</strong> ver la adjudicación en el Boletín Oficial y si ya cobró en la Tesorería.</li>
+      <li><strong>MEACI:</strong> verificar si el CUIT pertenece a una empresa sancionada en el exterior.</li>
+      <li><strong>Decla:</strong> revisar si algún funcionario declara participación en esa sociedad (alerta de conflicto de interés).</li>
+    </ol>
+  </div>
+  <div class="recorrido">
+    <h3>B · ¿Es razonable el patrimonio de este funcionario?</h3>
+    <ol>
+      <li><strong>Decla:</strong> abrir la ficha (<em>Ver</em>): evolución en USD, IVPI, efectivo y bienes en el exterior.</li>
+      <li><strong>Jefatura</strong> (si es del Ejecutivo): ver su cargo y área en la nómina.</li>
+      <li><strong>Contratos:</strong> comprobar si sus sociedades recibieron adjudicaciones.</li>
+    </ol>
+  </div>
+  <div class="recorrido">
+    <h3>C · ¿Qué organismo tiene más riesgo y por qué?</h3>
+    <ol>
+      <li><strong>Mapa / Monitor IRI:</strong> ver el ranking y el componente que más pesa.</li>
+      <li>Según el área: <strong>Justicia</strong> (vacantes, eficiencia), <strong>Diputados</strong> o <strong>Senadores</strong> (asistencia, productividad) o <strong>Contratos</strong> (adjudicaciones del organismo).</li>
+      <li><strong>Ajuste:</strong> ver cómo evolucionó su presupuesto en términos reales.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="limitaciones">
+  <h2>8. Limitaciones conocidas</h2>
+  <p>Detectadas por la validación cruzada y la verificación de sitios del 04–05/11/2026:</p>
+  <ul>
+    <li><strong>Alertas de MEACI:</strong> las alertas etiquetadas <code>contratos_v2</code> indican que la empresa sancionada tiene <em>presencia en Argentina</em>; ninguna de las 13 CUIT sancionadas figura hoy como proveedora en Contratos.</li>
+    <li><strong>Monto total de Contratos:</strong> sólo una parte de las adjudicaciones informa monto, por lo que el total en pesos es un piso, no el total adjudicado.</li>
+    <li><strong>Riesgo de contratación del IRI:</strong> calculado para 25 de 82 organismos y con datos COMPR.AR 2020-2021.</li>
+    <li><strong>Contratos sin reintento:</strong> corre una sola vez a las 08:00; si el Boletín Oficial no respondió, ese día queda sin adjudicaciones hasta la corrida siguiente (Comprar sí reintenta).</li>
+    <li><strong>Integraciones planificadas:</strong> MEACI y Vectores todavía no alimentan el IRI.</li>
+  </ul>
+</section>
+
+<section id="glosario">
+  <h2>9. Glosario</h2>
+  <div class="tabla"><table><tbody>
+    <tr><th>BORA</th><td>Boletín Oficial de la República Argentina. La 3.ª sección publica avisos de contrataciones y adjudicaciones.</td></tr>
+    <tr><th>COMPR.AR</th><td>Sistema electrónico de compras y contrataciones de la Administración Pública Nacional.</td></tr>
+    <tr><th>TGN</th><td>Tesorería General de la Nación: registra los pagos efectivos a proveedores.</td></tr>
+    <tr><th>CUIT</th><td>Clave Única de Identificación Tributaria; identifica a empresas y personas en los cruces.</td></tr>
+    <tr><th>IRI</th><td>Índice de Riesgo Institucional: score 0–100 por organismo que combina riesgo financiero, de contratación, operativo y de datos.</td></tr>
+    <tr><th>IVPI</th><td>Índice de Variación Patrimonial Injustificada: cuántas veces el incremento patrimonial supera los ingresos declarados. No implica ilicitud.</td></tr>
+    <tr><th>MJR</th><td>Resolución multijurisdiccional: caso de soborno transnacional resuelto en más de un país (informe OCDE).</td></tr>
+    <tr><th>DA / DNU</th><td>Decisión administrativa / Decreto de necesidad y urgencia; instrumentos que modifican el presupuesto.</td></tr>
+    <tr><th>OA</th><td>Oficina Anticorrupción: publica las declaraciones juradas patrimoniales.</td></tr>
+    <tr><th>HCDN</th><td>Honorable Cámara de Diputados de la Nación.</td></tr>
+    <tr><th>XAI</th><td>Inteligencia artificial explicable: el sistema muestra por qué marca un riesgo.</td></tr>
+    <tr><th>NEST</th><td>Framework analítico para detectar y evaluar corrupción estratégica por parte de estados extranjeros.</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="legal">
+  <h2>10. Marco legal y aviso</h2>
+  <p>Todos los datos provienen de fuentes oficiales públicas. Su reutilización está amparada por la <strong>Ley 27.275</strong> de Acceso a la Información Pública y el <strong>Decreto 1172/2003</strong>. Se procesa información de funcionarios públicos en ejercicio de sus funciones, conforme a la Ley 25.326 y la doctrina de la AAIP.</p>
+  <div class="nota">⚠️ Los indicadores, índices y alertas son <strong>resultados algorítmicos de riesgo</strong> con fines académicos y de transparencia. No implican juicio de valor, acusación ni determinación de responsabilidad sobre ninguna persona, empresa u organismo.</div>
+</section>
+
+</div>
+<footer>Ph.D. Vicente Humberto Monteverde · Algoritmos contra la Corrupción · Ecosistema de Transparencia del Estado Argentino</footer>
+<script>
+// Ajusta el alto del grafo incluido a su contenido real.
+addEventListener('message', e => {
+  if (e.origin !== location.origin || !e.data || !e.data.grafoAltura) return;
+  const f = document.querySelector('iframe.grafo');
+  if (f) f.style.height = (e.data.grafoAltura + 4) + 'px';
+});
+</script>
+</body>
+</html>
