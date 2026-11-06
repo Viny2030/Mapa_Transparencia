@@ -122,7 +122,7 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
 
 <section id="conexiones">
   <h2>4. Las conexiones, una por una</h2>
-  <p>Relevadas del código de cada repositorio el 05/11/2026. Se lee “A → B” como “A usa datos de B”.</p>
+  <p>Relevadas del código de cada repositorio el 06/11/2026. Se lee “A → B” como “A usa datos de B”.</p>
   <div class="tabla"><table>
     <thead><tr><th>#</th><th>Conexión</th><th>Tipo</th><th>Para qué sirve</th></tr></thead>
     <tbody>
@@ -134,11 +134,13 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
       <tr><td>6</td><td>Monitor IRI → Justicia</td><td>Datos</td><td>Magistrados y vacantes para los componentes financiero, operativo y de datos del IRI de los organismos judiciales.</td></tr>
       <tr><td>7</td><td>Monitor IRI → Diputados</td><td>Datos</td><td>Bloques y KPIs reales de la HCDN para el IRI de la Cámara.</td></tr>
       <tr><td>8</td><td>Monitor IRI → Senadores</td><td>Datos</td><td>Nómina y participación promedio para el IRI del Senado.</td></tr>
-      <tr><td>9</td><td>Monitor IRI → Contratos</td><td>Datos</td><td>Riesgo de contratación por organismo (hoy calculado con datos COMPR.AR 2020-2021; ver <a href="#limitaciones">limitaciones</a>).</td></tr>
+      <tr><td>9</td><td>Monitor IRI → Contratos</td><td>Datos</td><td>Toma las licitaciones 2026 del Boletín Oficial para marcar a los organismos que compran fuera de COMPR.AR (“sin dato de directas”, sin inventar un 0 %). El % de directas de cada organismo sale de las adjudicaciones COMPR.AR 2016-2026 de datos.gob.ar.</td></tr>
       <tr><td>10</td><td>Senadores → Diputados</td><td>Navegación</td><td>Botón “Diputados” en el menú del Senado.</td></tr>
       <tr><td>11</td><td>Mapa → todos</td><td>Integración</td><td>Enlaza los 11 sitios, chequea su estado en vivo (<code>/status</code>), muestra el IRI global (<code>/iri/*</code>) y los KPIs de MEACI.</td></tr>
       <tr><td>12</td><td>Vectores ⇢ Monitor IRI</td><td>Planificado</td><td>Alimentar la dimensión <em>R_Internacional</em> del IRI. Todavía no conectado.</td></tr>
       <tr><td>13</td><td>MEACI ⇢ Monitor IRI</td><td>Planificado</td><td>Aportar alertas internacionales al IRI. Todavía no conectado.</td></tr>
+      <tr><td>14</td><td>Mapa → Comprar, Contratos, Monitor IRI, MEACI, Ajuste</td><td>Validación</td><td>La validación cruzada diaria (lun–vie 13:00) compara sus cifras entre sí: ver <a href="#verificacion">cómo se verifican las cifras</a>.</td></tr>
+      <tr><td>15</td><td>Alarma de frescura → Diputados, Senadores</td><td>Frescura</td><td>Cada sitio publica en <code>/api/frescura</code> de dónde sale cada dato, qué período cubre y cuándo se cargó. Una alarma diaria lo lee y separa los atrasos técnicos (falló la carga) de los de contenido (la fuente no publicó). Piloto en estos dos sitios; el resto se suma de a uno.</td></tr>
     </tbody>
   </table></div>
   <p><strong>Ajuste</strong> y <strong>Justicia</strong> no consultan a otros sitios: se alimentan sólo de fuentes oficiales (Justicia sí es consultado por el Monitor IRI).</p>
@@ -201,7 +203,7 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
       <dl>
         <dt>Qué hace</dt><dd>Calcula el Índice de Riesgo Institucional de 82 organismos: <code>IRI = 35 % financiero + 30 % contratación + 20 % operativo + 15 % datos</code>, y los ubica en un semáforo (bajo, medio, alto, dato parcial).</dd>
         <dt>Responde</dt><dd>¿Qué organismos tienen mayor riesgo institucional? ¿En qué componente?</dd>
-        <dt>Fuentes</dt><dd>Justicia, Diputados y Senadores (vía sus datos publicados) · COMPR.AR 2020-2021 (datos.gob.ar).</dd>
+        <dt>Fuentes</dt><dd>Justicia, Diputados y Senadores (vía sus datos publicados) · COMPR.AR, adjudicaciones 2016-2026 (datos.gob.ar) · licitaciones 2026 del Boletín Oficial, vía Contratos.</dd>
         <dt>Actualización</dt><dd>Refresh diario.</dd>
         <dt>Conexiones</dt><dd>→ Justicia · → Diputados · → Senadores · → Contratos · ← Mapa lo muestra.</dd>
       </dl>
@@ -350,8 +352,9 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
   <p>Detectadas por la validación cruzada y la verificación de sitios del 04–05/11/2026:</p>
   <ul>
     <li><strong>Alertas de MEACI:</strong> las alertas etiquetadas <code>contratos_v2</code> indican que la empresa sancionada tiene <em>presencia en Argentina</em>; ninguna de las 13 CUIT sancionadas figura hoy como proveedora en Contratos.</li>
-    <li><strong>Monto total de Contratos:</strong> sólo una parte de las adjudicaciones informa monto, por lo que el total en pesos es un piso, no el total adjudicado.</li>
-    <li><strong>Riesgo de contratación del IRI:</strong> calculado para 25 de 82 organismos y con datos COMPR.AR 2020-2021.</li>
+    <li><strong>Monto total de Contratos:</strong> sólo una parte de las adjudicaciones informa monto (229 de 845 al 06/11/2026, contando los que se completan desde COMPR.AR), por lo que el total en pesos es un piso, no el total adjudicado.</li>
+    <li><strong>Cruce Contratos ↔ COMPR.AR:</strong> datos.gob.ar publica las adjudicaciones de COMPR.AR con meses de atraso (hoy, hasta el 09/07/2026). Los avisos posteriores figuran “⏳ pendiente” hasta la próxima publicación.</li>
+    <li><strong>Riesgo de contratación del IRI:</strong> el % de directas se calcula sólo para organismos con 20 procedimientos o más en COMPR.AR; los que compran fuera de COMPR.AR figuran “sin dato de directas”.</li>
     <li><strong>Horarios distintos:</strong> Comprar procesa el Boletín a las 08:30 y Contratos a las 09:30; entre esos horarios Contratos todavía no muestra las adjudicaciones del día. La validación cruzada corre a las 13:00, cuando ambos ya terminaron.</li>
     <li><strong>Integraciones planificadas:</strong> MEACI y Vectores todavía no alimentan el IRI.</li>
   </ul>

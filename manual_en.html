@@ -122,7 +122,7 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
 
 <section id="conexiones">
   <h2>4. Every connection, one by one</h2>
-  <p>Surveyed from each repository's code on 2026-11-05. Read “A → B” as “A uses data from B”.</p>
+  <p>Surveyed from each repository's code on 2026-11-06. Read “A → B” as “A uses data from B”.</p>
   <div class="tabla"><table>
     <thead><tr><th>#</th><th>Connection</th><th>Type</th><th>Purpose</th></tr></thead>
     <tbody>
@@ -134,11 +134,13 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
       <tr><td>6</td><td>IRI Monitor → Justicia</td><td>Data</td><td>Judges and vacancies for the financial, operational and data components of judicial bodies' IRI.</td></tr>
       <tr><td>7</td><td>IRI Monitor → Deputies</td><td>Data</td><td>Blocs and real HCDN KPIs for the Chamber's IRI.</td></tr>
       <tr><td>8</td><td>IRI Monitor → Senators</td><td>Data</td><td>Roster and average participation for the Senate's IRI.</td></tr>
-      <tr><td>9</td><td>IRI Monitor → Contratos</td><td>Data</td><td>Procurement risk per agency (currently computed from COMPR.AR 2020-2021 data; see <a href="#limitaciones">limitations</a>).</td></tr>
+      <tr><td>9</td><td>IRI Monitor → Contratos</td><td>Data</td><td>Pulls 2026 Official Gazette tenders to flag agencies that buy outside COMPR.AR (“no direct-award data”, never a made-up 0%). Each agency's direct-award % comes from the 2016-2026 COMPR.AR awards on datos.gob.ar.</td></tr>
       <tr><td>10</td><td>Senators → Deputies</td><td>Navigation</td><td>“Deputies” button in the Senate menu.</td></tr>
       <tr><td>11</td><td>Mapa → all</td><td>Integration</td><td>Links the 11 sites, checks their live status (<code>/status</code>), shows the global IRI (<code>/iri/*</code>) and MEACI KPIs.</td></tr>
       <tr><td>12</td><td>Vectores ⇢ IRI Monitor</td><td>Planned</td><td>Feed the IRI's <em>R_International</em> dimension. Not connected yet.</td></tr>
       <tr><td>13</td><td>MEACI ⇢ IRI Monitor</td><td>Planned</td><td>Contribute international alerts to the IRI. Not connected yet.</td></tr>
+      <tr><td>14</td><td>Mapa → Comprar, Contratos, IRI Monitor, MEACI, Ajuste</td><td>Validation</td><td>The daily cross-validation (Mon–Fri 13:00) compares their figures with each other: see <a href="#verificacion">how figures are verified</a>.</td></tr>
+      <tr><td>15</td><td>Freshness alarm → Deputies, Senators</td><td>Freshness</td><td>Each site publishes at <code>/api/frescura</code> where each data point comes from, which period it covers and when it was loaded. A daily alarm reads it and separates technical delays (loading failed) from content delays (the source did not publish). Piloted on these two sites; the rest join one at a time.</td></tr>
     </tbody>
   </table></div>
   <p><strong>Ajuste</strong> and <strong>Justicia</strong> do not query other sites: they are fed only by official sources (Justicia is, however, queried by the IRI Monitor).</p>
@@ -201,7 +203,7 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
       <dl>
         <dt>What it does</dt><dd>Computes the Institutional Risk Index for 82 agencies: <code>IRI = 35% financial + 30% procurement + 20% operational + 15% data</code>, and places them on a traffic light (low, medium, high, partial data).</dd>
         <dt>Answers</dt><dd>Which agencies carry the highest institutional risk? In which component?</dd>
-        <dt>Sources</dt><dd>Justicia, Deputies and Senators (via their published data) · COMPR.AR 2020-2021 (datos.gob.ar).</dd>
+        <dt>Sources</dt><dd>Justicia, Deputies and Senators (via their published data) · COMPR.AR 2016-2026 awards (datos.gob.ar) · 2026 Official Gazette tenders, via Contratos.</dd>
         <dt>Updates</dt><dd>Daily refresh.</dd>
         <dt>Connections</dt><dd>→ Justicia · → Deputies · → Senators · → Contratos · ← shown by the Mapa.</dd>
       </dl>
@@ -350,8 +352,9 @@ footer{text-align:center;font-size:.8rem;color:var(--sub);padding:1rem 16px 2rem
   <p>Found by the cross-validation and the site checks of 4–5 November 2026:</p>
   <ul>
     <li><strong>MEACI alerts:</strong> alerts tagged <code>contratos_v2</code> mean the sanctioned company has a <em>presence in Argentina</em>; none of the 13 sanctioned CUITs currently appears as a supplier in Contratos.</li>
-    <li><strong>Contratos total amount:</strong> only part of the awards report an amount, so the peso total is a floor, not the total awarded.</li>
-    <li><strong>IRI procurement risk:</strong> computed for 25 of 82 agencies, from COMPR.AR 2020-2021 data.</li>
+    <li><strong>Contratos total amount:</strong> only part of the awards report an amount (229 of 845 on 2026-11-06, counting those filled in from COMPR.AR), so the peso total is a floor, not the total awarded.</li>
+    <li><strong>IRI procurement risk:</strong> the direct-award % is computed only for agencies with 20 or more COMPR.AR procedures; agencies buying outside COMPR.AR show “no direct-award data”.</li>
+    <li><strong>Contratos ↔ COMPR.AR match:</strong> datos.gob.ar publishes COMPR.AR awards months late (currently up to 2026-07-09). Later notices show “⏳ pending” until the next release.</li>
     <li><strong>Different schedules:</strong> Comprar processes the Gazette at 08:30 and Contratos at 09:30; in between, Contratos does not yet show the day's awards. The cross-validation runs at 13:00, once both have finished.</li>
     <li><strong>Planned integrations:</strong> MEACI and Vectores do not feed the IRI yet.</li>
   </ul>
