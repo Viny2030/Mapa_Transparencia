@@ -109,6 +109,34 @@
         ["comprar", "gcalc"], ["motor", "gcalc"], ["motor", "csv"], ["gcalc", "gjson"], ["csv", "pg"], ["gjson", "pg"],
         ["csv", "dash"], ["csv", "api"], ["gjson", "grafo"], ["gjson", "api"], ["refresh", "mail"]
       ]
+    },
+    "senadores": {
+      "nombre": {"es": "Monitor Legislativo · Senado", "en": "Legislative Monitor · Senate"},
+      "url": "https://senadores.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "senado", "col": "fuente", "nom": {"es": "Senado de la Nación", "en": "National Senate"}, "sub": {"es": "Nómina, comisiones, versiones taquigráficas y recibo de dieta", "en": "Roster, committees, transcripts and salary receipt"}},
+        {"id": "argd", "col": "fuente", "nom": {"es": "ArgentinaDatos", "en": "ArgentinaDatos"}, "sub": {"es": "Nómina y actas de votación nominal", "en": "Roster and roll-call vote records"}},
+        {"id": "presup", "col": "fuente", "nom": {"es": "Presupuesto Abierto", "en": "Presupuesto Abierto"}, "sub": {"es": "Crédito del Senado (SAF 312)", "en": "Senate budget (SAF 312)"}},
+        {"id": "md", "col": "proceso", "nom": {"es": "Monitor Diario", "en": "Daily Monitor"}, "sub": {"es": "08:10: pipeline.py y cargar_db.py", "en": "08:10 ART: pipeline.py and cargar_db.py"}},
+        {"id": "scr", "col": "proceso", "nom": {"es": "Scripts de indicadores", "en": "Indicator scripts"}, "sub": {"es": "Comisiones, bloques, comparativa, consenso y presupuesto", "en": "Committees, blocs, comparison, consensus and budget"}},
+        {"id": "red", "col": "proceso", "nom": {"es": "Cálculo de la red de votos", "en": "Vote network computation"}, "sub": {"es": "Se arma al consultarla; se guarda 6 horas", "en": "Built on request; cached for 6 hours"}},
+        {"id": "tests", "col": "proceso", "nom": {"es": "Tests diarios", "en": "Daily tests"}, "sub": {"es": "04:10: controlan el sitio publicado", "en": "04:10 ART: check the live site"}},
+        {"id": "csv", "col": "dato", "nom": {"es": "Reportes diarios", "en": "Daily reports"}, "sub": {"es": "data/senadores_*.csv y reportes por partido y provincia", "en": "data/senadores_*.csv and reports by party and province"}},
+        {"id": "db", "col": "dato", "nom": {"es": "Postgres", "en": "Postgres"}, "sub": {"es": "Tablas del Senado por fecha", "en": "Senate tables by date"}},
+        {"id": "ind", "col": "dato", "nom": {"es": "Indicadores del tablero", "en": "Dashboard indicators"}, "sub": {"es": "Datos inyectados en las páginas HTML", "en": "Data injected into the HTML pages"}},
+        {"id": "dieta", "col": "dato", "nom": {"es": "Dieta", "en": "Salary"}, "sub": {"es": "dieta.json y dieta_historial.csv", "en": "dieta.json and dieta_historial.csv"}},
+        {"id": "tablero", "col": "salida", "nom": {"es": "Tablero Senado e indicadores", "en": "Senate dashboard and indicators"}, "sub": {"es": "Participación, bloques, provincias y comparativa", "en": "Participation, blocs, provinces and comparison"}},
+        {"id": "detalle", "col": "salida", "nom": {"es": "Nómina detalle y DDJJ", "en": "Roster detail and asset declarations"}, "sub": {"es": "Ficha de cada senador", "en": "Profile of each senator"}},
+        {"id": "redv", "col": "salida", "nom": {"es": "Red de coincidencia de votos", "en": "Vote-agreement network"}, "sub": {"es": "Quién vota igual que quién, con cruces entre bloques", "en": "Who votes alike, including across blocs"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: al día o atrasado, dato por dato", "en": "/api/frescura: up to date or late, item by item"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/senado/* y /db/*; la usa Monitor IRI", "en": "/senado/* and /db/*; used by the IRI Monitor"}}
+      ],
+      "aristas": [
+        ["senado", "md"], ["argd", "md"], ["argd", "red"], ["senado", "scr"], ["presup", "scr"], ["md", "csv"],
+        ["md", "db"], ["scr", "ind"], ["scr", "dieta"], ["csv", "red"], ["csv", "tablero"], ["ind", "tablero"],
+        ["csv", "detalle"], ["red", "redv"], ["csv", "fresc"], ["dieta", "fresc"], ["db", "api"], ["csv", "api"],
+        ["tests", "tablero"]
+      ]
     }
   }
 }
