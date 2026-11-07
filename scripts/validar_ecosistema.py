@@ -205,6 +205,14 @@ def control_meaci() -> None:
 
 
 # ── 4. Monitor ↔ Contratos ───────────────────────────────────────────────────
+def periodo_comprar(fuente: str) -> tuple[int, int] | None:
+    """'… COMPR.AR 2016-2026: …' → (2016, 2026); 'COMPR.AR 2024' → (2024, 2024)."""
+    m = re.search(r"COMPR\.AR\s+(\d{4})(?:\s*-\s*(\d{4}))?", fuente)
+    if not m:
+        return None
+    return int(m.group(1)), int(m.group(2) or m.group(1))
+
+
 def control_monitor() -> None:
     try:
         d = get(f"{URL['monitor']}/datos")
@@ -212,13 +220,23 @@ def control_monitor() -> None:
         registrar("FALLA", "Monitor", f"no se pudo consultar ({e})")
         return
     filas = d.get("datos") or []
-    con_contr = [f for f in filas if str(f.get("Riesgo Contratación", "")).strip() not in ("", "None", "nan")]
-    fuentes_contr = [f for f in filas if "monitor_contratos" in str(f.get("Fuente", ""))]
-    viejas = [f for f in fuentes_contr if "2020-2021" in str(f.get("Fuente", ""))]
-    registrar("ADVERTENCIA" if len(con_contr) < len(filas) / 2 else "OK", "Monitor↔Contratos",
-              f"{len(con_contr)} de {len(filas)} organismos tienen 'Riesgo Contratación' con dato; "
-              f"{len(fuentes_contr)} usan monitor_contratos como fuente"
-              + (f", {len(viejas)} de ellos con datos COMPR.AR 2020-2021" if viejas else ""))
+    # Solo los renglones de contratación: el resto (justicia, legislativo…) no tiene ese riesgo.
+    contr = [f for f in filas if "monitor_contratos" in str(f.get("Fuente", ""))]
+    con_dato = [f for f in contr if str(f.get("Riesgo Contratación", "")).strip() not in ("", "None", "nan")]
+    periodos = [p for p in (periodo_comprar(str(f.get("Fuente", ""))) for f in contr) if p]
+    detalle = (f"{len(contr)} organismos usan monitor_contratos como fuente; "
+               f"{len(con_dato)} tienen 'Riesgo Contratación' con dato")
+    if not contr:
+        registrar("ADVERTENCIA", "Monitor↔Contratos", "ningún organismo usa monitor_contratos como fuente")
+        return
+    if not periodos:
+        registrar("ADVERTENCIA", "Monitor↔Contratos", detalle + "; la fuente no indica el período de COMPR.AR")
+        return
+    desde, hasta = min(p[0] for p in periodos), max(p[1] for p in periodos)
+    viejo = hasta < date.today().year - 1
+    registrar("ADVERTENCIA" if viejo or not con_dato else "OK", "Monitor↔Contratos",
+              detalle + f"; datos COMPR.AR {desde}-{hasta}"
+              + (" → período desactualizado" if viejo else ""))
 
 
 # ── 5. Ajuste: auditoría diaria propia ───────────────────────────────────────

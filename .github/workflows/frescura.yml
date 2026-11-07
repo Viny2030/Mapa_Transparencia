@@ -1,0 +1,59 @@
+name: Frescura de datos — diario
+
+# Lee /api/frescura de cada sitio del ecosistema (o controla que responda, si
+# todavía no tiene ficha) y mantiene UN solo issue con la etiqueta "frescura":
+# lo abre o lo actualiza si hay alarmas y lo cierra cuando todo está al día.
+# Las alarmas técnicas (código) y las de contenido (la fuente no publicó)
+# van en secciones separadas. Ver scripts/frescura_check.py.
+
+on:
+  schedule:
+    - cron: "30 13 * * *"   # 10:30 Argentina: después de los pipelines diarios de los sitios
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  frescura:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Revisar sitios
+        run: python scripts/frescura_check.py --salida informe.md --json estado.json
+
+      - name: Resumen del job
+        if: always()
+        run: test -f informe.md && cat informe.md >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Abrir, actualizar o cerrar el issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const estado = JSON.parse(fs.readFileSync('estado.json', 'utf8'));
+            const cuerpo = fs.readFileSync('informe.md', 'utf8');
+            const {owner, repo} = context.repo;
+            const label = 'frescura';
+            try { await github.rest.issues.getLabel({owner, repo, name: label}); }
+            catch (e) { await github.rest.issues.createLabel({owner, repo, name: label, color: 'fbca04',
+                          description: 'Alarma diaria de frescura de datos del ecosistema'}); }
+            const abiertos = (await github.rest.issues.listForRepo({owner, repo, state: 'open', labels: label})).data;
+            const issue = abiertos[0];
+            const hayAlarmas = estado.tecnicas + estado.contenido > 0;
+            const titulo = `Frescura de datos: ${estado.tecnicas} técnicas · ${estado.contenido} de contenido`;
+            if (hayAlarmas && issue) {
+              await github.rest.issues.update({owner, repo, issue_number: issue.number, title: titulo, body: cuerpo});
+            } else if (hayAlarmas) {
+              await github.rest.issues.create({owner, repo, title: titulo, body: cuerpo, labels: [label, 'automated']});
+            } else if (issue) {
+              await github.rest.issues.createComment({owner, repo, issue_number: issue.number,
+                body: `✅ Todo al día (${estado.generado}). Se cierra hasta la próxima alarma.`});
+              await github.rest.issues.update({owner, repo, issue_number: issue.number, state: 'closed'});
+            }
