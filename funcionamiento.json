@@ -137,6 +137,34 @@
         ["csv", "detalle"], ["red", "redv"], ["csv", "fresc"], ["dieta", "fresc"], ["db", "api"], ["csv", "api"],
         ["tests", "tablero"]
       ]
+    },
+    "legislativo": {
+      "nombre": {"es": "Monitor Legislativo · Diputados", "en": "Legislative Monitor · Chamber of Deputies"},
+      "url": "https://legislativo.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "hcdn", "col": "fuente", "nom": {"es": "Cámara de Diputados (HCDN)", "en": "Chamber of Deputies (HCDN)"}, "sub": {"es": "Nómina, asistencia, votaciones y proyectos (datos.hcdn.gob.ar)", "en": "Roster, attendance, votes and bills (datos.hcdn.gob.ar)"}},
+        {"id": "presup", "col": "fuente", "nom": {"es": "Presupuesto Abierto", "en": "Presupuesto Abierto"}, "sub": {"es": "Crédito y devengado de la Cámara (SAF 313)", "en": "Chamber budget and spending (SAF 313)"}},
+        {"id": "argd", "col": "fuente", "nom": {"es": "ArgentinaDatos", "en": "ArgentinaDatos"}, "sub": {"es": "Actas de votación nominal", "en": "Roll-call vote records"}},
+        {"id": "md", "col": "proceso", "nom": {"es": "Monitor Diario", "en": "Daily Monitor"}, "sub": {"es": "06:00: scraper_pipeline.py, actualizar_diputados.py y nómina en el HTML", "en": "06:00 ART: scraper_pipeline.py, actualizar_diputados.py and roster in the HTML"}},
+        {"id": "agente", "col": "proceso", "nom": {"es": "Agente de monitoreo", "en": "Monitoring agent"}, "sub": {"es": "Compara con el día anterior y detecta cambios bruscos", "en": "Compares with the previous day and flags sharp changes"}},
+        {"id": "red", "col": "proceso", "nom": {"es": "Cálculo de la red de votos", "en": "Vote network computation"}, "sub": {"es": "Se arma al consultarla; se guarda 6 horas", "en": "Built on request; cached for 6 hours"}},
+        {"id": "tests", "col": "proceso", "nom": {"es": "Tests diarios", "en": "Daily tests"}, "sub": {"es": "04:00: controlan el código y el sitio publicado", "en": "04:00 ART: check the code and the live site"}},
+        {"id": "json", "col": "dato", "nom": {"es": "data/diputados.json", "en": "data/diputados.json"}, "sub": {"es": "Nómina, asistencia, proyectos, presupuesto, votaciones, TPMP e ITC", "en": "Roster, attendance, bills, budget, votes, TPMP and ITC"}},
+        {"id": "csv", "col": "dato", "nom": {"es": "Nómina CSV", "en": "Roster CSV"}, "sub": {"es": "nomina_diputados.csv", "en": "nomina_diputados.csv"}},
+        {"id": "alertas", "col": "dato", "nom": {"es": "Alertas del agente", "en": "Agent alerts"}, "sub": {"es": "data/alertas_agente.json, con severidad alta, media o baja", "en": "data/alertas_agente.json, with high, medium or low severity"}},
+        {"id": "tablero", "col": "salida", "nom": {"es": "Tablero e indicadores", "en": "Dashboard and indicators"}, "sub": {"es": "12 indicadores, bloques, comparativa y metodología", "en": "12 indicators, blocs, comparison and methodology"}},
+        {"id": "detalle", "col": "salida", "nom": {"es": "Nómina detalle", "en": "Roster detail"}, "sub": {"es": "Ficha de cada diputado: asistencia y proyectos", "en": "Profile of each deputy: attendance and bills"}},
+        {"id": "redv", "col": "salida", "nom": {"es": "Red de coincidencia de votos", "en": "Vote-agreement network"}, "sub": {"es": "Quién vota igual que quién, con cruces entre bloques", "en": "Who votes alike, including across blocs"}},
+        {"id": "ia", "col": "salida", "nom": {"es": "Explicar con IA", "en": "Explain with AI"}, "sub": {"es": "Resumen y anomalías explicados por Claude", "en": "Summary and anomalies explained by Claude"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: al día o atrasado, dato por dato", "en": "/api/frescura: up to date or late, item by item"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/*; la usan Monitor IRI y el Mapa", "en": "/api/*; used by the IRI Monitor and the Map"}},
+        {"id": "mail", "col": "salida", "nom": {"es": "Avisos por correo", "en": "Email alerts"}, "sub": {"es": "Hallazgos de severidad alta y fallas del pipeline", "en": "High-severity findings and pipeline failures"}}
+      ],
+      "aristas": [
+        ["hcdn", "md"], ["presup", "md"], ["argd", "red"], ["md", "json"], ["md", "csv"], ["json", "agente"],
+        ["agente", "alertas"], ["alertas", "mail"], ["md", "mail"], ["json", "red"], ["json", "tablero"], ["json", "detalle"],
+        ["red", "redv"], ["json", "ia"], ["json", "fresc"], ["json", "api"], ["tests", "tablero"]
+      ]
     }
   }
 }
