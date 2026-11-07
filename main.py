@@ -1,9 +1,10 @@
 import asyncio
+import json
 import time
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from pathlib import Path
 import httpx
 import os
@@ -139,6 +140,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   <a href="#donacion">💛 Donar</a>
   <a href="/manual">📖 Manual</a>
   <a href="/grafo">🕸️ Grafo</a>
+  <a href="/funcionamiento">⚙️ Cómo funciona cada sitio</a>
   <a href="/docs">🔧 API</a>
   <a href="/en">🇺🇸 English</a>
 </nav>
@@ -473,6 +475,19 @@ def _pagina(nombre: str) -> HTMLResponse:
 async def grafo():
     """Grafo interactivo de relaciones entre sitios (?lang=en para inglés)."""
     return _pagina("grafo.html")
+
+
+@app.get("/funcionamiento", response_class=HTMLResponse)
+async def funcionamiento():
+    """Grafo de funcionamiento de un sitio: fuentes → procesos → datos → salidas.
+    ?sitio=jefatura|contratos|monitor…  ?lang=en  ?embed=1 (iframe de los manuales)."""
+    return _pagina("funcionamiento.html")
+
+
+@app.get("/funcionamiento.json")
+async def funcionamiento_json():
+    """Datos de los grafos de funcionamiento (nombres y descripciones en ES/EN)."""
+    return JSONResponse(json.loads((_BASE_DIR / "funcionamiento.json").read_text(encoding="utf-8")))
 
 
 @app.get("/manual", response_class=HTMLResponse)

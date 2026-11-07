@@ -1,0 +1,114 @@
+{
+  "_nota": "Grafos de funcionamiento de cada sitio: de qué fuentes oficiales toma los datos, qué procesos automáticos los transforman, dónde se guardan y qué publica. Columnas: fuente, proceso, dato, salida. Cada nodo tiene nombre y descripción en español e inglés. Relevado del código y los workflows de cada repositorio.",
+  "relevado": "2026-11-07",
+  "columnas": {
+    "fuente":  {"es": "Fuentes", "en": "Sources"},
+    "proceso": {"es": "Procesos automáticos", "en": "Automated processes"},
+    "dato":    {"es": "Datos guardados", "en": "Stored data"},
+    "salida":  {"es": "Lo que publica", "en": "What it publishes"}
+  },
+  "sitios": {
+    "jefatura": {
+      "nombre": {"es": "Monitor PEN · Jefatura de Gabinete", "en": "PEN Monitor · Cabinet Office"},
+      "url": "https://jefatura.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "comprar", "col": "fuente", "nom": {"es": "COMPR.AR", "en": "COMPR.AR"}, "sub": {"es": "Procesos y adjudicaciones de JGM, SGP y Presidencia", "en": "Procurement processes and awards of JGM, SGP and the Presidency"}},
+        {"id": "mc", "col": "fuente", "nom": {"es": "Sitio Contratos", "en": "Contratos site"}, "sub": {"es": "Reporte diario BORA + COMPR.AR + TGN", "en": "Daily BORA + COMPR.AR + TGN report"}},
+        {"id": "botgn", "col": "fuente", "nom": {"es": "gob_bo_comprar_tgn", "en": "gob_bo_comprar_tgn"}, "sub": {"es": "Reporte integrado BORA + COMPR.AR + TGN", "en": "Integrated BORA + COMPR.AR + TGN report"}},
+        {"id": "nomina", "col": "fuente", "nom": {"es": "Nómina APN", "en": "APN staff roster"}, "sub": {"es": "Personal de cada organismo (se baja a mano)", "en": "Staff of each body (downloaded by hand)"}},
+        {"id": "presup", "col": "fuente", "nom": {"es": "Presupuesto Abierto", "en": "Presupuesto Abierto"}, "sub": {"es": "Crédito y ejecución de la JGM", "en": "JGM budget and spending"}},
+        {"id": "sigen", "col": "fuente", "nom": {"es": "SIGEN", "en": "SIGEN"}, "sub": {"es": "Informes de auditoría interna", "en": "Internal audit reports"}},
+
+        {"id": "sc", "col": "proceso", "nom": {"es": "Scraper Contratos JGM", "en": "JGM contracts scraper"}, "sub": {"es": "Lunes y jueves 03:00", "en": "Mondays and Thursdays 03:00 ART"}},
+        {"id": "sd", "col": "proceso", "nom": {"es": "Scraper Detalle", "en": "Detail scraper"}, "sub": {"es": "Todos los días 01:00: monto, CUIT y razón social", "en": "Daily 01:00 ART: amount, CUIT and supplier name"}},
+        {"id": "nom", "col": "proceso", "nom": {"es": "Nómina desde CSV", "en": "Roster from CSV"}, "sub": {"es": "Al subir un CSV a nomina/", "en": "When a CSV is uploaded to nomina/"}},
+        {"id": "md", "col": "proceso", "nom": {"es": "Monitor Diario PEN", "en": "Daily PEN Monitor"}, "sub": {"es": "Lunes a viernes 09:00: genera los JSON del portal", "en": "Weekdays 09:00 ART: builds the portal's JSON files"}},
+        {"id": "cr", "col": "proceso", "nom": {"es": "Generador de Cruces PEN", "en": "PEN cross-check generator"}, "sub": {"es": "Todos los días 02:00: CUIL = CUIT, apellido, multi-organismo", "en": "Daily 02:00 ART: CUIL = CUIT, surname, multi-body"}},
+        {"id": "ps", "col": "proceso", "nom": {"es": "Presupuesto y SIGEN", "en": "Budget and SIGEN"}, "sub": {"es": "Lunes 07:30", "en": "Mondays 07:30 ART"}},
+        {"id": "ts", "col": "proceso", "nom": {"es": "Tests diarios y cobertura", "en": "Daily tests and coverage"}, "sub": {"es": "Controlan el sitio publicado y la cobertura de montos", "en": "Check the live site and amount coverage"}},
+
+        {"id": "ccsv", "col": "dato", "nom": {"es": "contratos_*.csv", "en": "contratos_*.csv"}, "sub": {"es": "Procesos por organismo", "en": "Processes per body"}},
+        {"id": "dcsv", "col": "dato", "nom": {"es": "contratos_detalle.csv", "en": "contratos_detalle.csv"}, "sub": {"es": "Detalle de los adjudicados", "en": "Detail of awarded processes"}},
+        {"id": "json", "col": "dato", "nom": {"es": "JSON del portal", "en": "Portal JSON files"}, "sub": {"es": "Personal, contratos y fecha de actualización", "en": "Staff, contracts and update date"}},
+        {"id": "cruces", "col": "dato", "nom": {"es": "cruces.json", "en": "cruces.json"}, "sub": {"es": "Alertas de cruce", "en": "Cross-check alerts"}},
+        {"id": "pjson", "col": "dato", "nom": {"es": "presupuesto_jgm.json y sigen_auditorias.json", "en": "presupuesto_jgm.json and sigen_auditorias.json"}, "sub": {"es": "Presupuesto y auditorías", "en": "Budget and audits"}},
+
+        {"id": "fichas", "col": "salida", "nom": {"es": "Fichas JGM, SGP y Presidencia", "en": "JGM, SGP and Presidency pages"}, "sub": {"es": "Contratos, personal, presupuesto y auditorías", "en": "Contracts, staff, budget and audits"}},
+        {"id": "alertas", "col": "salida", "nom": {"es": "Alertas", "en": "Alerts"}, "sub": {"es": "Todas las alertas, con filtros", "en": "Every alert, with filters"}},
+        {"id": "grafo", "col": "salida", "nom": {"es": "Grafo de relaciones", "en": "Relationship graph"}, "sub": {"es": "Funcionarios ↔ proveedores", "en": "Officials ↔ suppliers"}},
+        {"id": "agente", "col": "salida", "nom": {"es": "Agente IA", "en": "AI agent"}, "sub": {"es": "Responde preguntas sobre los datos", "en": "Answers questions about the data"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API REST", "en": "REST API"}, "sub": {"es": "/api/…", "en": "/api/…"}},
+        {"id": "mails", "col": "salida", "nom": {"es": "Mails de control", "en": "Control emails"}, "sub": {"es": "Resultado de las corridas y nómina vencida", "en": "Run results and outdated roster"}}
+      ],
+      "aristas": [
+        ["comprar", "sc"], ["comprar", "sd"], ["nomina", "nom"], ["mc", "md"], ["mc", "cr"], ["botgn", "cr"],
+        ["presup", "ps"], ["sigen", "ps"],
+        ["sc", "ccsv"], ["sd", "dcsv"], ["nom", "json"], ["md", "json"], ["ccsv", "md"], ["dcsv", "cr"], ["json", "cr"],
+        ["cr", "cruces"], ["ps", "pjson"],
+        ["json", "fichas"], ["pjson", "fichas"], ["cruces", "alertas"], ["cruces", "grafo"], ["cruces", "fichas"],
+        ["json", "agente"], ["json", "api"], ["cruces", "api"], ["ts", "mails"], ["md", "mails"]
+      ]
+    },
+    "contratos": {
+      "nombre": {"es": "Monitor de Contratos", "en": "Contracts Monitor"},
+      "url": "https://contratos.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "bora", "col": "fuente", "nom": {"es": "Boletín Oficial (BORA)", "en": "Official Gazette (BORA)"}, "sub": {"es": "Avisos de adjudicación, tercera sección", "en": "Award notices, third section"}},
+        {"id": "comprar", "col": "fuente", "nom": {"es": "COMPR.AR", "en": "COMPR.AR"}, "sub": {"es": "Procesos de compra del Estado nacional", "en": "National procurement processes"}},
+        {"id": "tgn", "col": "fuente", "nom": {"es": "Tesorería General (TGN)", "en": "National Treasury (TGN)"}, "sub": {"es": "Pagos por organismo", "en": "Payments per body"}},
+        {"id": "meaci", "col": "fuente", "nom": {"es": "Sitio MEACI", "en": "MEACI site"}, "sub": {"es": "CUIT con sanciones internacionales", "en": "CUITs with international sanctions"}},
+        {"id": "ia", "col": "fuente", "nom": {"es": "Modelo de IA", "en": "AI model"}, "sub": {"es": "Redacta explicaciones en lenguaje simple", "en": "Writes plain-language explanations"}},
+
+        {"id": "runner", "col": "proceso", "nom": {"es": "Corrida diaria en Argentina", "en": "Daily run in Argentina"}, "sub": {"es": "Días hábiles, en una PC propia: el BORA no responde al exterior", "en": "Business days, on an own PC: BORA blocks foreign servers"}},
+        {"id": "diario", "col": "proceso", "nom": {"es": "diario.py", "en": "diario.py"}, "sub": {"es": "Lee cada aviso: proveedor, CUIT, monto y riesgo", "en": "Reads each notice: supplier, CUIT, amount and risk"}},
+        {"id": "cruce", "col": "proceso", "nom": {"es": "cruce_comprar.py", "en": "cruce_comprar.py"}, "sub": {"es": "Busca el mismo proceso en COMPR.AR", "en": "Finds the same process in COMPR.AR"}},
+        {"id": "sync", "col": "proceso", "nom": {"es": "Actualizar datos", "en": "Update data"}, "sub": {"es": "El sitio trae los reportes nuevos del repositorio", "en": "The site pulls new reports from the repository"}},
+
+        {"id": "rep", "col": "dato", "nom": {"es": "Reportes diarios", "en": "Daily reports"}, "sub": {"es": "data/AAAA-MM/reporte_AAAA-MM-DD.xlsx", "en": "data/YYYY-MM/reporte_YYYY-MM-DD.xlsx"}},
+        {"id": "corr", "col": "dato", "nom": {"es": "Correcciones", "en": "Corrections"}, "sub": {"es": "data/correcciones/*.csv: CUIT y montos releídos", "en": "data/correcciones/*.csv: re-read CUITs and amounts"}},
+        {"id": "db", "col": "dato", "nom": {"es": "Base de estadísticas", "en": "Statistics database"}, "sub": {"es": "Visitas por sección", "en": "Visits per section"}},
+
+        {"id": "resumen", "col": "salida", "nom": {"es": "Resumen y Contratos", "en": "Summary and Contracts"}, "sub": {"es": "Totales, riesgo y cada adjudicación", "en": "Totals, risk and every award"}},
+        {"id": "perfiles", "col": "salida", "nom": {"es": "Organismos y Proveedores", "en": "Agencies and Vendors"}, "sub": {"es": "Rankings y perfiles, con alerta MEACI y explicación IA", "en": "Rankings and profiles, with MEACI alert and AI explanation"}},
+        {"id": "monitor", "col": "salida", "nom": {"es": "Monitor sistémico", "en": "Systemic monitor"}, "sub": {"es": "Fragmentación, proveedor único y HHI", "en": "Fragmentation, single vendor and HHI"}},
+        {"id": "grafo", "col": "salida", "nom": {"es": "Grafo organismo ↔ proveedor", "en": "Agency ↔ vendor graph"}, "sub": {"es": "Quién le adjudica a quién", "en": "Who awards contracts to whom"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API y CSV", "en": "API and CSV"}, "sub": {"es": "La usan Monitor IRI, Jefatura y el Mapa", "en": "Used by the IRI Monitor, Jefatura and the Map"}}
+      ],
+      "aristas": [
+        ["bora", "runner"], ["runner", "diario"], ["comprar", "cruce"], ["tgn", "diario"], ["diario", "rep"], ["cruce", "rep"],
+        ["rep", "sync"], ["sync", "resumen"], ["rep", "resumen"], ["corr", "resumen"], ["rep", "perfiles"], ["rep", "monitor"],
+        ["rep", "grafo"], ["rep", "api"], ["meaci", "perfiles"], ["meaci", "grafo"], ["ia", "perfiles"], ["db", "resumen"]
+      ]
+    },
+    "monitor": {
+      "nombre": {"es": "Monitor IRI", "en": "IRI Monitor"},
+      "url": "https://monitor.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "jus", "col": "fuente", "nom": {"es": "Sitio Justicia", "en": "Justicia site"}, "sub": {"es": "Magistrados y vacantes", "en": "Judges and vacancies"}},
+        {"id": "leg", "col": "fuente", "nom": {"es": "Sitio Legislativo", "en": "Legislativo site"}, "sub": {"es": "Indicadores y bloques de Diputados", "en": "Chamber of Deputies indicators and blocs"}},
+        {"id": "sen", "col": "fuente", "nom": {"es": "Sitio Senadores", "en": "Senadores site"}, "sub": {"es": "Nómina y partidos del Senado", "en": "Senate roster and parties"}},
+        {"id": "con", "col": "fuente", "nom": {"es": "Sitio Contratos", "en": "Contratos site"}, "sub": {"es": "Actividad 2026 en el BORA", "en": "2026 activity in the BORA"}},
+        {"id": "comprar", "col": "fuente", "nom": {"es": "COMPR.AR Adjudicaciones", "en": "COMPR.AR awards"}, "sub": {"es": "datos.gob.ar, archivo 2016-2026", "en": "datos.gob.ar, 2016-2026 file"}},
+        {"id": "tgn", "col": "fuente", "nom": {"es": "gob_bo_comprar_tgn", "en": "gob_bo_comprar_tgn"}, "sub": {"es": "Flujo de pagos de la TGN", "en": "TGN payment flow"}},
+
+        {"id": "refresh", "col": "proceso", "nom": {"es": "Refresh diario", "en": "Daily refresh"}, "sub": {"es": "GitHub Actions 07:17 → POST /refresh", "en": "GitHub Actions 07:17 ART → POST /refresh"}},
+        {"id": "motor", "col": "proceso", "nom": {"es": "motor_analitico.py + connector.py", "en": "motor_analitico.py + connector.py"}, "sub": {"es": "Calcula el IRI de cada organismo", "en": "Computes each body's IRI"}},
+        {"id": "gcalc", "col": "proceso", "nom": {"es": "Cálculo del grafo", "en": "Graph computation"}, "sub": {"es": "10 principales proveedores por organismo", "en": "Top 10 suppliers per body"}},
+
+        {"id": "csv", "col": "dato", "nom": {"es": "monitor_completo.csv", "en": "monitor_completo.csv"}, "sub": {"es": "Un renglón por organismo", "en": "One row per body"}},
+        {"id": "gjson", "col": "dato", "nom": {"es": "grafo_comprar.json", "en": "grafo_comprar.json"}, "sub": {"es": "Red organismo ↔ proveedor", "en": "Body ↔ supplier network"}},
+        {"id": "pg", "col": "dato", "nom": {"es": "Postgres", "en": "Postgres"}, "sub": {"es": "Tablas monitor_iri y monitor_grafo: sobreviven al redeploy", "en": "monitor_iri and monitor_grafo tables: survive redeploys"}},
+
+        {"id": "dash", "col": "salida", "nom": {"es": "Dashboard IRI", "en": "IRI dashboard"}, "sub": {"es": "Tarjetas, gráficos y tabla de organismos", "en": "Cards, charts and table of bodies"}},
+        {"id": "grafo", "col": "salida", "nom": {"es": "Grafo organismo ↔ proveedor", "en": "Body ↔ supplier graph"}, "sub": {"es": "COMPR.AR, últimos dos ejercicios", "en": "COMPR.AR, last two fiscal years"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/datos, /resumen, /grafo; la usa el Mapa", "en": "/datos, /resumen, /grafo; used by the Map"}},
+        {"id": "mail", "col": "salida", "nom": {"es": "Mail del refresh", "en": "Refresh email"}, "sub": {"es": "Avisa si la corrida salió bien o mal", "en": "Reports whether the run succeeded"}}
+      ],
+      "aristas": [
+        ["refresh", "motor"], ["jus", "motor"], ["leg", "motor"], ["sen", "motor"], ["con", "motor"], ["comprar", "motor"], ["tgn", "motor"],
+        ["comprar", "gcalc"], ["motor", "gcalc"], ["motor", "csv"], ["gcalc", "gjson"], ["csv", "pg"], ["gjson", "pg"],
+        ["csv", "dash"], ["csv", "api"], ["gjson", "grafo"], ["gjson", "api"], ["refresh", "mail"]
+      ]
+    }
+  }
+}

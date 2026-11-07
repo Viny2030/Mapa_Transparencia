@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cómo funciona cada sitio · Mapa de Transparencia</title>
+<style>
+:root{
+  --azul:#003f8a; --gris:#f4f6f9; --texto:#1a1a2e; --sub:#5b6474; --borde:#e2e6ee; --panel:#fff;
+  --fuente:#475569; --proceso:#0b6e4f; --dato:#b45309; --salida:#003f8a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--gris);color:var(--texto)}
+body.embebido header,body.embebido .pie{display:none}
+header{background:linear-gradient(135deg,#003f8a,#005bb5);color:#fff;padding:1.2rem 1rem;text-align:center}
+header h1{font-size:1.4rem}
+header p{font-size:.85rem;opacity:.85;margin-top:.3rem}
+header nav{margin-top:.6rem;display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap}
+header nav a,header select{color:#fff;background:transparent;text-decoration:none;font-size:.8rem;padding:.25rem .7rem;border:1px solid rgba(255,255,255,.35);border-radius:14px}
+header select option{color:#1a1a2e}
+.wrap{max-width:1200px;margin:1rem auto;padding:0 16px;display:grid;grid-template-columns:1fr 300px;gap:1rem}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.lienzo{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:.8rem;overflow:hidden}
+.lienzo h2{font-size:1rem;margin:0 .2rem .5rem}
+svg{width:100%;height:auto;display:block}
+.nodo{cursor:pointer}
+.nodo rect{fill:#fff;stroke-width:2;transition:opacity .2s}
+.nodo .nom{font-size:13px;font-weight:700;fill:var(--texto)}
+.nodo .sub{font-size:11px;fill:var(--sub)}
+.arista{fill:none;stroke:#94a3b8;stroke-width:1.6;opacity:.7;transition:opacity .2s}
+.arista.atras{stroke-dasharray:5 4}
+.etq-col{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.atenuado{opacity:.12 !important}
+.panel{background:var(--panel);border:1px solid var(--borde);border-radius:12px;padding:1rem;font-size:.86rem;line-height:1.55;align-self:start}
+.panel h2{font-size:1.02rem;margin-bottom:.2rem}
+.panel .col{display:inline-block;font-size:.7rem;font-weight:700;color:#fff;border-radius:10px;padding:.1rem .55rem;margin-bottom:.5rem}
+.panel h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);margin:.8rem 0 .25rem}
+.panel ul{padding-left:1.1rem}
+.panel .vacio{color:var(--sub)}
+.lista{display:none}
+@media(max-width:640px){
+  svg{display:none}
+  .lista{display:block}
+  .lista h3{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;margin:.8rem 0 .3rem}
+  .lista div{border-left:4px solid;padding:.35rem .6rem;margin-bottom:.35rem;background:var(--gris);border-radius:4px;font-size:.82rem;cursor:pointer}
+  .lista small{display:block;color:var(--sub)}
+}
+.pie{text-align:center;font-size:.75rem;color:var(--sub);padding:1rem}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="t-titulo">Cómo funciona cada sitio</h1>
+  <p id="t-sub">De qué fuentes toma los datos, qué procesos los transforman, dónde se guardan y qué publica.</p>
+  <nav>
+    <a href="/" id="t-portada">🗺️ Portada</a>
+    <a href="/grafo" id="t-grafo">🕸️ Grafo del ecosistema</a>
+    <select id="sel-sitio" aria-label="Sitio"></select>
+    <a href="#" id="t-idioma">🇺🇸 English</a>
+  </nav>
+</header>
+
+<div class="wrap">
+  <div class="lienzo">
+    <h2 id="t-sitio"></h2>
+    <svg id="grafo" role="img" aria-labelledby="t-sitio"></svg>
+    <div class="lista" id="lista"></div>
+  </div>
+  <aside class="panel" id="panel"></aside>
+</div>
+<p class="pie" id="t-pie"></p>
+
+<script>
+const Q = new URLSearchParams(location.search);
+const LANG = Q.get('lang') === 'en' ? 'en' : 'es';
+if (Q.get('embed') === '1') document.body.classList.add('embebido');
+const TX = {
+  titulo: {es: 'Cómo funciona cada sitio', en: 'How each site works'},
+  sub: {es: 'De qué fuentes toma los datos, qué procesos los transforman, dónde se guardan y qué publica.',
+        en: 'Where each site gets its data, which processes transform it, where it is stored and what it publishes.'},
+  portada: {es: '🗺️ Portada', en: '🗺️ Home'}, grafo: {es: '🕸️ Grafo del ecosistema', en: '🕸️ Ecosystem graph'},
+  idioma: {es: '🇺🇸 English', en: '🇦🇷 Español'},
+  ayuda: {es: 'Hacé clic en un nodo para ver de dónde recibe datos y a qué alimenta.',
+          en: 'Click a node to see where it gets data from and what it feeds.'},
+  recibe: {es: 'Recibe de', en: 'Receives from'}, alimenta: {es: 'Alimenta a', en: 'Feeds'},
+  nada: {es: 'Nada', en: 'Nothing'}, visitar: {es: 'Abrir el sitio ↗', en: 'Open the site ↗'},
+  pie: {es: 'Relevado del código y los workflows de cada repositorio el', en: 'Surveyed from each repository\'s code and workflows on'},
+  atras: {es: 'Las líneas punteadas vuelven hacia atrás: un dato guardado que alimenta otro proceso.',
+          en: 'Dashed lines go backwards: stored data that feeds another process.'},
+  error: {es: 'No se pudo cargar el grafo de funcionamiento.', en: 'The workflow graph could not be loaded.'},
+  sinSitio: {es: 'Este sitio todavía no tiene grafo de funcionamiento.', en: 'This site does not have a workflow graph yet.'},
+};
+const T = o => (o && (o[LANG] || o.es)) || '';
+const COLOR = {fuente: 'var(--fuente)', proceso: 'var(--proceso)', dato: 'var(--dato)', salida: 'var(--salida)'};
+const ORDEN = ['fuente', 'proceso', 'dato', 'salida'];
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs, padre) => {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (padre) padre.appendChild(e);
+  return e;
+};
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// Corta un texto en renglones de hasta `max` caracteres.
+function renglones(texto, max) {
+  const out = []; let linea = '';
+  for (const p of String(texto).split(/\s+/)) {
+    if ((linea + ' ' + p).trim().length > max && linea) { out.push(linea); linea = p; }
+    else linea = (linea + ' ' + p).trim();
+  }
+  if (linea) out.push(linea);
+  return out;
+}
+
+document.documentElement.lang = LANG;
+document.title = T(TX.titulo) + ' · ' + (LANG === 'en' ? 'Transparency Map' : 'Mapa de Transparencia');
+for (const k of ['titulo', 'sub', 'portada', 'grafo', 'idioma']) document.getElementById('t-' + k).textContent = T(TX[k]);
+const qIdioma = new URLSearchParams(location.search);
+if (LANG === 'en') qIdioma.delete('lang'); else qIdioma.set('lang', 'en');
+document.getElementById('t-idioma').href = '?' + qIdioma.toString();
+if (LANG === 'en') { document.getElementById('t-portada').href = '/en'; document.getElementById('t-grafo').href = '/grafo?lang=en'; }
+
+let SITIO, POR_ID = {}, ENTRA = {}, SALE = {}, seleccion = null, nodosEl = [], aristasEl = [], DATOS;
+
+function dibujar(clave) {
+  SITIO = DATOS.sitios[clave];
+  const svg = document.getElementById('grafo');
+  svg.innerHTML = '';
+  document.getElementById('t-sitio').textContent = SITIO ? T(SITIO.nombre) : T(TX.sinSitio);
+  if (!SITIO) { document.getElementById('panel').innerHTML = ''; return; }
+  POR_ID = {}; ENTRA = {}; SALE = {}; seleccion = null; nodosEl = []; aristasEl = [];
+  for (const n of SITIO.nodos) { POR_ID[n.id] = n; ENTRA[n.id] = []; SALE[n.id] = []; }
+  for (const [a, b] of SITIO.aristas) { if (POR_ID[a] && POR_ID[b]) { SALE[a].push(b); ENTRA[b].push(a); } }
+
+  // Disposición: cuatro columnas; cada caja crece con su texto.
+  const W = 1000, colW = 215, gapX = (W - 4 * colW) / 3, top = 34, gapY = 12;
+  const pos = {}; let alto = 0;
+  ORDEN.forEach((col, i) => {
+    const x = i * (colW + gapX);
+    el('text', {x: x + 4, y: 16, class: 'etq-col', fill: COLOR[col]}, svg).textContent = T(DATOS.columnas[col]);
+    let y = top;
+    for (const n of SITIO.nodos.filter(n => n.col === col)) {
+      const ln = renglones(T(n.nom), 26), ls = renglones(T(n.sub), 34);
+      const h = 14 + ln.length * 16 + ls.length * 14;
+      pos[n.id] = {x, y, w: colW, h, ln, ls};
+      y += h + gapY;
+    }
+    alto = Math.max(alto, y);
+  });
+  svg.setAttribute('viewBox', `0 0 ${W} ${alto + 6}`);
+
+  const gA = el('g', {}, svg), gN = el('g', {}, svg);
+  for (const [a, b] of SITIO.aristas) {
+    const p = pos[a], q = pos[b];
+    if (!p || !q) continue;
+    const atras = q.x <= p.x;
+    const x1 = atras ? p.x : p.x + p.w, y1 = p.y + p.h / 2, x2 = atras ? q.x + q.w : q.x, y2 = q.y + q.h / 2;
+    const dx = atras ? -60 : Math.max(40, (x2 - x1) / 2);
+    const d = `M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}`;
+    aristasEl.push({a, b, e: el('path', {d, class: 'arista' + (atras ? ' atras' : ''), 'marker-end': 'url(#flecha)'}, gA)});
+  }
+  const defs = el('defs', {}, svg);
+  const m = el('marker', {id: 'flecha', viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse'}, defs);
+  el('path', {d: 'M0,0 L10,5 L0,10 z', fill: '#94a3b8'}, m);
+
+  for (const n of SITIO.nodos) {
+    const p = pos[n.id];
+    const g = el('g', {class: 'nodo', tabindex: 0, role: 'button', 'aria-label': T(n.nom)}, gN);
+    el('rect', {x: p.x, y: p.y, width: p.w, height: p.h, rx: 8, stroke: COLOR[n.col]}, g);
+    el('rect', {x: p.x, y: p.y, width: 5, height: p.h, rx: 2, fill: COLOR[n.col], stroke: 'none'}, g);
+    let y = p.y + 18;
+    for (const l of p.ln) { el('text', {x: p.x + 13, y, class: 'nom'}, g).textContent = l; y += 16; }
+    for (const l of p.ls) { el('text', {x: p.x + 13, y: y - 1, class: 'sub'}, g).textContent = l; y += 14; }
+    const elegir = () => { seleccion = seleccion === n.id ? null : n.id; aplicar(); };
+    g.addEventListener('click', elegir);
+    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); elegir(); } });
+    nodosEl.push({n, g});
+  }
+
+  // Versión en lista para pantallas angostas
+  document.getElementById('lista').innerHTML = ORDEN.map(col =>
+    `<h3 style="color:${COLOR[col]}">${esc(T(DATOS.columnas[col]))}</h3>` +
+    SITIO.nodos.filter(n => n.col === col).map(n =>
+      `<div style="border-color:${COLOR[col]}" data-id="${esc(n.id)}"><b>${esc(T(n.nom))}</b><small>${esc(T(n.sub))}</small></div>`).join('')
+  ).join('');
+  document.querySelectorAll('#lista div[data-id]').forEach(d => d.addEventListener('click', () => { seleccion = d.dataset.id; aplicar(); }));
+  const ini = Q.get('nodo');
+  if (ini && POR_ID[ini]) seleccion = ini;
+  aplicar();
+}
+
+function aplicar() {
+  const vec = new Set(seleccion ? [seleccion, ...ENTRA[seleccion], ...SALE[seleccion]] : []);
+  for (const {n, g} of nodosEl) g.classList.toggle('atenuado', !!seleccion && !vec.has(n.id));
+  for (const {a, b, e} of aristasEl) e.classList.toggle('atenuado', !!seleccion && a !== seleccion && b !== seleccion);
+  const panel = document.getElementById('panel');
+  if (!seleccion) {
+    panel.innerHTML = `<p class="vacio">${esc(T(TX.ayuda))}</p><p class="vacio" style="margin-top:.6rem">${esc(T(TX.atras))}</p>` +
+      `<p style="margin-top:.8rem"><a href="${esc(SITIO.url)}" target="_blank" rel="noopener">${esc(T(TX.visitar))}</a></p>`;
+    return;
+  }
+  const n = POR_ID[seleccion];
+  const lis = ids => ids.length ? '<ul>' + ids.map(i => `<li>${esc(T(POR_ID[i].nom))}</li>`).join('') + '</ul>'
+                                : `<p class="vacio">${esc(T(TX.nada))}</p>`;
+  panel.innerHTML = `<span class="col" style="background:${COLOR[n.col]}">${esc(T(DATOS.columnas[n.col]))}</span>
+    <h2>${esc(T(n.nom))}</h2><p>${esc(T(n.sub))}</p>
+    <h3>${esc(T(TX.recibe))}</h3>${lis(ENTRA[n.id])}<h3>${esc(T(TX.alimenta))}</h3>${lis(SALE[n.id])}`;
+}
+
+fetch('/funcionamiento.json').then(r => r.json()).then(d => {
+  DATOS = d;
+  document.getElementById('t-pie').textContent = `${T(TX.pie)} ${d.relevado}.`;
+  const sel = document.getElementById('sel-sitio');
+  const claves = Object.keys(d.sitios);
+  sel.innerHTML = claves.map(k => `<option value="${esc(k)}">${esc(T(d.sitios[k].nombre))}</option>`).join('');
+  const pedido = Q.get('sitio');
+  const clave = pedido || claves[0];
+  if (d.sitios[clave]) sel.value = clave;
+  sel.addEventListener('change', () => {
+    const u = new URL(location.href); u.searchParams.set('sitio', sel.value); u.searchParams.delete('nodo');
+    history.replaceState(null, '', u); dibujar(sel.value);
+  });
+  dibujar(clave);
+}).catch(() => { document.getElementById('t-sitio').textContent = T(TX.error); });
+
+// En modo embebido (iframe del manual) informa su altura para que el padre la ajuste.
+if (document.body.classList.contains('embebido') && window.parent !== window) {
+  const avisar = () => parent.postMessage({grafoAltura: Math.ceil(document.querySelector('.wrap').getBoundingClientRect().bottom + 16)}, '*');
+  new ResizeObserver(avisar).observe(document.body);
+  avisar();
+}
+</script>
+</body>
+</html>
