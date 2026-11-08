@@ -51,3 +51,11 @@ def test_informe_lista_las_dos_alarmas_por_separado():
     tec, con = md.split("## 🟡")
     assert "Comisiones" in tec and "última carga hace 9 días" in tec
     assert "Dieta (recibo oficial)" in con and "hace 279 días" in con
+
+
+def test_conserva_las_filas_y_muestra_la_nota():
+    get = fake_get({"https://s.example/api/frescura": (200, "application/json", json.dumps(FICHA).encode())})
+    r = fc.revisar_sitio({"id": "s", "nombre": "S", "url": "https://s.example/"}, get=get)
+    assert [d["id"] for d in r["datos"]] == ["nomina", "dieta", "comisiones"]
+    r["contenido"][0]["nota"] = "Hay que revisarla"
+    assert "Hay que revisarla" in fc.informe_md([r], "2026-11-08 12:00 UTC")
