@@ -251,6 +251,80 @@
         ["base", "robot"], ["robot", "evid"], ["base", "panel"], ["evid", "panel"], ["enab", "panel"], ["base", "grafo"],
         ["enab", "grafo"], ["base", "api"], ["base", "fresc"], ["evid", "fresc"]
       ]
+    },
+    "decla": {
+      "nombre": {"es": "DECLA · Declaraciones juradas", "en": "DECLA · Asset declarations"},
+      "url": "https://decla.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "oa", "col": "fuente", "nom": {"es": "Oficina Anticorrupción", "en": "Anti-Corruption Office"}, "sub": {"es": "DDJJ, bienes y deudas (datos.jus.gob.ar)", "en": "Declarations, assets and debts (datos.jus.gob.ar)"}},
+        {"id": "mag", "col": "fuente", "nom": {"es": "Magistrados federales", "en": "Federal judges"}, "sub": {"es": "Nómina publicada en datos.jus.gob.ar", "en": "List published on datos.jus.gob.ar"}},
+        {"id": "mappap", "col": "fuente", "nom": {"es": "Actividades previas y posteriores", "en": "Prior and later activities"}, "sub": {"es": "Paso entre sector público y privado (OA)", "en": "Moves between public and private sector (OA)"}},
+        {"id": "contr", "col": "fuente", "nom": {"es": "Monitor Contratos", "en": "Contracts Monitor"}, "sub": {"es": "Adjudicaciones del Boletín Oficial", "en": "Official Gazette awards"}},
+        {"id": "bcra", "col": "fuente", "nom": {"es": "BCRA", "en": "BCRA"}, "sub": {"es": "Tipo de cambio para llevar montos a dólares", "en": "Exchange rate to convert amounts to dollars"}},
+        {"id": "marcos", "col": "fuente", "nom": {"es": "Marcos internacionales", "en": "International frameworks"}, "sub": {"es": "GAFI, Banco Mundial, Transparencia Internacional, OCDE", "en": "FATF, World Bank, Transparency International, OECD"}},
+        {"id": "arca", "col": "fuente", "nom": {"es": "ARCA", "en": "ARCA"}, "sub": {"es": "Padrón A13: constancias de inscripción", "en": "A13 registry: registration certificates"}},
+        {"id": "etl", "col": "proceso", "nom": {"es": "Fase 1: ETL", "en": "Phase 1: ETL"}, "sub": {"es": "Diario 03:00: baja y normaliza las DDJJ", "en": "Daily 03:00 ART: downloads and normalizes declarations"}},
+        {"id": "cruces", "col": "proceso", "nom": {"es": "Fase 2: cruces", "en": "Phase 2: cross-checks"}, "sub": {"es": "CUIT × adjudicaciones y puertas giratorias", "en": "Tax ID × awards and revolving doors"}},
+        {"id": "score", "col": "proceso", "nom": {"es": "Fase 3: puntaje", "en": "Phase 3: scoring"}, "sub": {"es": "Calcula el nivel de riesgo de cada declaración", "en": "Computes the risk level of each declaration"}},
+        {"id": "ml", "col": "proceso", "nom": {"es": "Fase 4: anomalías", "en": "Phase 4: anomalies"}, "sub": {"es": "Isolation Forest y One-Class SVM", "en": "Isolation Forest and One-Class SVM"}},
+        {"id": "indic", "col": "proceso", "nom": {"es": "Fase 5: indicadores", "en": "Phase 5: indicators"}, "sub": {"es": "12 indicadores internacionales aplicados a las DDJJ", "en": "12 international indicators applied to declarations"}},
+        {"id": "const", "col": "proceso", "nom": {"es": "Constancias", "en": "Certificates"}, "sub": {"es": "Diario 04:00: consulta ARCA y reutiliza lo ya consultado", "en": "Daily 04:00 ART: queries ARCA and reuses earlier results"}},
+        {"id": "ddjj", "col": "dato", "nom": {"es": "Funcionarios y magistrados", "en": "Officials and judges"}, "sub": {"es": "CSV: sujetos obligados y tabla judicial", "en": "CSV: obliged filers and judicial table"}},
+        {"id": "alert", "col": "dato", "nom": {"es": "Alertas", "en": "Alerts"}, "sub": {"es": "CSV: conflicto de interés y puertas giratorias", "en": "CSV: conflict of interest and revolving doors"}},
+        {"id": "scor", "col": "dato", "nom": {"es": "Puntajes y anomalías", "en": "Scores and anomalies"}, "sub": {"es": "CSV: riesgo por declaración y casos atípicos", "en": "CSV: risk per declaration and outliers"}},
+        {"id": "ind", "col": "dato", "nom": {"es": "Perfil internacional", "en": "International profile"}, "sub": {"es": "CSV: indicadores y perfil de riesgo completo", "en": "CSV: indicators and full risk profile"}},
+        {"id": "cons", "col": "dato", "nom": {"es": "Constancias públicas", "en": "Public certificates"}, "sub": {"es": "CSV sin domicilio ni otros datos personales", "en": "CSV without address or other personal data"}},
+        {"id": "panel", "col": "salida", "nom": {"es": "Tablero", "en": "Dashboard"}, "sub": {"es": "Por poder del Estado, con riesgo y alertas", "en": "By branch of government, with risk and alerts"}},
+        {"id": "pind", "col": "salida", "nom": {"es": "Pestaña Indicadores", "en": "Indicators tab"}, "sub": {"es": "12 indicadores por marco internacional y por funcionario", "en": "12 indicators by international framework and by official"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/resumen, /api/alertas, /api/funcionario; la consulta el Mapa", "en": "/api/resumen, /api/alertas, /api/funcionario; queried by the Map"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: ejercicio de las DDJJ y última consulta a ARCA", "en": "/api/frescura: declaration year and latest ARCA query"}}
+      ],
+      "aristas": [
+        ["oa", "etl"], ["mag", "etl"], ["etl", "ddjj"], ["ddjj", "cruces"],
+        ["mappap", "cruces"], ["contr", "cruces"], ["cruces", "alert"], ["ddjj", "score"],
+        ["bcra", "score"], ["marcos", "score"], ["score", "scor"], ["scor", "ml"],
+        ["ddjj", "ml"], ["ml", "scor"], ["alert", "indic"], ["scor", "indic"],
+        ["marcos", "indic"], ["indic", "ind"], ["ddjj", "const"], ["arca", "const"],
+        ["const", "cons"], ["ddjj", "panel"], ["alert", "panel"], ["scor", "panel"],
+        ["cons", "panel"], ["ind", "pind"], ["ddjj", "api"], ["alert", "api"],
+        ["scor", "api"], ["ind", "api"], ["cons", "api"], ["ddjj", "fresc"],
+        ["cons", "fresc"]
+      ]
+    },
+    "ajuste": {
+      "nombre": {"es": "Ajuste · Monitor del ajuste presupuestario", "en": "Ajuste · Budget adjustment monitor"},
+      "url": "https://ajuste.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "mecon", "col": "fuente", "nom": {"es": "Presupuesto Abierto", "en": "Open Budget"}, "sub": {"es": "Crédito anual publicado por MECON", "en": "Annual appropriations published by MECON"}},
+        {"id": "bora", "col": "fuente", "nom": {"es": "Boletín Oficial", "en": "Official Gazette"}, "sub": {"es": "Decisiones administrativas presupuestarias", "en": "Budget administrative decisions"}},
+        {"id": "bcra", "col": "fuente", "nom": {"es": "BCRA", "en": "BCRA"}, "sub": {"es": "Tipo de cambio mayorista y series monetarias", "en": "Wholesale exchange rate and monetary series"}},
+        {"id": "argd", "col": "fuente", "nom": {"es": "ArgentinaDatos", "en": "ArgentinaDatos"}, "sub": {"es": "Inflación mensual y dólar oficial", "en": "Monthly inflation and official dollar"}},
+        {"id": "deis", "col": "fuente", "nom": {"es": "DEIS y SNIC", "en": "DEIS and SNIC"}, "sub": {"es": "Salud y Seguridad: mortalidad y suicidios", "en": "Health and Security: mortality and suicides"}},
+        {"id": "pres", "col": "proceso", "nom": {"es": "Actualización del presupuesto", "en": "Budget update"}, "sub": {"es": "Diario 08:00: reemplaza 2026; carga 2023 si falta", "en": "Daily 08:00 ART: replaces 2026; loads 2023 if missing"}},
+        {"id": "disc", "col": "proceso", "nom": {"es": "Descubrimiento de normas", "en": "Rule discovery"}, "sub": {"es": "Diario 03:00: busca DA de los últimos 30 días", "en": "Daily 03:00 ART: looks for decisions from the last 30 days"}},
+        {"id": "acum", "col": "proceso", "nom": {"es": "Acumulación de normas", "en": "Rule accumulation"}, "sub": {"es": "Después de cada búsqueda: agrega y nunca borra", "en": "After each search: adds and never deletes"}},
+        {"id": "macro", "col": "proceso", "nom": {"es": "Índices macro", "en": "Macro indices"}, "sub": {"es": "Día 16 de cada mes: seed_macro_indices.py", "en": "Day 16 of each month: seed_macro_indices.py"}},
+        {"id": "soc", "col": "proceso", "nom": {"es": "Indicadores sociales", "en": "Social indicators"}, "sub": {"es": "Días 1 y 15 de cada mes: scraper_social.py", "en": "Days 1 and 15 of each month: scraper_social.py"}},
+        {"id": "verif", "col": "proceso", "nom": {"es": "Verificación de cifras", "en": "Figure check"}, "sub": {"es": "Diario 10:30: recalcula y compara con la API; abre un issue si falla", "en": "Daily 10:30 ART: recomputes and compares with the API; opens an issue on failure"}},
+        {"id": "dpres", "col": "dato", "nom": {"es": "Presupuesto", "en": "Budget"}, "sub": {"es": "PostgreSQL: partidas de 2023 y 2026", "en": "PostgreSQL: 2023 and 2026 line items"}},
+        {"id": "ddas", "col": "dato", "nom": {"es": "Normativa", "en": "Rules"}, "sub": {"es": "JSON: normas recientes y acumuladas", "en": "JSON: recent and accumulated rules"}},
+        {"id": "dmac", "col": "dato", "nom": {"es": "Índices macro", "en": "Macro indices"}, "sub": {"es": "Inflación y dólar: base del deflactor", "en": "Inflation and dollar: basis of the deflator"}},
+        {"id": "dsoc", "col": "dato", "nom": {"es": "Datos sociales", "en": "Social data"}, "sub": {"es": "JSON: indicadores sanitarios y de seguridad", "en": "JSON: health and security indicators"}},
+        {"id": "dver", "col": "dato", "nom": {"es": "Última verificación sana", "en": "Latest clean check"}, "sub": {"es": "JSON: resultado de la verificación diaria", "en": "JSON: result of the daily check"}},
+        {"id": "panel", "col": "salida", "nom": {"es": "Tablero", "en": "Dashboard"}, "sub": {"es": "Ranking, incisos, nominal vs. real, licuación y sectores", "en": "Ranking, items, nominal vs. real, erosion and sectors"}},
+        {"id": "impa", "col": "salida", "nom": {"es": "Impacto social", "en": "Social impact"}, "sub": {"es": "Indicadores junto a la evolución del gasto", "en": "Indicators next to spending trends"}},
+        {"id": "norm", "col": "salida", "nom": {"es": "Normativa", "en": "Rules"}, "sub": {"es": "/api/v1/normativa: decisiones publicadas", "en": "/api/v1/normativa: published decisions"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/v1/analisis y /api/v1/partidas; la consulta el Mapa", "en": "/api/v1/analisis and /api/v1/partidas; queried by the Map"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: períodos y última verificación", "en": "/api/frescura: periods and latest check"}}
+      ],
+      "aristas": [
+        ["mecon", "pres"], ["pres", "dpres"], ["bora", "disc"], ["disc", "acum"],
+        ["acum", "ddas"], ["bcra", "macro"], ["argd", "macro"], ["macro", "dmac"],
+        ["deis", "soc"], ["soc", "dsoc"], ["api", "verif"], ["verif", "dver"],
+        ["dpres", "panel"], ["dmac", "panel"], ["bcra", "panel"], ["dpres", "api"],
+        ["dmac", "api"], ["dsoc", "impa"], ["ddas", "norm"], ["dpres", "fresc"],
+        ["dmac", "fresc"], ["dsoc", "fresc"], ["dver", "fresc"]
+      ]
     }
   }
 }
