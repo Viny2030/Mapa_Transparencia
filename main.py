@@ -142,6 +142,8 @@ HTML_CONTENT = """<!DOCTYPE html>
   <a href="/grafo">🕸️ Grafo</a>
   <a href="/funcionamiento">⚙️ Cómo funciona cada sitio</a>
   <a href="/informe">📅 Informe de actualización</a>
+  <a href="/funcionamiento?lang=en" lang="en">⚙️ How each site works</a>
+  <a href="/informe?lang=en" lang="en">📅 Update report</a>
   <a href="/docs">🔧 API</a>
   <a href="/en">🇺🇸 English</a>
 </nav>
