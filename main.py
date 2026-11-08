@@ -141,6 +141,7 @@ HTML_CONTENT = """<!DOCTYPE html>
   <a href="/manual">📖 Manual</a>
   <a href="/grafo">🕸️ Grafo</a>
   <a href="/funcionamiento">⚙️ Cómo funciona cada sitio</a>
+  <a href="/informe">📅 Informe de actualización</a>
   <a href="/docs">🔧 API</a>
   <a href="/en">🇺🇸 English</a>
 </nav>
@@ -488,6 +489,74 @@ async def funcionamiento():
 async def funcionamiento_json():
     """Datos de los grafos de funcionamiento (nombres y descripciones en ES/EN)."""
     return JSONResponse(json.loads((_BASE_DIR / "funcionamiento.json").read_text(encoding="utf-8")))
+
+
+_INFORME_TTL = 600  # segundos: el informe consulta los 11 sitios y GitHub
+_informe_cache = {"t": 0.0, "datos": None}
+_informe_lock = asyncio.Lock()
+_VALIDACION_URL = ("https://api.github.com/repos/Viny2030/Mapa_Transparencia/actions/workflows/"
+                   "validacion_cruzada.yml/runs?per_page=5&status=completed")
+
+
+def _ultima_validacion() -> dict | None:
+    """Última corrida terminada de la validación cruzada (API pública de GitHub)."""
+    try:
+        r = httpx.get(_VALIDACION_URL, timeout=10, headers={"Accept": "application/vnd.github+json"})
+        r.raise_for_status()
+        corridas = r.json().get("workflow_runs") or []
+    except Exception:
+        return None
+    if not corridas:
+        return None
+    c = corridas[0]
+    return {"conclusion": c.get("conclusion"), "fecha": c.get("updated_at"), "url": c.get("html_url")}
+
+
+def _armar_informe() -> dict:
+    """Une la frescura de los 11 sitios y la validación cruzada (GET /api/informe)."""
+    import importlib.util
+    from concurrent.futures import ThreadPoolExecutor
+    from datetime import datetime, timezone
+
+    spec = importlib.util.spec_from_file_location("frescura_check", _BASE_DIR / "scripts" / "frescura_check.py")
+    fc = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(fc)
+    sitios = json.loads((_BASE_DIR / "frescura" / "sitios.json").read_text(encoding="utf-8"))["sitios"]
+
+    def revisar(s):
+        return fc.revisar_sitio(s, get=lambda url: fc._get(url, timeout=20))
+
+    with ThreadPoolExecutor(max_workers=len(sitios)) as ex:
+        resultados = list(ex.map(revisar, sitios))
+    return {
+        "generado": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "resumen": {
+            "sitios": len(resultados),
+            "responden": sum(r["responde"] for r in resultados),
+            "con_ficha": sum(r["con_ficha"] for r in resultados),
+            "al_dia": sum(r["al_dia"] for r in resultados),
+            "tecnicas": sum(len(r["tecnicas"]) for r in resultados),
+            "contenido": sum(len(r["contenido"]) for r in resultados),
+        },
+        "validacion": _ultima_validacion(),
+        "sitios": resultados,
+    }
+
+
+@app.get("/api/informe")
+async def api_informe():
+    """Informe de actualización de la red (se guarda 10 minutos)."""
+    async with _informe_lock:
+        if _informe_cache["datos"] is None or time.time() - _informe_cache["t"] > _INFORME_TTL:
+            _informe_cache["datos"] = await asyncio.to_thread(_armar_informe)
+            _informe_cache["t"] = time.time()
+        return JSONResponse(_informe_cache["datos"])
+
+
+@app.get("/informe", response_class=HTMLResponse)
+async def informe():
+    """Informe de actualización de los 11 sitios (?lang=en para inglés)."""
+    return _pagina("informe.html")
 
 
 @app.get("/manual", response_class=HTMLResponse)

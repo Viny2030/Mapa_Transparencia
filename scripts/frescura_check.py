@@ -63,6 +63,7 @@ def revisar_sitio(sitio: dict, get=_get) -> dict:
             data = None
         if isinstance(data, dict) and str(data.get("formato", "")).startswith("frescura/"):
             res["responde"] = res["con_ficha"] = True
+            res["datos"] = data.get("datos", [])
             for d in data.get("datos", []):
                 fila = {"dato": d.get("dato") or d.get("id"), "periodo": d.get("periodo"),
                         "fuente": d.get("fuente"), "dias_desde_carga": d.get("dias_desde_carga"),
@@ -101,15 +102,15 @@ def informe_md(resultados: list[dict], ahora: str) -> str:
             lin.append(f"| [{r['nombre']}]({r['url']}) | {f['dato']} | {det} |")
     else:
         lin.append("Ninguna.")
-    lin += ["", "## 🟡 Contenido (la fuente no publicó datos nuevos: hay que buscarlos)", ""]
+    lin += ["", "## 🟡 Contenido (dato viejo o pendiente de revisar: no se arregla con código)", ""]
     if con:
-        lin.append("| Sitio | Dato | Período que cubre | Fuente |")
-        lin.append("|---|---|---|---|")
+        lin.append("| Sitio | Dato | Período que cubre | Fuente | Nota |")
+        lin.append("|---|---|---|---|---|")
         for r, f in con:
             per = f.get("periodo") or "—"
             if f.get("dias_desde_periodo") is not None:
                 per += f" (hace {f['dias_desde_periodo']} días)"
-            lin.append(f"| [{r['nombre']}]({r['url']}) | {f['dato']} | {per} | {f.get('fuente') or '—'} |")
+            lin.append(f"| [{r['nombre']}]({r['url']}) | {f['dato']} | {per} | {f.get('fuente') or '—'} | {f.get('nota') or '—'} |")
     else:
         lin.append("Ninguna.")
     sin = [r["nombre"] for r in resultados if r["responde"] and not r["con_ficha"]]
