@@ -1,6 +1,6 @@
 {
   "_nota": "Grafos de funcionamiento de cada sitio: de qué fuentes oficiales toma los datos, qué procesos automáticos los transforman, dónde se guardan y qué publica. Columnas: fuente, proceso, dato, salida. Cada nodo tiene nombre y descripción en español e inglés. Relevado del código y los workflows de cada repositorio.",
-  "relevado": "2026-11-07",
+  "relevado": "2026-11-08",
   "columnas": {
     "fuente":  {"es": "Fuentes", "en": "Sources"},
     "proceso": {"es": "Procesos automáticos", "en": "Automated processes"},
@@ -164,6 +164,34 @@
         ["hcdn", "md"], ["presup", "md"], ["argd", "red"], ["md", "json"], ["md", "csv"], ["json", "agente"],
         ["agente", "alertas"], ["alertas", "mail"], ["md", "mail"], ["json", "red"], ["json", "tablero"], ["json", "detalle"],
         ["red", "redv"], ["json", "ia"], ["json", "fresc"], ["json", "api"], ["tests", "tablero"]
+      ]
+    },
+    "meaci": {
+      "nombre": {"es": "MEACI · Empresas en casos internacionales", "en": "MEACI · Companies in international cases"},
+      "url": "https://meaci.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "ocde", "col": "fuente", "nom": {"es": "Informe OCDE 2026", "en": "OECD 2026 report"}, "sub": {"es": "31 casos multijurisdiccionales y 114 resoluciones", "en": "31 multijurisdictional cases and 114 resolutions"}},
+        {"id": "auth", "col": "fuente", "nom": {"es": "Resoluciones de cada autoridad", "en": "Each authority's resolutions"}, "sub": {"es": "DOJ, SEC, SFO, PNF y otras: montos, mecanismos y enlaces", "en": "DOJ, SEC, SFO, PNF and others: amounts, mechanisms and links"}},
+        {"id": "doj", "col": "fuente", "nom": {"es": "DOJ (FCPA)", "en": "DOJ (FCPA)"}, "sub": {"es": "Casos corporativos recientes de EE. UU.", "en": "Recent US corporate cases"}},
+        {"id": "sfo", "col": "fuente", "nom": {"es": "SFO (gov.uk)", "en": "SFO (gov.uk)"}, "sub": {"es": "Acuerdos (DPA) del Reino Unido, por la API de gov.uk", "en": "UK agreements (DPAs), through the gov.uk API"}},
+        {"id": "seed", "col": "proceso", "nom": {"es": "Carga verificada del seed", "en": "Verified seed load"}, "sub": {"es": "data/ocde_seed.py, curado a mano; entra si la base está vacía", "en": "data/ocde_seed.py, curated by hand; loaded if the database is empty"}},
+        {"id": "cron", "col": "proceso", "nom": {"es": "Ciclo diario", "en": "Daily cycle"}, "sub": {"es": "06:00 dentro de la app (APScheduler): genera alertas y revisa novedades", "en": "06:00 ART inside the app (APScheduler): creates alerts and checks for new cases"}},
+        {"id": "nov", "col": "proceso", "nom": {"es": "Detector de novedades", "en": "New-case detector"}, "sub": {"es": "scraper/novedades.py: busca casos que la base no tiene; no los carga", "en": "scraper/novedades.py: looks for cases not in the database; does not load them"}},
+        {"id": "sync", "col": "proceso", "nom": {"es": "Revisión semanal", "en": "Weekly review"}, "sub": {"es": "Lunes 03:00 (GitHub Actions): compara con el seed; solo informa", "en": "Mondays 03:00 ART (GitHub Actions): compares with the seed; report only"}},
+        {"id": "red", "col": "proceso", "nom": {"es": "Cálculo de la red de casos", "en": "Case network computation"}, "sub": {"es": "Se arma desde la base al consultarla", "en": "Built from the database on request"}},
+        {"id": "base", "col": "dato", "nom": {"es": "Casos, empresas y resoluciones", "en": "Cases, companies and resolutions"}, "sub": {"es": "PostgreSQL: incluye presencia y CUIT en Argentina", "en": "PostgreSQL: includes presence and CUITs in Argentina"}},
+        {"id": "alertas", "col": "dato", "nom": {"es": "Alertas", "en": "Alerts"}, "sub": {"es": "Empresas sancionadas con presencia en Argentina, por nivel", "en": "Sanctioned companies with a presence in Argentina, by level"}},
+        {"id": "novs", "col": "dato", "nom": {"es": "Novedades para revisar", "en": "New cases to review"}, "sub": {"es": "Quedan pendientes hasta verificarlas a mano", "en": "Stay pending until checked by hand"}},
+        {"id": "tablero", "col": "salida", "nom": {"es": "Tablero", "en": "Dashboard"}, "sub": {"es": "Casos, empresas, cruce por CUIT, alertas, novedades y manual", "en": "Cases, companies, CUIT check, alerts, new cases and manual"}},
+        {"id": "redp", "col": "salida", "nom": {"es": "Red de casos", "en": "Case network"}, "sub": {"es": "Grafo de casos y jurisdicciones (/red)", "en": "Graph of cases and jurisdictions (/red)"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/*; la usan Jefatura, Comprar, Contratos y el Mapa", "en": "/api/*; used by Jefatura, Comprar, Contratos and the Map"}},
+        {"id": "inf", "col": "salida", "nom": {"es": "Informe semanal", "en": "Weekly report"}, "sub": {"es": "Queda en el resumen de la corrida de Actions", "en": "Left in the summary of the Actions run"}}
+      ],
+      "aristas": [
+        ["ocde", "seed"], ["auth", "seed"], ["seed", "base"], ["base", "cron"], ["cron", "alertas"], ["cron", "nov"],
+        ["doj", "nov"], ["sfo", "nov"], ["base", "nov"], ["nov", "novs"], ["seed", "sync"], ["doj", "sync"],
+        ["sfo", "sync"], ["sync", "inf"], ["base", "red"], ["red", "redp"], ["base", "tablero"], ["alertas", "tablero"],
+        ["novs", "tablero"], ["base", "api"], ["alertas", "api"]
       ]
     }
   }
