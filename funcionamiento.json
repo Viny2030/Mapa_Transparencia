@@ -327,6 +327,38 @@
         ["dmac", "api"], ["dsoc", "impa"], ["ddas", "norm"], ["dpres", "fresc"],
         ["dmac", "fresc"], ["dsoc", "fresc"], ["dver", "fresc"]
       ]
+    },
+    "comprar": {
+      "nombre": {"es": "Comprar · Monitor de licitaciones y contratos", "en": "Comprar · Tenders and contracts monitor"},
+      "url": "https://comprar.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "bora", "col": "fuente", "nom": {"es": "Boletín Oficial", "en": "Official Gazette"}, "sub": {"es": "Sección Tercera: licitaciones y adjudicaciones", "en": "Third Section: tenders and awards"}},
+        {"id": "compr", "col": "fuente", "nom": {"es": "Comprar.gob.ar", "en": "Comprar.gob.ar"}, "sub": {"es": "Procesos con apertura próxima; sin histórico", "en": "Processes opening soon; no history"}},
+        {"id": "tgn", "col": "fuente", "nom": {"es": "TGN", "en": "National Treasury"}, "sub": {"es": "Presupuesto Abierto: pagado por organismo, sin CUIT", "en": "Open Budget: paid per agency, no tax ID"}},
+        {"id": "meaci", "col": "fuente", "nom": {"es": "MEACI", "en": "MEACI"}, "sub": {"es": "Sanciones internacionales por CUIT", "en": "International sanctions by tax ID"}},
+        {"id": "ia", "col": "fuente", "nom": {"es": "Claude (IA)", "en": "Claude (AI)"}, "sub": {"es": "Segunda opinión a pedido; no cambia el puntaje", "en": "Second opinion on request; does not change the score"}},
+        {"id": "rep", "col": "proceso", "nom": {"es": "Reporte diario", "en": "Daily report"}, "sub": {"es": "Lun a vie 08:30 y 12:30: corre en un equipo en Argentina", "en": "Mon-Fri 08:30 and 12:30 ART: runs on a computer in Argentina"}},
+        {"id": "ext", "col": "proceso", "nom": {"es": "Extracción de avisos", "en": "Notice extraction"}, "sub": {"es": "Proveedor, CUIT y monto de cada adjudicación", "en": "Supplier, tax ID and amount of each award"}},
+        {"id": "cruce", "col": "proceso", "nom": {"es": "Cruce entre fuentes", "en": "Source cross-check"}, "sub": {"es": "BORA → Comprar → TGN, por nombre del organismo", "en": "BORA → Comprar → Treasury, by agency name"}},
+        {"id": "riesgo", "col": "proceso", "nom": {"es": "Matriz de riesgo", "en": "Risk matrix"}, "sub": {"es": "Calcula el riesgo licitatorio de cada aviso", "en": "Computes the tender risk of each notice"}},
+        {"id": "sync", "col": "proceso", "nom": {"es": "Publicación en el sitio", "en": "Site publishing"}, "sub": {"es": "El servidor toma los reportes del repositorio", "en": "The server takes the reports from the repository"}},
+        {"id": "alerta", "col": "proceso", "nom": {"es": "Control de faltantes", "en": "Missing-report check"}, "sub": {"es": "Días hábiles 14:00: avisa por mail si falta el reporte", "en": "Business days 14:00 ART: emails if the report is missing"}},
+        {"id": "excel", "col": "dato", "nom": {"es": "Reportes Excel", "en": "Excel reports"}, "sub": {"es": "Licitaciones, adjudicaciones, Comprar, TGN y riesgo, por día", "en": "Tenders, awards, Comprar, Treasury and risk, per day"}},
+        {"id": "marco", "col": "dato", "nom": {"es": "Marco normativo", "en": "Legal framework"}, "sub": {"es": "Régimen y topes de cada procedimiento", "en": "Regime and limits of each procedure"}},
+        {"id": "panel", "col": "salida", "nom": {"es": "Dashboard", "en": "Dashboard"}, "sub": {"es": "Resumen del último reporte", "en": "Summary of the latest report"}},
+        {"id": "lici", "col": "salida", "nom": {"es": "Licitaciones", "en": "Tenders"}, "sub": {"es": "Flujo cruzado del día, con alertas de MEACI", "en": "Daily cross-checked flow, with MEACI alerts"}},
+        {"id": "pmarco", "col": "salida", "nom": {"es": "Marco normativo", "en": "Legal framework"}, "sub": {"es": "Página y /api/marco-normativo", "en": "Page and /api/marco-normativo"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API y descargas", "en": "API and downloads"}, "sub": {"es": "/api/reportes y Excel por día; la consulta el Mapa", "en": "/api/reportes and Excel per day; queried by the Map"}},
+        {"id": "estado", "col": "salida", "nom": {"es": "Estado", "en": "Status"}, "sub": {"es": "/estado: salud del sistema y días faltantes", "en": "/estado: system health and missing days"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: último reporte guardado", "en": "/api/frescura: latest stored report"}}
+      ],
+      "aristas": [
+        ["bora", "rep"], ["compr", "rep"], ["tgn", "rep"], ["rep", "ext"],
+        ["ext", "cruce"], ["cruce", "riesgo"], ["riesgo", "excel"], ["excel", "sync"],
+        ["excel", "alerta"], ["sync", "panel"], ["sync", "lici"], ["sync", "api"],
+        ["sync", "estado"], ["sync", "fresc"], ["meaci", "lici"], ["ia", "lici"],
+        ["marco", "lici"], ["marco", "pmarco"]
+      ]
     }
   }
 }
