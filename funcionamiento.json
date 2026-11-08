@@ -313,6 +313,7 @@
         {"id": "dver", "col": "dato", "nom": {"es": "Última verificación sana", "en": "Latest clean check"}, "sub": {"es": "JSON: resultado de la verificación diaria", "en": "JSON: result of the daily check"}},
         {"id": "panel", "col": "salida", "nom": {"es": "Tablero", "en": "Dashboard"}, "sub": {"es": "Ranking, incisos, nominal vs. real, licuación y sectores", "en": "Ranking, items, nominal vs. real, erosion and sectors"}},
         {"id": "impa", "col": "salida", "nom": {"es": "Impacto social", "en": "Social impact"}, "sub": {"es": "Indicadores junto a la evolución del gasto", "en": "Indicators next to spending trends"}},
+        {"id": "mapa", "col": "salida", "nom": {"es": "Mapa del presupuesto", "en": "Budget map"}, "sub": {"es": "/treemap: jurisdicción, programa e inciso de un año", "en": "/treemap: jurisdiction, program and item for one year"}},
         {"id": "norm", "col": "salida", "nom": {"es": "Normativa", "en": "Rules"}, "sub": {"es": "/api/v1/normativa: decisiones publicadas", "en": "/api/v1/normativa: published decisions"}},
         {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/v1/analisis y /api/v1/partidas; la consulta el Mapa", "en": "/api/v1/analisis and /api/v1/partidas; queried by the Map"}},
         {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: períodos y última verificación", "en": "/api/frescura: periods and latest check"}}
@@ -321,7 +322,7 @@
         ["mecon", "pres"], ["pres", "dpres"], ["bora", "disc"], ["disc", "acum"],
         ["acum", "ddas"], ["bcra", "macro"], ["argd", "macro"], ["macro", "dmac"],
         ["deis", "soc"], ["soc", "dsoc"], ["api", "verif"], ["verif", "dver"],
-        ["dpres", "panel"], ["dmac", "panel"], ["bcra", "panel"], ["dpres", "api"],
+        ["dpres", "mapa"], ["dpres", "panel"], ["dmac", "panel"], ["bcra", "panel"], ["dpres", "api"],
         ["dmac", "api"], ["dsoc", "impa"], ["ddas", "norm"], ["dpres", "fresc"],
         ["dmac", "fresc"], ["dsoc", "fresc"], ["dver", "fresc"]
       ]
