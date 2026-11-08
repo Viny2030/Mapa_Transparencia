@@ -227,6 +227,30 @@
         ["djd", "est"], ["juzj", "ope"], ["magj", "ope"], ["magj", "fresc"], ["djd", "fresc"], ["csj", "fresc"],
         ["magj", "api"], ["tests", "est"]
       ]
+    },
+    "corrupcion": {
+      "nombre": {"es": "Corrupción Estratégica · Vectores", "en": "Strategic Corruption · Vectors"},
+      "url": "https://corrupcionestrategica-production.up.railway.app/",
+      "nodos": [
+        {"id": "inv", "col": "fuente", "nom": {"es": "Investigación documentada", "en": "Documented research"}, "sub": {"es": "Casos, evidencia y enablers relevados a mano", "en": "Cases, evidence and enablers gathered by hand"}},
+        {"id": "bcra", "col": "fuente", "nom": {"es": "BCRA", "en": "BCRA"}, "sub": {"es": "Comunicados del Banco Central", "en": "Central Bank announcements"}},
+        {"id": "bora", "col": "fuente", "nom": {"es": "Boletín Oficial", "en": "Official Gazette"}, "sub": {"es": "Primera sección de los últimos días", "en": "First section of recent days"}},
+        {"id": "seed", "col": "proceso", "nom": {"es": "Carga inicial", "en": "Initial load"}, "sub": {"es": "seed_vectores.json: entra al arrancar si la base está vacía", "en": "seed_vectores.json: loaded at startup if the database is empty"}},
+        {"id": "clas", "col": "proceso", "nom": {"es": "Clasificación NEST", "en": "NEST classification"}, "sub": {"es": "scoring.py: asigna clasificación y nivel de alerta", "en": "scoring.py: assigns classification and alert level"}},
+        {"id": "robot", "col": "proceso", "nom": {"es": "Robot semanal", "en": "Weekly robot"}, "sub": {"es": "Lunes 08:00: robot_diario.py busca novedades de cada vector", "en": "Mondays 08:00 ART: robot_diario.py looks for news on each vector"}},
+        {"id": "base", "col": "dato", "nom": {"es": "Vectores", "en": "Vectors"}, "sub": {"es": "PostgreSQL: actores, contrapartes, puntajes y clasificación", "en": "PostgreSQL: actors, counterparts, scores and classification"}},
+        {"id": "evid", "col": "dato", "nom": {"es": "Evidencia y novedades", "en": "Evidence and news"}, "sub": {"es": "PostgreSQL: fuentes y actualizaciones de cada vector", "en": "PostgreSQL: sources and updates for each vector"}},
+        {"id": "enab", "col": "dato", "nom": {"es": "Enablers y vínculos", "en": "Enablers and links"}, "sub": {"es": "Cargados a mano en la página", "en": "Loaded by hand in the page"}},
+        {"id": "panel", "col": "salida", "nom": {"es": "Panel", "en": "Panel"}, "sub": {"es": "Indicadores, tabla y detalle de cada vector", "en": "Indicators, table and detail of each vector"}},
+        {"id": "grafo", "col": "salida", "nom": {"es": "Grafo", "en": "Graph"}, "sub": {"es": "País, actor, contraparte, enablers y personas", "en": "Country, actor, counterpart, enablers and people"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/vectores y /api/alertas; la consulta el Mapa", "en": "/api/vectores and /api/alertas; queried by the Map"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: última novedad registrada", "en": "/api/frescura: latest news recorded"}}
+      ],
+      "aristas": [
+        ["inv", "seed"], ["seed", "clas"], ["clas", "base"], ["inv", "enab"], ["bcra", "robot"], ["bora", "robot"],
+        ["base", "robot"], ["robot", "evid"], ["base", "panel"], ["evid", "panel"], ["enab", "panel"], ["base", "grafo"],
+        ["enab", "grafo"], ["base", "api"], ["base", "fresc"], ["evid", "fresc"]
+      ]
     }
   }
 }
