@@ -193,6 +193,40 @@
         ["sfo", "sync"], ["sync", "inf"], ["base", "red"], ["red", "redp"], ["base", "tablero"], ["alertas", "tablero"],
         ["novs", "tablero"], ["base", "api"], ["alertas", "api"]
       ]
+    },
+    "justicia": {
+      "nombre": {"es": "Monitor Judicial", "en": "Judicial Monitor"},
+      "url": "https://justicia.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "djus", "col": "fuente", "nom": {"es": "datos.jus.gob.ar", "en": "datos.jus.gob.ar"}, "sub": {"es": "Magistrados, vacantes, renuncias, designaciones y otros datasets", "en": "Judges, vacancies, resignations, appointments and other datasets"}},
+        {"id": "pjn", "col": "fuente", "nom": {"es": "Estadísticas del PJN", "en": "Judiciary statistics (PJN)"}, "sub": {"es": "Sentencias, movimiento y trámite por jurisdicción", "en": "Rulings, caseload and proceedings by jurisdiction"}},
+        {"id": "csjn", "col": "fuente", "nom": {"es": "Corte Suprema (CSJN)", "en": "Supreme Court (CSJN)"}, "sub": {"es": "Composición, anuarios y presupuesto", "en": "Composition, yearbooks and budget"}},
+        {"id": "mag", "col": "proceso", "nom": {"es": "Actualización de magistrados", "en": "Judges update"}, "sub": {"es": "03:00: scraper_magistrados.py", "en": "03:00 ART: scraper_magistrados.py"}},
+        {"id": "juz", "col": "proceso", "nom": {"es": "Juzgados diario", "en": "Daily courts update"}, "sub": {"es": "03:00: scraper_juzgados_nacional.py, sin el crawl completo", "en": "03:00 ART: scraper_juzgados_nacional.py, without the full crawl"}},
+        {"id": "crawl", "col": "proceso", "nom": {"es": "Crawl completo del PJN", "en": "Full PJN crawl"}, "sub": {"es": "Miércoles 02:00: causas y oralidad", "en": "Wednesdays 02:00 ART: cases and oral proceedings"}},
+        {"id": "refresh", "col": "proceso", "nom": {"es": "Datasets de datos.jus", "en": "datos.jus datasets"}, "sub": {"es": "Día 1 de cada mes, 02:00", "en": "1st of each month, 02:00 ART"}},
+        {"id": "vigia", "col": "proceso", "nom": {"es": "Vigía de la Corte", "en": "Supreme Court watch"}, "sub": {"es": "Lunes 09:00: revisa novedades; no modifica datos", "en": "Mondays 09:00 ART: checks for news; does not change data"}},
+        {"id": "carga", "col": "proceso", "nom": {"es": "Carga manual de la Corte", "en": "Manual Supreme Court load"}, "sub": {"es": "Una persona actualiza el archivo cuando hay novedades", "en": "A person updates the file when there is news"}},
+        {"id": "red", "col": "proceso", "nom": {"es": "Cálculo de la red de vacantes", "en": "Vacancies network computation"}, "sub": {"es": "Se arma al consultarla", "en": "Built on request"}},
+        {"id": "tests", "col": "proceso", "nom": {"es": "Tests diarios", "en": "Daily tests"}, "sub": {"es": "03:00: controlan el código", "en": "03:00 ART: check the code"}},
+        {"id": "magj", "col": "dato", "nom": {"es": "Magistrados y vacantes", "en": "Judges and vacancies"}, "sub": {"es": "magistrados.json, vacantes.json, renuncias.json y designaciones.json", "en": "magistrados.json, vacantes.json, renuncias.json and designaciones.json"}},
+        {"id": "juzj", "col": "dato", "nom": {"es": "Juzgados", "en": "Courts"}, "sub": {"es": "juzgados_nacional.json y .csv", "en": "juzgados_nacional.json and .csv"}},
+        {"id": "djd", "col": "dato", "nom": {"es": "Datasets descargados", "en": "Downloaded datasets"}, "sub": {"es": "Carpeta datos_jus/", "en": "datos_jus/ folder"}},
+        {"id": "csj", "col": "dato", "nom": {"es": "Datos de la Corte", "en": "Supreme Court data"}, "sub": {"es": "datos_csjn.json", "en": "datos_csjn.json"}},
+        {"id": "est", "col": "salida", "nom": {"es": "Corte, Consejo, indicadores y candidatos", "en": "Court, Council, indicators and candidates"}, "sub": {"es": "Tableros estratégicos", "en": "Strategic dashboards"}},
+        {"id": "ope", "col": "salida", "nom": {"es": "Cámaras, nacional y juzgados", "en": "Courts of appeals, national view and courts"}, "sub": {"es": "Tableros operativos", "en": "Operational dashboards"}},
+        {"id": "redp", "col": "salida", "nom": {"es": "Red de vacantes", "en": "Vacancies network"}, "sub": {"es": "Grafo de cámaras y ámbitos de concurso (/red)", "en": "Graph of courts and selection bodies (/red)"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: al día o atrasado, dato por dato", "en": "/api/frescura: up to date or late, item by item"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API y archivos públicos", "en": "API and public files"}, "sub": {"es": "La usan el Mapa y Monitor IRI", "en": "Used by the Map and the IRI Monitor"}},
+        {"id": "aviso", "col": "salida", "nom": {"es": "Aviso de novedades de la Corte", "en": "Supreme Court news alert"}, "sub": {"es": "Issue en GitHub, que avisa por correo", "en": "GitHub issue, which alerts by email"}}
+      ],
+      "aristas": [
+        ["djus", "mag"], ["mag", "magj"], ["magj", "juz"], ["pjn", "juz"], ["pjn", "crawl"], ["juz", "juzj"],
+        ["crawl", "juzj"], ["djus", "refresh"], ["refresh", "djd"], ["djd", "juz"], ["csjn", "vigia"], ["vigia", "aviso"],
+        ["csjn", "carga"], ["carga", "csj"], ["magj", "red"], ["red", "redp"], ["magj", "est"], ["csj", "est"],
+        ["djd", "est"], ["juzj", "ope"], ["magj", "ope"], ["magj", "fresc"], ["djd", "fresc"], ["csj", "fresc"],
+        ["magj", "api"], ["tests", "est"]
+      ]
     }
   }
 }
