@@ -275,6 +275,7 @@
         {"id": "ind", "col": "dato", "nom": {"es": "Perfil internacional", "en": "International profile"}, "sub": {"es": "CSV: indicadores y perfil de riesgo completo", "en": "CSV: indicators and full risk profile"}},
         {"id": "cons", "col": "dato", "nom": {"es": "Constancias públicas", "en": "Public certificates"}, "sub": {"es": "CSV sin domicilio ni otros datos personales", "en": "CSV without address or other personal data"}},
         {"id": "panel", "col": "salida", "nom": {"es": "Tablero", "en": "Dashboard"}, "sub": {"es": "Por poder del Estado, con riesgo y alertas", "en": "By branch of government, with risk and alerts"}},
+        {"id": "red", "col": "salida", "nom": {"es": "Red de pasos", "en": "Moves network"}, "sub": {"es": "/red: organismo y sector privado declarado, sin personas", "en": "/red: agency and declared private sector, without people"}},
         {"id": "pind", "col": "salida", "nom": {"es": "Pestaña Indicadores", "en": "Indicators tab"}, "sub": {"es": "12 indicadores por marco internacional y por funcionario", "en": "12 indicators by international framework and by official"}},
         {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/resumen, /api/alertas, /api/funcionario; la consulta el Mapa", "en": "/api/resumen, /api/alertas, /api/funcionario; queried by the Map"}},
         {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: ejercicio de las DDJJ y última consulta a ARCA", "en": "/api/frescura: declaration year and latest ARCA query"}}
@@ -285,7 +286,7 @@
         ["bcra", "score"], ["marcos", "score"], ["score", "scor"], ["scor", "ml"],
         ["ddjj", "ml"], ["ml", "scor"], ["alert", "indic"], ["scor", "indic"],
         ["marcos", "indic"], ["indic", "ind"], ["ddjj", "const"], ["arca", "const"],
-        ["const", "cons"], ["ddjj", "panel"], ["alert", "panel"], ["scor", "panel"],
+        ["const", "cons"], ["alert", "red"], ["ddjj", "panel"], ["alert", "panel"], ["scor", "panel"],
         ["cons", "panel"], ["ind", "pind"], ["ddjj", "api"], ["alert", "api"],
         ["scor", "api"], ["ind", "api"], ["cons", "api"], ["ddjj", "fresc"],
         ["cons", "fresc"]
