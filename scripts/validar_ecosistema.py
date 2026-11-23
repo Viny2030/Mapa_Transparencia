@@ -89,27 +89,69 @@ def control_comprar_vs_contratos(dias: int) -> None:
 
 
 # ── 2. Contratos: coherencia interna resumen vs organismos ───────────────────
-def control_contratos_interno() -> None:
+def control_contratos_interno():
     try:
-        res = get(f"{URL['contratos']}/api/resumen")
-        org = get(f"{URL['contratos']}/api/organismos").get("data") or []
+        resumen = get(f"{URL['contratos']}/api/resumen")
+        organismos = get(f"{URL['contratos']}/api/organismos").get("data", [])
     except Exception as e:
-        registrar("FALLA", "Contratos interno", f"no se pudo consultar ({e})")
+        registrar("FALLA", "Contratos interno", f"Error al consultar: {e}")
         return
-    suma = sum(o.get("monto_total") or 0 for o in org)
-    tot = res.get("monto_total_ars") or 0
-    dif = abs(suma - tot) / tot if tot else 1
-    nivel = "OK" if dif < 0.005 else "FALLA"
-    registrar(nivel, "Contratos interno",
-              f"monto_total_ars del resumen {fmt(tot)} vs suma por organismo {fmt(suma)} (dif. {dif:.2%}); "
-              f"{len(org)} organismos en la tabla vs organismos_unicos={res.get('organismos_unicos')}")
-    total, con_monto = res.get("total") or 0, res.get("con_monto") or 0
-    if total:
-        cob = con_monto / total
-        registrar("ADVERTENCIA" if cob < 0.5 else "OK", "Contratos interno",
-                  f"sólo {con_monto} de {total} adjudicaciones ({cob:.0%}) tienen monto: "
-                  f"el total en ARS subestima lo adjudicado")
 
+    suma = sum((o.get("monto_total") or 0) for o in organismos)
+    tot = resumen.get("monto_total_ars", 0)
+    organismos_unicos = resumen.get("organismos_unicos", len(organismos))
+    dif = abs(suma - tot) / tot if tot else 1
+
+    if len(organismos) < organismos_unicos:
+        # /api/organismos devuelve un top-N (hoy {len(organismos)} de
+        # {organismos_unicos}), no la lista completa: no es comparable 1:1
+        # contra monto_total_ars. Se valida solo que el top-N no supere el
+        # total (chequeo de cordura) y se reporta la cobertura real, sin
+        # marcar FALLA por una limitación de diseño del endpoint.
+        if suma > tot:
+            registrar(
+                "FALLA", "Contratos interno",
+                f"Suma del top-{len(organismos)} (${suma:,.0f}) supera el "
+                f"total declarado (${tot:,.0f}) — inconsistencia real, "
+                f"no explicable por cobertura parcial."
+            )
+        else:
+            registrar(
+                "ADVERTENCIA", "Contratos interno",
+                f"/api/organismos solo expone {len(organismos)} de "
+                f"{organismos_unicos} organismos; el top-{len(organismos)} "
+                f"cubre {suma/tot:.1%} del monto_total_ars declarado. No se "
+                f"puede validar el agregado completo hasta que el endpoint "
+                f"pagine todos los organismos."
+            )
+    elif dif < 0.005:
+        registrar(
+            "OK", "Contratos interno",
+            f"monto_total_ars (${tot:,.0f}) coincide con la suma por "
+            f"organismo (${suma:,.0f}), diferencia {dif:.2%}."
+        )
+    else:
+        registrar(
+            "FALLA", "Contratos interno",
+            f"monto_total_ars (${tot:,.0f}) difiere de la suma por "
+            f"organismo (${suma:,.0f}) en {dif:.2%} (umbral 0.5%)."
+        )
+
+    total_adj = resumen.get("total", 0)
+    con_monto = resumen.get("con_monto", 0)
+    if total_adj:
+        cob = con_monto / total_adj
+        if cob < 0.5:
+            registrar(
+                "ADVERTENCIA", "Contratos interno",
+                f"Solo {con_monto}/{total_adj} adjudicaciones ({cob:.0%}) "
+                f"tienen monto cargado; el total en ARS subestima lo adjudicado."
+            )
+        else:
+            registrar(
+                "OK", "Contratos interno",
+                f"{con_monto}/{total_adj} adjudicaciones ({cob:.0%}) con monto cargado."
+            )
 
 # ── 3. MEACI ↔ Contratos / Comprar ───────────────────────────────────────────
 def control_meaci() -> None:
