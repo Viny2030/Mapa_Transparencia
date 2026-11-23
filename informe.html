@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Informe de actualización · Mapa de Transparencia</title>
+<style>
+:root{--bg:#f1f5f9;--card:#fff;--texto:#0f172a;--suave:#475569;--tenue:#64748b;--borde:#dde2ec;--cab:#f8fafc;--azul:#1d4ed8;
+  --ok:#15803d;--ok-bg:#dcfce7;--con:#92400e;--con-bg:#fef3c7;--tec:#b91c1c;--tec-bg:#fee2e2;--neu:#475569;--neu-bg:#e2e8f0}
+@media (prefers-color-scheme:dark){:root{--bg:#0b1220;--card:#131c2e;--texto:#e2e8f0;--suave:#b4c0d3;--tenue:#8fa0b8;--borde:#27344a;--cab:#1a2539;--azul:#93c5fd;
+  --ok:#86efac;--ok-bg:#14361f;--con:#fcd34d;--con-bg:#3b2c0a;--tec:#fca5a5;--tec-bg:#3f1616;--neu:#cbd5e1;--neu-bg:#27344a}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--texto);font-family:system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5}
+header{background:linear-gradient(120deg,#0b3d91,#0d6efd);color:#fff;padding:1.4rem 16px;text-align:center}
+header h1{font-size:1.35rem;font-weight:700}
+header p{font-size:.9rem;opacity:.92;margin-top:.2rem}
+nav{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;margin-top:.7rem}
+nav a,nav button{color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);border-radius:16px;padding:.22rem .75rem;font-size:.8rem;text-decoration:none;cursor:pointer;font-family:inherit}
+main{max-width:1100px;margin:0 auto;padding:1rem 16px 2rem}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem}
+.kpi{background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:.65rem .85rem}
+.kpi b{display:block;font-size:1.5rem;font-weight:600}
+.kpi span{font-size:.78rem;color:var(--suave)}
+.bloque{background:var(--card);border:1px solid var(--borde);border-radius:10px;padding:.75rem 1rem;margin-top:.8rem}
+.bloque h2{font-size:1rem;font-weight:600;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.bloque h2 a{color:var(--texto)}
+.pie,.vacio{font-size:.82rem;color:var(--tenue);margin-top:.35rem}
+.gen{font-size:.82rem;color:var(--tenue);margin:.2rem 0 .8rem}
+.val a{color:var(--azul)}
+.tabla{overflow-x:auto;margin-top:.5rem}
+table{width:100%;border-collapse:collapse;font-size:.82rem;min-width:640px}
+th{text-align:left;background:var(--cab);padding:.35rem .5rem;font-weight:600;color:var(--suave)}
+td{padding:.4rem .5rem;border-top:1px solid var(--borde);vertical-align:top}
+td small{display:block;color:var(--tenue);font-size:.74rem}
+.et{display:inline-block;padding:.08rem .5rem;border-radius:5px;font-weight:600;font-size:.74rem;white-space:nowrap}
+.ok{color:var(--ok);background:var(--ok-bg)}.con{color:var(--con);background:var(--con-bg)}
+.tec{color:var(--tec);background:var(--tec-bg)}.neu{color:var(--neu);background:var(--neu-bg)}
+.error{color:var(--tec);padding:1rem 0}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="t-titulo"></h1>
+  <p id="t-sub"></p>
+  <nav>
+    <a id="t-portada" href="/"></a>
+    <button type="button" id="b-lang"></button>
+  </nav>
+</header>
+<main>
+  <p class="gen" id="generado"></p>
+  <div class="kpis" id="kpis"></div>
+  <div class="bloque val" id="validacion"></div>
+  <div id="sitios"></div>
+  <p class="pie" id="t-nota"></p>
+</main>
+<script>
+const P = new URLSearchParams(location.search);
+const LANG = P.get('lang') === 'en' ? 'en' : 'es';
+const TX = {
+  es: {
+    titulo: 'Informe de actualización de la red', sub: 'Estado de los datos de los 11 sitios, leído en vivo de cada uno.',
+    portada: 'Portada', otro: 'English', generado: 'Generado', cargando: 'Consultando los sitios…',
+    responden: 'Sitios que responden', ficha: 'Con ficha de datos', aldia: 'Datos al día', tecnicas: 'Fallas técnicas', contenido: 'Datos para revisar',
+    val: 'Validación cruzada de cifras', valsin: 'No se pudo consultar la última corrida.', valok: 'Última corrida sin fallas', valmal: 'La última corrida encontró fallas', ver: 'Ver detalle',
+    dato: 'Dato', fuente: 'Fuente', periodo: 'Período que cubre', carga: 'Última carga', estado: 'Estado', manual: 'manual',
+    eok: 'Al día', etec: 'Falló la actualización', econ: 'La fuente no publicó datos nuevos', sinficha: 'Sin ficha', caido: 'No responde', todoal: 'Todo al día', atraso: 'con atraso',
+    sinfichatxt: 'Este sitio todavía no publica su ficha: solo se controla que responda.',
+    nota: 'Una falla técnica se arregla con código. Un dato para revisar depende de la fuente oficial o de una revisión manual. Que un sitio se haya actualizado hoy no significa que el dato sea de hoy.',
+    error: 'No se pudo armar el informe: ',
+  },
+  en: {
+    titulo: 'Network update report', sub: 'Data status of the 11 sites, read live from each one.',
+    portada: 'Home', otro: 'Español', generado: 'Generated', cargando: 'Querying the sites…',
+    responden: 'Sites responding', ficha: 'Publishing a data sheet', aldia: 'Data up to date', tecnicas: 'Technical failures', contenido: 'Data to review',
+    val: 'Cross-validation of figures', valsin: 'The latest run could not be retrieved.', valok: 'Latest run without failures', valmal: 'The latest run found failures', ver: 'See details',
+    dato: 'Data', fuente: 'Source', periodo: 'Period covered', carga: 'Last load', estado: 'Status', manual: 'manual',
+    eok: 'Up to date', etec: 'Update failed', econ: 'The source published nothing new', sinficha: 'No data sheet', caido: 'Not responding', todoal: 'All up to date', atraso: 'delayed',
+    sinfichatxt: 'This site does not publish its data sheet yet: only its availability is checked.',
+    nota: 'A technical failure is fixed with code. Data to review depends on the official source or on a manual review. A site updated today does not mean its data is from today. Data names and sources are shown in Spanish, as each site publishes them.',
+    error: 'The report could not be built: ',
+  },
+};
+const t = k => TX[LANG][k];
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const fecha = iso => {
+  if (!iso) return null;
+  const d = new Date(String(iso).length <= 10 ? iso + 'T12:00:00' : iso);
+  return isNaN(d) ? String(iso) : d.toLocaleDateString(LANG === 'en' ? 'en-GB' : 'es-AR', {day: '2-digit', month: '2-digit', year: 'numeric'});
+};
+const fechaHora = iso => {
+  const d = new Date(iso);
+  return isNaN(d) ? String(iso) : d.toLocaleString(LANG === 'en' ? 'en-GB' : 'es-AR', {dateStyle: 'short', timeStyle: 'short'});
+};
+
+function textos() {
+  document.documentElement.lang = LANG;
+  document.title = t('titulo') + ' · Mapa';
+  for (const k of ['titulo', 'sub', 'portada', 'nota']) document.getElementById('t-' + k).textContent = t(k);
+  document.getElementById('t-portada').href = LANG === 'en' ? '/en' : '/';
+  const b = document.getElementById('b-lang');
+  b.textContent = t('otro');
+  b.onclick = () => { location.search = LANG === 'en' ? '' : '?lang=en'; };
+  document.getElementById('generado').textContent = t('cargando');
+}
+
+function etiqueta(d) {
+  if (d.estado === 'atrasado_tecnico') return `<span class="et tec">${t('etec')}</span>`;
+  if (d.estado === 'atrasado_contenido') return `<span class="et con">${esc(LANG === 'es' && d.texto_estado ? d.texto_estado : t('econ'))}</span>`;
+  return `<span class="et ok">${t('eok')}</span>`;
+}
+
+function sitio(s) {
+  const tec = s.tecnicas.length, con = s.contenido.length;
+  let cab;
+  if (!s.responde) cab = `<span class="et tec">${t('caido')}</span>`;
+  else if (!s.con_ficha) cab = `<span class="et neu">${t('sinficha')}</span>`;
+  else if (tec) cab = `<span class="et tec">${tec} ${t('tecnicas').toLowerCase()}</span>`;
+  else if (con) cab = `<span class="et con">${con} ${t('atraso')}</span>`;
+  else cab = `<span class="et ok">${t('todoal')}</span>`;
+  let cuerpo = '';
+  if (s.con_ficha) {
+    const filas = (s.datos || []).map(d => `<tr>
+      <td><strong>${esc(d.dato || d.id)}</strong>${d.nota ? `<small>${esc(d.nota)}</small>` : ''}</td>
+      <td>${esc(d.fuente || '—')}</td><td>${esc(d.periodo || '—')}</td>
+      <td>${esc(fecha(d.ultima_carga) || t('manual'))}<small>${esc(d.frecuencia || '')}</small></td><td>${etiqueta(d)}</td></tr>`).join('');
+    cuerpo = `<div class="tabla"><table><thead><tr><th>${t('dato')}</th><th>${t('fuente')}</th><th>${t('periodo')}</th><th>${t('carga')}</th><th>${t('estado')}</th></tr></thead><tbody>${filas}</tbody></table></div>`;
+  } else if (s.responde) {
+    cuerpo = `<p class="vacio">${t('sinfichatxt')}</p>`;
+  } else {
+    cuerpo = `<p class="vacio">${esc((s.tecnicas[0] || {}).nota || '')}</p>`;
+  }
+  return `<section class="bloque"><h2><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.nombre)}</a> ${cab}</h2>${cuerpo}</section>`;
+}
+
+function validacion(v) {
+  const el = document.getElementById('validacion');
+  let cuerpo;
+  if (!v) cuerpo = `<p class="vacio">${t('valsin')}</p>`;
+  else {
+    const ok = v.conclusion === 'success';
+    cuerpo = `<p class="vacio"><span class="et ${ok ? 'ok' : 'tec'}">${ok ? t('valok') : t('valmal')}</span> ${esc(fecha(v.fecha) || '')} · <a href="${esc(v.url)}" target="_blank" rel="noopener">${t('ver')}</a></p>`;
+  }
+  el.innerHTML = `<h2>${t('val')}</h2>${cuerpo}`;
+}
+
+async function cargar() {
+  try {
+    const r = await fetch('/api/informe');
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || ('HTTP ' + r.status));
+    const res = d.resumen;
+    document.getElementById('generado').textContent = t('generado') + ': ' + fechaHora(d.generado);
+    document.getElementById('kpis').innerHTML = [
+      [`${res.responden}/${res.sitios}`, t('responden')], [`${res.con_ficha}/${res.sitios}`, t('ficha')], [res.al_dia, t('aldia')],
+      [res.tecnicas, t('tecnicas')], [res.contenido, t('contenido')],
+    ].map(([n, l]) => `<div class="kpi"><b>${n}</b><span>${l}</span></div>`).join('');
+    validacion(d.validacion);
+    document.getElementById('sitios').innerHTML = d.sitios.map(sitio).join('');
+  } catch (e) {
+    document.getElementById('generado').innerHTML = `<span class="error">${esc(t('error') + e.message)}</span>`;
+  }
+}
+textos(); cargar();
+</script>
+</body>
+</html>

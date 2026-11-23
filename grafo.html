@@ -74,7 +74,7 @@ svg{width:100%;height:auto;display:block}
   <aside class="panel" id="panel"></aside>
 </div>
 <div class="tip" id="tip"></div>
-<p class="pie" id="t-pie">Relevado del código de los repositorios el 05/11/2026. Las líneas punteadas largas son integraciones planificadas que todavía no están conectadas.</p>
+<p class="pie" id="t-pie">Relevado del código de los repositorios el 06/11/2026. Las líneas punteadas largas son integraciones planificadas que todavía no están conectadas.</p>
 
 <script>
 const LANG = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'es';
@@ -103,8 +103,8 @@ const NODOS = [
    fuentes:{es:['Boletín Oficial (BORA), 3.ª sección','COMPR.AR','Tesorería General de la Nación (TGN)'],en:['Official Gazette (BORA), 3rd section','COMPR.AR','National Treasury (TGN)']},
    act:{es:'Lun–vie 08:30 ART, reintento 12:30 si el BORA no respondió.',en:'Mon–Fri 08:30 ART, retry 12:30 if BORA was down.'}},
   {id:'contratos',capa:1,x:150,y:320,nom:'Contratos',sub:{es:'Contratos v2 · XAI',en:'Contracts v2 · XAI'},url:`https://contratos.${D}`,
-   desc:{es:'Versión 2 del monitor de contratos: adjudicaciones BORA + COMPR.AR + TGN con análisis de riesgo explicable, por organismo y proveedor.',en:'Contracts monitor v2: BORA + COMPR.AR + TGN awards with explainable risk analysis, by agency and supplier.'},
-   fuentes:{es:['Boletín Oficial (BORA)','COMPR.AR','TGN'],en:['Official Gazette (BORA)','COMPR.AR','TGN']},
+   desc:{es:'Versión 2 del monitor de contratos: adjudicaciones del BORA cruzadas con el mismo proceso en COMPR.AR (y pagos TGN), con análisis de riesgo explicable por organismo y proveedor. Cada aviso queda “en COMPR.AR”, “fuera de COMPR.AR” o “pendiente” hasta que datos.gob.ar publique el período.',en:'Contracts monitor v2: Official Gazette awards matched to the same procedure in COMPR.AR (and Treasury payments), with explainable risk analysis by agency and supplier. Each notice is “in COMPR.AR”, “outside COMPR.AR” or “pending” until datos.gob.ar publishes the period.'},
+   fuentes:{es:['Boletín Oficial (BORA)','COMPR.AR — adjudicaciones 2016-2026 (datos.gob.ar)','TGN'],en:['Official Gazette (BORA)','COMPR.AR — 2016-2026 awards (datos.gob.ar)','TGN']},
    act:{es:'Lun–vie 09:30 ART (runner en Argentina), reintento 12:30 si el BORA no respondió.',en:'Mon–Fri 09:30 ART (runner in Argentina), retry 12:30 if BORA was down.'}},
   {id:'jefatura',capa:1,x:150,y:450,nom:'Jefatura',sub:{es:'Monitor Ejecutivo',en:'Executive monitor'},url:`https://jefatura.${D}`,
    desc:{es:'Jefatura de Gabinete, Secretaría General y Presidencia: nómina de autoridades y personal, contratos y alertas de conflicto de interés.',en:'Cabinet Office, General Secretariat and Presidency: officials and staff roster, contracts and conflict-of-interest alerts.'},
@@ -113,7 +113,7 @@ const NODOS = [
 
   {id:'monitor',capa:2,x:390,y:190,nom:'Monitor IRI',sub:{es:'Índice de Riesgo Institucional',en:'Institutional Risk Index'},url:`https://monitor.${D}`,
    desc:{es:'Semáforo de integridad por organismo. IRI = 35 % riesgo financiero + 30 % contratación + 20 % operativo + 15 % datos.',en:'Integrity traffic light per agency. IRI = 35% financial + 30% procurement + 20% operational + 15% data risk.'},
-   fuentes:{es:['Justicia (magistrados, vacantes)','Diputados (bloques, KPIs HCDN)','Senadores (nómina, participación)','COMPR.AR 2020-2021 (datos.gob.ar)'],en:['Judiciary (judges, vacancies)','Deputies (blocs, HCDN KPIs)','Senators (roster, participation)','COMPR.AR 2020-2021 (datos.gob.ar)']},
+   fuentes:{es:['Justicia (magistrados, vacantes)','Diputados (bloques, KPIs HCDN)','Senadores (nómina, participación)','COMPR.AR — adjudicaciones 2016-2026 (datos.gob.ar)','Contratos (licitaciones BORA 2026)'],en:['Judiciary (judges, vacancies)','Deputies (blocs, HCDN KPIs)','Senators (roster, participation)','COMPR.AR — 2016-2026 awards (datos.gob.ar)','Contracts (2026 BORA tenders)']},
    act:{es:'Refresh diario.',en:'Daily refresh.'}},
   {id:'meaci',capa:2,x:390,y:320,nom:'MEACI',sub:{es:'Casos internacionales',en:'International cases'},url:`https://meaci.${D}`,
    desc:{es:'Empresas con presencia en Argentina sancionadas en casos multijurisdiccionales de soborno transnacional (31 casos OCDE). Publica la lista de CUIT que usan los demás sitios.',en:'Companies present in Argentina sanctioned in multijurisdictional foreign-bribery cases (31 OECD cases). Publishes the CUIT list other sites check against.'},
@@ -135,12 +135,12 @@ const NODOS = [
 
   {id:'legislativo',capa:4,x:860,y:190,nom:'Diputados',sub:{es:'Monitor Legislativo',en:'Legislative monitor'},url:`https://legislativo.${D}`,
    desc:{es:'257 diputados: composición por bloque y distrito, asistencia, productividad, costo per cápita y presupuesto de la Cámara.',en:'257 deputies: composition by bloc and district, attendance, productivity, per-capita cost and Chamber budget.'},
-   fuentes:{es:['HCDN (datos.hcdn.gob.ar, votaciones)','Presupuesto Abierto'],en:['HCDN (datos.hcdn.gob.ar, votes)','Open Budget']},
-   act:{es:'Monitor diario.',en:'Daily monitor.'}},
+   fuentes:{es:['HCDN (nómina, asistencia, proyectos)','Presupuesto Abierto (SAF 313)'],en:['HCDN (roster, attendance, bills)','Open Budget (SAF 313)']},
+   act:{es:'Diario 06:00 ART. Publica su ficha de frescura (/api/frescura).',en:'Daily 06:00 ART. Publishes its freshness card (/api/frescura).'}},
   {id:'senadores',capa:4,x:860,y:340,nom:'Senadores',sub:{es:'Monitor del Senado',en:'Senate monitor'},url:`https://senadores.${D}`,
    desc:{es:'72 senadores: participación, votaciones, reporte por partido, dieta y DDJJ.',en:'72 senators: participation, votes, party report, salary and asset declarations.'},
-   fuentes:{es:['Senado de la Nación','ArgentinaDatos (API)'],en:['National Senate','ArgentinaDatos (API)']},
-   act:{es:'Monitor diario.',en:'Daily monitor.'}},
+   fuentes:{es:['Senado de la Nación (nómina, versiones taquigráficas, recibo de dieta)','ArgentinaDatos (API)','Presupuesto Abierto (SAF 312)'],en:['National Senate (roster, transcripts, salary receipt)','ArgentinaDatos (API)','Open Budget (SAF 312)']},
+   act:{es:'Diario 08:10 ART. Publica su ficha de frescura (/api/frescura).',en:'Daily 08:10 ART. Publishes its freshness card (/api/frescura).'}},
 
   {id:'vectores',capa:'s',x:860,y:480,nom:'Vectores',sub:{es:'Corrupción estratégica',en:'Strategic corruption'},url:'https://corrupcionestrategica-production.up.railway.app',
    desc:{es:'Clasifica casos de influencia estatal extranjera (China, Rusia) sobre decisiones públicas argentinas con el framework NEST.',en:'Classifies cases of foreign state influence (China, Russia) on Argentine public decisions using the NEST framework.'},
@@ -166,16 +166,18 @@ const ARISTAS = [
   ['monitor','justicia','datos',{es:'Toma magistrados y vacantes para el riesgo financiero, operativo y de datos.',en:'Pulls judges and vacancies for financial, operational and data risk.'}],
   ['monitor','legislativo','datos',{es:'Toma bloques y KPIs reales de la HCDN.',en:'Pulls blocs and real HCDN KPIs.'}],
   ['monitor','senadores','datos',{es:'Toma la nómina y la participación promedio de senadores.',en:'Pulls the senators roster and average participation.'}],
-  ['monitor','contratos','datos',{es:'Riesgo de contratación por organismo (hoy con datos COMPR.AR 2020-2021).',en:'Procurement risk per agency (currently COMPR.AR 2020-2021 data).'}],
+  ['monitor','contratos','datos',{es:'Toma las licitaciones 2026 del BORA para marcar a los organismos que compran fuera de COMPR.AR (“sin dato de directas”). El % de directas sale de COMPR.AR 2016-2026.',en:'Pulls 2026 BORA tenders to flag agencies that buy outside COMPR.AR (“no direct-award data”). The direct-award % comes from COMPR.AR 2016-2026.'}],
   ['senadores','legislativo','nav',{es:'Navegación cruzada: botón “Diputados”.',en:'Cross navigation: “Deputies” button.'}],
   ['vectores','monitor','plan',{es:'Planificado: alimentar la dimensión R_Internacional del IRI. Todavía no conectado.',en:'Planned: feed the IRI R_International dimension. Not connected yet.'}],
   ['meaci','monitor','plan',{es:'Planificado: aportar alertas internacionales al IRI. Todavía no conectado.',en:'Planned: contribute international alerts to the IRI. Not connected yet.'}],
   ...NODOS.filter(n => n.id !== 'mapa').map(n => ['mapa', n.id, 'mapa',
-     n.id === 'monitor' ? {es:'Muestra el IRI global (proxy /iri/*) y el estado del sitio.',en:'Shows the global IRI (proxy /iri/*) and site status.'}
-   : n.id === 'meaci'   ? {es:'Muestra los KPIs de MEACI y el estado del sitio.',en:'Shows MEACI KPIs and site status.'}
+     n.id === 'monitor' ? {es:'Muestra el IRI global (proxy /iri/*) y el estado del sitio. La validación cruzada diaria revisa de qué año es su riesgo de contratación.',en:'Shows the global IRI (proxy /iri/*) and site status. The daily cross-validation checks the year of its procurement risk data.'}
+   : n.id === 'meaci'   ? {es:'Muestra los KPIs de MEACI y el estado del sitio. La validación cruzada diaria comprueba que Comprar y Contratos reconozcan su lista de CUIT.',en:'Shows MEACI KPIs and site status. The daily cross-validation checks that Comprar and Contratos recognise its CUIT list.'}
+   : (n.id === 'comprar' || n.id === 'contratos') ? {es:'Enlace y estado en vivo. La validación cruzada diaria (lun–vie 13:00) compara Comprar y Contratos día por día y peso por peso.',en:'Link and live status. The daily cross-validation (Mon–Fri 13:00) compares Comprar and Contratos day by day, to the peso.'}
+   : n.id === 'ajuste'  ? {es:'Enlace y estado en vivo. La validación cruzada diaria lee el resultado de la auditoría de cifras de Ajuste.',en:'Link and live status. The daily cross-validation reads the result of Ajuste\'s own figure audit.'}
    : {es:'Enlace y estado en vivo del sitio.',en:'Link and live status of the site.'}]),
   ...[['f_bora',['comprar','contratos','jefatura','ajuste']],['f_comprar',['comprar','contratos','jefatura','decla','monitor']],['f_tgn',['comprar','contratos']],
-      ['f_mde',['jefatura']],['f_mecon',['ajuste','legislativo']],['f_bcra',['ajuste','decla']],['f_oa',['decla']],['f_jus',['justicia','decla']],
+      ['f_mde',['jefatura']],['f_mecon',['ajuste','legislativo','senadores']],['f_bcra',['ajuste','decla']],['f_oa',['decla']],['f_jus',['justicia','decla']],
       ['f_hcdn',['legislativo']],['f_senado',['senadores']],['f_ocde',['meaci']]]
      .flatMap(([f, ds]) => ds.map(d => [f, d, 'fuente', {es:'Fuente oficial',en:'Official source'}])),
 ];
@@ -186,7 +188,7 @@ const TXT = {
   sub:{es:'Cada nodo es un sitio; cada línea, un intercambio real de datos encontrado en el código. Hacé clic en un sitio para ver su ficha.',en:'Each node is a site; each line is a real data exchange found in the code. Click a site to see its profile.'},
   portada:{es:'🗺️ Portada',en:'🗺️ Home'}, manual:{es:'📖 Manual',en:'📖 Manual'}, idioma:{es:'🇺🇸 English',en:'🇦🇷 Español'},
   fuentes:{es:'Mostrar fuentes oficiales',en:'Show official sources'}, mapa:{es:'Mostrar integración del Mapa',en:'Show Mapa integration'},
-  pie:{es:'Relevado del código de los repositorios el 05/11/2026. Las líneas punteadas largas son integraciones planificadas que todavía no están conectadas.',en:'Surveyed from the repositories\' code on 2026-11-05. Long-dashed lines are planned integrations not yet connected.'},
+  pie:{es:'Relevado del código de los repositorios el 06/11/2026. Las líneas punteadas largas son integraciones planificadas que todavía no están conectadas.',en:'Surveyed from the repositories\' code on 2026-11-06. Long-dashed lines are planned integrations not yet connected.'},
   ayuda:{es:'Hacé clic en un sitio para ver qué hace, de dónde toma los datos y con quién se conecta.',en:'Click a site to see what it does, where its data comes from and what it connects to.'},
   leyenda:{es:'Leyenda',en:'Legend'}, l_datos:{es:'Intercambio de datos',en:'Data exchange'}, l_cruce:{es:'Cruce de CUIT',en:'CUIT cross-check'},
   l_nav:{es:'Navegación',en:'Navigation'}, l_plan:{es:'Planificado',en:'Planned'}, l_mapa:{es:'Integración del Mapa',en:'Mapa integration'}, l_fuente:{es:'Fuente oficial',en:'Official source'},
@@ -330,7 +332,7 @@ aplicar(); pintarPanel();
 
 // En modo embebido (iframe del manual) informa su altura para que el padre la ajuste.
 if (document.body.classList.contains('embebido') && window.parent !== window) {
-  const avisar = () => parent.postMessage({grafoAltura: Math.ceil(document.querySelector('.wrap').getBoundingClientRect().bottom + 16)}, location.origin);
+  const avisar = () => parent.postMessage({grafoAltura: Math.ceil(document.querySelector('.wrap').getBoundingClientRect().bottom + 16)}, '*');
   new ResizeObserver(avisar).observe(document.body);
   avisar();
 }

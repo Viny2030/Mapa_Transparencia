@@ -1,0 +1,364 @@
+{
+  "_nota": "Grafos de funcionamiento de cada sitio: de qué fuentes oficiales toma los datos, qué procesos automáticos los transforman, dónde se guardan y qué publica. Columnas: fuente, proceso, dato, salida. Cada nodo tiene nombre y descripción en español e inglés. Relevado del código y los workflows de cada repositorio.",
+  "relevado": "2026-11-08",
+  "columnas": {
+    "fuente":  {"es": "Fuentes", "en": "Sources"},
+    "proceso": {"es": "Procesos automáticos", "en": "Automated processes"},
+    "dato":    {"es": "Datos guardados", "en": "Stored data"},
+    "salida":  {"es": "Lo que publica", "en": "What it publishes"}
+  },
+  "sitios": {
+    "jefatura": {
+      "nombre": {"es": "Monitor PEN · Jefatura de Gabinete", "en": "PEN Monitor · Cabinet Office"},
+      "url": "https://jefatura.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "comprar", "col": "fuente", "nom": {"es": "COMPR.AR", "en": "COMPR.AR"}, "sub": {"es": "Procesos y adjudicaciones de JGM, SGP y Presidencia", "en": "Procurement processes and awards of JGM, SGP and the Presidency"}},
+        {"id": "mc", "col": "fuente", "nom": {"es": "Sitio Contratos", "en": "Contratos site"}, "sub": {"es": "Reporte diario BORA + COMPR.AR + TGN", "en": "Daily BORA + COMPR.AR + TGN report"}},
+        {"id": "botgn", "col": "fuente", "nom": {"es": "gob_bo_comprar_tgn", "en": "gob_bo_comprar_tgn"}, "sub": {"es": "Reporte integrado BORA + COMPR.AR + TGN", "en": "Integrated BORA + COMPR.AR + TGN report"}},
+        {"id": "nomina", "col": "fuente", "nom": {"es": "Nómina APN", "en": "APN staff roster"}, "sub": {"es": "Personal de cada organismo (se baja a mano)", "en": "Staff of each body (downloaded by hand)"}},
+        {"id": "presup", "col": "fuente", "nom": {"es": "Presupuesto Abierto", "en": "Presupuesto Abierto"}, "sub": {"es": "Crédito y ejecución de la JGM", "en": "JGM budget and spending"}},
+        {"id": "sigen", "col": "fuente", "nom": {"es": "SIGEN", "en": "SIGEN"}, "sub": {"es": "Informes de auditoría interna", "en": "Internal audit reports"}},
+
+        {"id": "sc", "col": "proceso", "nom": {"es": "Scraper Contratos JGM", "en": "JGM contracts scraper"}, "sub": {"es": "Lunes y jueves 03:00", "en": "Mondays and Thursdays 03:00 ART"}},
+        {"id": "sd", "col": "proceso", "nom": {"es": "Scraper Detalle", "en": "Detail scraper"}, "sub": {"es": "Todos los días 01:00: monto, CUIT y razón social", "en": "Daily 01:00 ART: amount, CUIT and supplier name"}},
+        {"id": "nom", "col": "proceso", "nom": {"es": "Nómina desde CSV", "en": "Roster from CSV"}, "sub": {"es": "Al subir un CSV a nomina/", "en": "When a CSV is uploaded to nomina/"}},
+        {"id": "md", "col": "proceso", "nom": {"es": "Monitor Diario PEN", "en": "Daily PEN Monitor"}, "sub": {"es": "Lunes a viernes 09:00: genera los JSON del portal", "en": "Weekdays 09:00 ART: builds the portal's JSON files"}},
+        {"id": "cr", "col": "proceso", "nom": {"es": "Generador de Cruces PEN", "en": "PEN cross-check generator"}, "sub": {"es": "Todos los días 02:00: CUIL = CUIT, apellido, multi-organismo", "en": "Daily 02:00 ART: CUIL = CUIT, surname, multi-body"}},
+        {"id": "ps", "col": "proceso", "nom": {"es": "Presupuesto y SIGEN", "en": "Budget and SIGEN"}, "sub": {"es": "Lunes 07:30", "en": "Mondays 07:30 ART"}},
+        {"id": "ts", "col": "proceso", "nom": {"es": "Tests diarios y cobertura", "en": "Daily tests and coverage"}, "sub": {"es": "Controlan el sitio publicado y la cobertura de montos", "en": "Check the live site and amount coverage"}},
+
+        {"id": "ccsv", "col": "dato", "nom": {"es": "contratos_*.csv", "en": "contratos_*.csv"}, "sub": {"es": "Procesos por organismo", "en": "Processes per body"}},
+        {"id": "dcsv", "col": "dato", "nom": {"es": "contratos_detalle.csv", "en": "contratos_detalle.csv"}, "sub": {"es": "Detalle de los adjudicados", "en": "Detail of awarded processes"}},
+        {"id": "json", "col": "dato", "nom": {"es": "JSON del portal", "en": "Portal JSON files"}, "sub": {"es": "Personal, contratos y fecha de actualización", "en": "Staff, contracts and update date"}},
+        {"id": "cruces", "col": "dato", "nom": {"es": "cruces.json", "en": "cruces.json"}, "sub": {"es": "Alertas de cruce", "en": "Cross-check alerts"}},
+        {"id": "pjson", "col": "dato", "nom": {"es": "presupuesto_jgm.json y sigen_auditorias.json", "en": "presupuesto_jgm.json and sigen_auditorias.json"}, "sub": {"es": "Presupuesto y auditorías", "en": "Budget and audits"}},
+
+        {"id": "fichas", "col": "salida", "nom": {"es": "Fichas JGM, SGP y Presidencia", "en": "JGM, SGP and Presidency pages"}, "sub": {"es": "Contratos, personal, presupuesto y auditorías", "en": "Contracts, staff, budget and audits"}},
+        {"id": "alertas", "col": "salida", "nom": {"es": "Alertas", "en": "Alerts"}, "sub": {"es": "Todas las alertas, con filtros", "en": "Every alert, with filters"}},
+        {"id": "grafo", "col": "salida", "nom": {"es": "Grafo de relaciones", "en": "Relationship graph"}, "sub": {"es": "Funcionarios ↔ proveedores", "en": "Officials ↔ suppliers"}},
+        {"id": "agente", "col": "salida", "nom": {"es": "Agente IA", "en": "AI agent"}, "sub": {"es": "Responde preguntas sobre los datos", "en": "Answers questions about the data"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API REST", "en": "REST API"}, "sub": {"es": "/api/…", "en": "/api/…"}},
+        {"id": "mails", "col": "salida", "nom": {"es": "Mails de control", "en": "Control emails"}, "sub": {"es": "Resultado de las corridas y nómina vencida", "en": "Run results and outdated roster"}}
+      ],
+      "aristas": [
+        ["comprar", "sc"], ["comprar", "sd"], ["nomina", "nom"], ["mc", "md"], ["mc", "cr"], ["botgn", "cr"],
+        ["presup", "ps"], ["sigen", "ps"],
+        ["sc", "ccsv"], ["sd", "dcsv"], ["nom", "json"], ["md", "json"], ["ccsv", "md"], ["dcsv", "cr"], ["json", "cr"],
+        ["cr", "cruces"], ["ps", "pjson"],
+        ["json", "fichas"], ["pjson", "fichas"], ["cruces", "alertas"], ["cruces", "grafo"], ["cruces", "fichas"],
+        ["json", "agente"], ["json", "api"], ["cruces", "api"], ["ts", "mails"], ["md", "mails"]
+      ]
+    },
+    "contratos": {
+      "nombre": {"es": "Monitor de Contratos", "en": "Contracts Monitor"},
+      "url": "https://contratos.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "bora", "col": "fuente", "nom": {"es": "Boletín Oficial (BORA)", "en": "Official Gazette (BORA)"}, "sub": {"es": "Avisos de adjudicación, tercera sección", "en": "Award notices, third section"}},
+        {"id": "comprar", "col": "fuente", "nom": {"es": "COMPR.AR", "en": "COMPR.AR"}, "sub": {"es": "Procesos de compra del Estado nacional", "en": "National procurement processes"}},
+        {"id": "tgn", "col": "fuente", "nom": {"es": "Tesorería General (TGN)", "en": "National Treasury (TGN)"}, "sub": {"es": "Pagos por organismo", "en": "Payments per body"}},
+        {"id": "meaci", "col": "fuente", "nom": {"es": "Sitio MEACI", "en": "MEACI site"}, "sub": {"es": "CUIT con sanciones internacionales", "en": "CUITs with international sanctions"}},
+        {"id": "ia", "col": "fuente", "nom": {"es": "Modelo de IA", "en": "AI model"}, "sub": {"es": "Redacta explicaciones en lenguaje simple", "en": "Writes plain-language explanations"}},
+
+        {"id": "runner", "col": "proceso", "nom": {"es": "Corrida diaria en Argentina", "en": "Daily run in Argentina"}, "sub": {"es": "Días hábiles, en una PC propia: el BORA no responde al exterior", "en": "Business days, on an own PC: BORA blocks foreign servers"}},
+        {"id": "diario", "col": "proceso", "nom": {"es": "diario.py", "en": "diario.py"}, "sub": {"es": "Lee cada aviso: proveedor, CUIT, monto y riesgo", "en": "Reads each notice: supplier, CUIT, amount and risk"}},
+        {"id": "cruce", "col": "proceso", "nom": {"es": "cruce_comprar.py", "en": "cruce_comprar.py"}, "sub": {"es": "Busca el mismo proceso en COMPR.AR", "en": "Finds the same process in COMPR.AR"}},
+        {"id": "sync", "col": "proceso", "nom": {"es": "Actualizar datos", "en": "Update data"}, "sub": {"es": "El sitio trae los reportes nuevos del repositorio", "en": "The site pulls new reports from the repository"}},
+
+        {"id": "rep", "col": "dato", "nom": {"es": "Reportes diarios", "en": "Daily reports"}, "sub": {"es": "data/AAAA-MM/reporte_AAAA-MM-DD.xlsx", "en": "data/YYYY-MM/reporte_YYYY-MM-DD.xlsx"}},
+        {"id": "corr", "col": "dato", "nom": {"es": "Correcciones", "en": "Corrections"}, "sub": {"es": "data/correcciones/*.csv: CUIT y montos releídos", "en": "data/correcciones/*.csv: re-read CUITs and amounts"}},
+        {"id": "db", "col": "dato", "nom": {"es": "Base de estadísticas", "en": "Statistics database"}, "sub": {"es": "Visitas por sección", "en": "Visits per section"}},
+
+        {"id": "resumen", "col": "salida", "nom": {"es": "Resumen y Contratos", "en": "Summary and Contracts"}, "sub": {"es": "Totales, riesgo y cada adjudicación", "en": "Totals, risk and every award"}},
+        {"id": "perfiles", "col": "salida", "nom": {"es": "Organismos y Proveedores", "en": "Agencies and Vendors"}, "sub": {"es": "Rankings y perfiles, con alerta MEACI y explicación IA", "en": "Rankings and profiles, with MEACI alert and AI explanation"}},
+        {"id": "monitor", "col": "salida", "nom": {"es": "Monitor sistémico", "en": "Systemic monitor"}, "sub": {"es": "Fragmentación, proveedor único y HHI", "en": "Fragmentation, single vendor and HHI"}},
+        {"id": "grafo", "col": "salida", "nom": {"es": "Grafo organismo ↔ proveedor", "en": "Agency ↔ vendor graph"}, "sub": {"es": "Quién le adjudica a quién", "en": "Who awards contracts to whom"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API y CSV", "en": "API and CSV"}, "sub": {"es": "La usan Monitor IRI, Jefatura y el Mapa", "en": "Used by the IRI Monitor, Jefatura and the Map"}}
+      ],
+      "aristas": [
+        ["bora", "runner"], ["runner", "diario"], ["comprar", "cruce"], ["tgn", "diario"], ["diario", "rep"], ["cruce", "rep"],
+        ["rep", "sync"], ["sync", "resumen"], ["rep", "resumen"], ["corr", "resumen"], ["rep", "perfiles"], ["rep", "monitor"],
+        ["rep", "grafo"], ["rep", "api"], ["meaci", "perfiles"], ["meaci", "grafo"], ["ia", "perfiles"], ["db", "resumen"]
+      ]
+    },
+    "monitor": {
+      "nombre": {"es": "Monitor IRI", "en": "IRI Monitor"},
+      "url": "https://monitor.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "jus", "col": "fuente", "nom": {"es": "Sitio Justicia", "en": "Justicia site"}, "sub": {"es": "Magistrados y vacantes", "en": "Judges and vacancies"}},
+        {"id": "leg", "col": "fuente", "nom": {"es": "Sitio Legislativo", "en": "Legislativo site"}, "sub": {"es": "Indicadores y bloques de Diputados", "en": "Chamber of Deputies indicators and blocs"}},
+        {"id": "sen", "col": "fuente", "nom": {"es": "Sitio Senadores", "en": "Senadores site"}, "sub": {"es": "Nómina y partidos del Senado", "en": "Senate roster and parties"}},
+        {"id": "con", "col": "fuente", "nom": {"es": "Sitio Contratos", "en": "Contratos site"}, "sub": {"es": "Actividad 2026 en el BORA", "en": "2026 activity in the BORA"}},
+        {"id": "comprar", "col": "fuente", "nom": {"es": "COMPR.AR Adjudicaciones", "en": "COMPR.AR awards"}, "sub": {"es": "datos.gob.ar, archivo 2016-2026", "en": "datos.gob.ar, 2016-2026 file"}},
+        {"id": "tgn", "col": "fuente", "nom": {"es": "gob_bo_comprar_tgn", "en": "gob_bo_comprar_tgn"}, "sub": {"es": "Flujo de pagos de la TGN", "en": "TGN payment flow"}},
+
+        {"id": "refresh", "col": "proceso", "nom": {"es": "Refresh diario", "en": "Daily refresh"}, "sub": {"es": "GitHub Actions 07:17 → POST /refresh", "en": "GitHub Actions 07:17 ART → POST /refresh"}},
+        {"id": "motor", "col": "proceso", "nom": {"es": "motor_analitico.py + connector.py", "en": "motor_analitico.py + connector.py"}, "sub": {"es": "Calcula el IRI de cada organismo", "en": "Computes each body's IRI"}},
+        {"id": "gcalc", "col": "proceso", "nom": {"es": "Cálculo del grafo", "en": "Graph computation"}, "sub": {"es": "10 principales proveedores por organismo", "en": "Top 10 suppliers per body"}},
+
+        {"id": "csv", "col": "dato", "nom": {"es": "monitor_completo.csv", "en": "monitor_completo.csv"}, "sub": {"es": "Un renglón por organismo", "en": "One row per body"}},
+        {"id": "gjson", "col": "dato", "nom": {"es": "grafo_comprar.json", "en": "grafo_comprar.json"}, "sub": {"es": "Red organismo ↔ proveedor", "en": "Body ↔ supplier network"}},
+        {"id": "pg", "col": "dato", "nom": {"es": "Postgres", "en": "Postgres"}, "sub": {"es": "Tablas monitor_iri y monitor_grafo: sobreviven al redeploy", "en": "monitor_iri and monitor_grafo tables: survive redeploys"}},
+
+        {"id": "dash", "col": "salida", "nom": {"es": "Dashboard IRI", "en": "IRI dashboard"}, "sub": {"es": "Tarjetas, gráficos y tabla de organismos", "en": "Cards, charts and table of bodies"}},
+        {"id": "grafo", "col": "salida", "nom": {"es": "Grafo organismo ↔ proveedor", "en": "Body ↔ supplier graph"}, "sub": {"es": "COMPR.AR, últimos dos ejercicios", "en": "COMPR.AR, last two fiscal years"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/datos, /resumen, /grafo; la usa el Mapa", "en": "/datos, /resumen, /grafo; used by the Map"}},
+        {"id": "mail", "col": "salida", "nom": {"es": "Mail del refresh", "en": "Refresh email"}, "sub": {"es": "Avisa si la corrida salió bien o mal", "en": "Reports whether the run succeeded"}}
+      ],
+      "aristas": [
+        ["refresh", "motor"], ["jus", "motor"], ["leg", "motor"], ["sen", "motor"], ["con", "motor"], ["comprar", "motor"], ["tgn", "motor"],
+        ["comprar", "gcalc"], ["motor", "gcalc"], ["motor", "csv"], ["gcalc", "gjson"], ["csv", "pg"], ["gjson", "pg"],
+        ["csv", "dash"], ["csv", "api"], ["gjson", "grafo"], ["gjson", "api"], ["refresh", "mail"]
+      ]
+    },
+    "senadores": {
+      "nombre": {"es": "Monitor Legislativo · Senado", "en": "Legislative Monitor · Senate"},
+      "url": "https://senadores.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "senado", "col": "fuente", "nom": {"es": "Senado de la Nación", "en": "National Senate"}, "sub": {"es": "Nómina, comisiones, versiones taquigráficas y recibo de dieta", "en": "Roster, committees, transcripts and salary receipt"}},
+        {"id": "argd", "col": "fuente", "nom": {"es": "ArgentinaDatos", "en": "ArgentinaDatos"}, "sub": {"es": "Nómina y actas de votación nominal", "en": "Roster and roll-call vote records"}},
+        {"id": "presup", "col": "fuente", "nom": {"es": "Presupuesto Abierto", "en": "Presupuesto Abierto"}, "sub": {"es": "Crédito del Senado (SAF 312)", "en": "Senate budget (SAF 312)"}},
+        {"id": "md", "col": "proceso", "nom": {"es": "Monitor Diario", "en": "Daily Monitor"}, "sub": {"es": "08:10: pipeline.py y cargar_db.py", "en": "08:10 ART: pipeline.py and cargar_db.py"}},
+        {"id": "scr", "col": "proceso", "nom": {"es": "Scripts de indicadores", "en": "Indicator scripts"}, "sub": {"es": "Comisiones, bloques, comparativa, consenso y presupuesto", "en": "Committees, blocs, comparison, consensus and budget"}},
+        {"id": "red", "col": "proceso", "nom": {"es": "Cálculo de la red de votos", "en": "Vote network computation"}, "sub": {"es": "Se arma al consultarla; se guarda 6 horas", "en": "Built on request; cached for 6 hours"}},
+        {"id": "tests", "col": "proceso", "nom": {"es": "Tests diarios", "en": "Daily tests"}, "sub": {"es": "04:10: controlan el sitio publicado", "en": "04:10 ART: check the live site"}},
+        {"id": "csv", "col": "dato", "nom": {"es": "Reportes diarios", "en": "Daily reports"}, "sub": {"es": "data/senadores_*.csv y reportes por partido y provincia", "en": "data/senadores_*.csv and reports by party and province"}},
+        {"id": "db", "col": "dato", "nom": {"es": "Postgres", "en": "Postgres"}, "sub": {"es": "Tablas del Senado por fecha", "en": "Senate tables by date"}},
+        {"id": "ind", "col": "dato", "nom": {"es": "Indicadores del tablero", "en": "Dashboard indicators"}, "sub": {"es": "Datos inyectados en las páginas HTML", "en": "Data injected into the HTML pages"}},
+        {"id": "dieta", "col": "dato", "nom": {"es": "Dieta", "en": "Salary"}, "sub": {"es": "dieta.json y dieta_historial.csv", "en": "dieta.json and dieta_historial.csv"}},
+        {"id": "tablero", "col": "salida", "nom": {"es": "Tablero Senado e indicadores", "en": "Senate dashboard and indicators"}, "sub": {"es": "Participación, bloques, provincias y comparativa", "en": "Participation, blocs, provinces and comparison"}},
+        {"id": "detalle", "col": "salida", "nom": {"es": "Nómina detalle y DDJJ", "en": "Roster detail and asset declarations"}, "sub": {"es": "Ficha de cada senador", "en": "Profile of each senator"}},
+        {"id": "redv", "col": "salida", "nom": {"es": "Red de coincidencia de votos", "en": "Vote-agreement network"}, "sub": {"es": "Quién vota igual que quién, con cruces entre bloques", "en": "Who votes alike, including across blocs"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: al día o atrasado, dato por dato", "en": "/api/frescura: up to date or late, item by item"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/senado/* y /db/*; la usa Monitor IRI", "en": "/senado/* and /db/*; used by the IRI Monitor"}}
+      ],
+      "aristas": [
+        ["senado", "md"], ["argd", "md"], ["argd", "red"], ["senado", "scr"], ["presup", "scr"], ["md", "csv"],
+        ["md", "db"], ["scr", "ind"], ["scr", "dieta"], ["csv", "red"], ["csv", "tablero"], ["ind", "tablero"],
+        ["csv", "detalle"], ["red", "redv"], ["csv", "fresc"], ["dieta", "fresc"], ["db", "api"], ["csv", "api"],
+        ["tests", "tablero"]
+      ]
+    },
+    "legislativo": {
+      "nombre": {"es": "Monitor Legislativo · Diputados", "en": "Legislative Monitor · Chamber of Deputies"},
+      "url": "https://legislativo.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "hcdn", "col": "fuente", "nom": {"es": "Cámara de Diputados (HCDN)", "en": "Chamber of Deputies (HCDN)"}, "sub": {"es": "Nómina, asistencia, votaciones y proyectos (datos.hcdn.gob.ar)", "en": "Roster, attendance, votes and bills (datos.hcdn.gob.ar)"}},
+        {"id": "presup", "col": "fuente", "nom": {"es": "Presupuesto Abierto", "en": "Presupuesto Abierto"}, "sub": {"es": "Crédito y devengado de la Cámara (SAF 313)", "en": "Chamber budget and spending (SAF 313)"}},
+        {"id": "argd", "col": "fuente", "nom": {"es": "ArgentinaDatos", "en": "ArgentinaDatos"}, "sub": {"es": "Actas de votación nominal", "en": "Roll-call vote records"}},
+        {"id": "md", "col": "proceso", "nom": {"es": "Monitor Diario", "en": "Daily Monitor"}, "sub": {"es": "06:00: scraper_pipeline.py, actualizar_diputados.py y nómina en el HTML", "en": "06:00 ART: scraper_pipeline.py, actualizar_diputados.py and roster in the HTML"}},
+        {"id": "agente", "col": "proceso", "nom": {"es": "Agente de monitoreo", "en": "Monitoring agent"}, "sub": {"es": "Compara con el día anterior y detecta cambios bruscos", "en": "Compares with the previous day and flags sharp changes"}},
+        {"id": "red", "col": "proceso", "nom": {"es": "Cálculo de la red de votos", "en": "Vote network computation"}, "sub": {"es": "Se arma al consultarla; se guarda 6 horas", "en": "Built on request; cached for 6 hours"}},
+        {"id": "tests", "col": "proceso", "nom": {"es": "Tests diarios", "en": "Daily tests"}, "sub": {"es": "04:00: controlan el código y el sitio publicado", "en": "04:00 ART: check the code and the live site"}},
+        {"id": "json", "col": "dato", "nom": {"es": "data/diputados.json", "en": "data/diputados.json"}, "sub": {"es": "Nómina, asistencia, proyectos, presupuesto, votaciones, TPMP e ITC", "en": "Roster, attendance, bills, budget, votes, TPMP and ITC"}},
+        {"id": "csv", "col": "dato", "nom": {"es": "Nómina CSV", "en": "Roster CSV"}, "sub": {"es": "nomina_diputados.csv", "en": "nomina_diputados.csv"}},
+        {"id": "alertas", "col": "dato", "nom": {"es": "Alertas del agente", "en": "Agent alerts"}, "sub": {"es": "data/alertas_agente.json, con severidad alta, media o baja", "en": "data/alertas_agente.json, with high, medium or low severity"}},
+        {"id": "tablero", "col": "salida", "nom": {"es": "Tablero e indicadores", "en": "Dashboard and indicators"}, "sub": {"es": "12 indicadores, bloques, comparativa y metodología", "en": "12 indicators, blocs, comparison and methodology"}},
+        {"id": "detalle", "col": "salida", "nom": {"es": "Nómina detalle", "en": "Roster detail"}, "sub": {"es": "Ficha de cada diputado: asistencia y proyectos", "en": "Profile of each deputy: attendance and bills"}},
+        {"id": "redv", "col": "salida", "nom": {"es": "Red de coincidencia de votos", "en": "Vote-agreement network"}, "sub": {"es": "Quién vota igual que quién, con cruces entre bloques", "en": "Who votes alike, including across blocs"}},
+        {"id": "ia", "col": "salida", "nom": {"es": "Explicar con IA", "en": "Explain with AI"}, "sub": {"es": "Resumen y anomalías explicados por Claude", "en": "Summary and anomalies explained by Claude"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: al día o atrasado, dato por dato", "en": "/api/frescura: up to date or late, item by item"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/*; la usan Monitor IRI y el Mapa", "en": "/api/*; used by the IRI Monitor and the Map"}},
+        {"id": "mail", "col": "salida", "nom": {"es": "Avisos por correo", "en": "Email alerts"}, "sub": {"es": "Hallazgos de severidad alta y fallas del pipeline", "en": "High-severity findings and pipeline failures"}}
+      ],
+      "aristas": [
+        ["hcdn", "md"], ["presup", "md"], ["argd", "red"], ["md", "json"], ["md", "csv"], ["json", "agente"],
+        ["agente", "alertas"], ["alertas", "mail"], ["md", "mail"], ["json", "red"], ["json", "tablero"], ["json", "detalle"],
+        ["red", "redv"], ["json", "ia"], ["json", "fresc"], ["json", "api"], ["tests", "tablero"]
+      ]
+    },
+    "meaci": {
+      "nombre": {"es": "MEACI · Empresas en casos internacionales", "en": "MEACI · Companies in international cases"},
+      "url": "https://meaci.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "ocde", "col": "fuente", "nom": {"es": "Informe OCDE 2026", "en": "OECD 2026 report"}, "sub": {"es": "31 casos multijurisdiccionales y 114 resoluciones", "en": "31 multijurisdictional cases and 114 resolutions"}},
+        {"id": "auth", "col": "fuente", "nom": {"es": "Resoluciones de cada autoridad", "en": "Each authority's resolutions"}, "sub": {"es": "DOJ, SEC, SFO, PNF y otras: montos, mecanismos y enlaces", "en": "DOJ, SEC, SFO, PNF and others: amounts, mechanisms and links"}},
+        {"id": "doj", "col": "fuente", "nom": {"es": "DOJ (FCPA)", "en": "DOJ (FCPA)"}, "sub": {"es": "Casos corporativos recientes de EE. UU.", "en": "Recent US corporate cases"}},
+        {"id": "sfo", "col": "fuente", "nom": {"es": "SFO (gov.uk)", "en": "SFO (gov.uk)"}, "sub": {"es": "Acuerdos (DPA) del Reino Unido, por la API de gov.uk", "en": "UK agreements (DPAs), through the gov.uk API"}},
+        {"id": "seed", "col": "proceso", "nom": {"es": "Carga verificada del seed", "en": "Verified seed load"}, "sub": {"es": "data/ocde_seed.py, curado a mano; entra si la base está vacía", "en": "data/ocde_seed.py, curated by hand; loaded if the database is empty"}},
+        {"id": "cron", "col": "proceso", "nom": {"es": "Ciclo diario", "en": "Daily cycle"}, "sub": {"es": "06:00 dentro de la app (APScheduler): genera alertas y revisa novedades", "en": "06:00 ART inside the app (APScheduler): creates alerts and checks for new cases"}},
+        {"id": "nov", "col": "proceso", "nom": {"es": "Detector de novedades", "en": "New-case detector"}, "sub": {"es": "scraper/novedades.py: busca casos que la base no tiene; no los carga", "en": "scraper/novedades.py: looks for cases not in the database; does not load them"}},
+        {"id": "sync", "col": "proceso", "nom": {"es": "Revisión semanal", "en": "Weekly review"}, "sub": {"es": "Lunes 03:00 (GitHub Actions): compara con el seed; solo informa", "en": "Mondays 03:00 ART (GitHub Actions): compares with the seed; report only"}},
+        {"id": "red", "col": "proceso", "nom": {"es": "Cálculo de la red de casos", "en": "Case network computation"}, "sub": {"es": "Se arma desde la base al consultarla", "en": "Built from the database on request"}},
+        {"id": "base", "col": "dato", "nom": {"es": "Casos, empresas y resoluciones", "en": "Cases, companies and resolutions"}, "sub": {"es": "PostgreSQL: incluye presencia y CUIT en Argentina", "en": "PostgreSQL: includes presence and CUITs in Argentina"}},
+        {"id": "alertas", "col": "dato", "nom": {"es": "Alertas", "en": "Alerts"}, "sub": {"es": "Empresas sancionadas con presencia en Argentina, por nivel", "en": "Sanctioned companies with a presence in Argentina, by level"}},
+        {"id": "novs", "col": "dato", "nom": {"es": "Novedades para revisar", "en": "New cases to review"}, "sub": {"es": "Quedan pendientes hasta verificarlas a mano", "en": "Stay pending until checked by hand"}},
+        {"id": "tablero", "col": "salida", "nom": {"es": "Tablero", "en": "Dashboard"}, "sub": {"es": "Casos, empresas, cruce por CUIT, alertas, novedades y manual", "en": "Cases, companies, CUIT check, alerts, new cases and manual"}},
+        {"id": "redp", "col": "salida", "nom": {"es": "Red de casos", "en": "Case network"}, "sub": {"es": "Grafo de casos y jurisdicciones (/red)", "en": "Graph of cases and jurisdictions (/red)"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/*; la usan Jefatura, Comprar, Contratos y el Mapa", "en": "/api/*; used by Jefatura, Comprar, Contratos and the Map"}},
+        {"id": "inf", "col": "salida", "nom": {"es": "Informe semanal", "en": "Weekly report"}, "sub": {"es": "Queda en el resumen de la corrida de Actions", "en": "Left in the summary of the Actions run"}}
+      ],
+      "aristas": [
+        ["ocde", "seed"], ["auth", "seed"], ["seed", "base"], ["base", "cron"], ["cron", "alertas"], ["cron", "nov"],
+        ["doj", "nov"], ["sfo", "nov"], ["base", "nov"], ["nov", "novs"], ["seed", "sync"], ["doj", "sync"],
+        ["sfo", "sync"], ["sync", "inf"], ["base", "red"], ["red", "redp"], ["base", "tablero"], ["alertas", "tablero"],
+        ["novs", "tablero"], ["base", "api"], ["alertas", "api"]
+      ]
+    },
+    "justicia": {
+      "nombre": {"es": "Monitor Judicial", "en": "Judicial Monitor"},
+      "url": "https://justicia.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "djus", "col": "fuente", "nom": {"es": "datos.jus.gob.ar", "en": "datos.jus.gob.ar"}, "sub": {"es": "Magistrados, vacantes, renuncias, designaciones y otros datasets", "en": "Judges, vacancies, resignations, appointments and other datasets"}},
+        {"id": "pjn", "col": "fuente", "nom": {"es": "Estadísticas del PJN", "en": "Judiciary statistics (PJN)"}, "sub": {"es": "Sentencias, movimiento y trámite por jurisdicción", "en": "Rulings, caseload and proceedings by jurisdiction"}},
+        {"id": "csjn", "col": "fuente", "nom": {"es": "Corte Suprema (CSJN)", "en": "Supreme Court (CSJN)"}, "sub": {"es": "Composición, anuarios y presupuesto", "en": "Composition, yearbooks and budget"}},
+        {"id": "mag", "col": "proceso", "nom": {"es": "Actualización de magistrados", "en": "Judges update"}, "sub": {"es": "03:00: scraper_magistrados.py", "en": "03:00 ART: scraper_magistrados.py"}},
+        {"id": "juz", "col": "proceso", "nom": {"es": "Juzgados diario", "en": "Daily courts update"}, "sub": {"es": "03:00: scraper_juzgados_nacional.py, sin el crawl completo", "en": "03:00 ART: scraper_juzgados_nacional.py, without the full crawl"}},
+        {"id": "crawl", "col": "proceso", "nom": {"es": "Crawl completo del PJN", "en": "Full PJN crawl"}, "sub": {"es": "Miércoles 02:00: causas y oralidad", "en": "Wednesdays 02:00 ART: cases and oral proceedings"}},
+        {"id": "refresh", "col": "proceso", "nom": {"es": "Datasets de datos.jus", "en": "datos.jus datasets"}, "sub": {"es": "Día 1 de cada mes, 02:00", "en": "1st of each month, 02:00 ART"}},
+        {"id": "vigia", "col": "proceso", "nom": {"es": "Vigía de la Corte", "en": "Supreme Court watch"}, "sub": {"es": "Lunes 09:00: revisa novedades; no modifica datos", "en": "Mondays 09:00 ART: checks for news; does not change data"}},
+        {"id": "carga", "col": "proceso", "nom": {"es": "Carga manual de la Corte", "en": "Manual Supreme Court load"}, "sub": {"es": "Una persona actualiza el archivo cuando hay novedades", "en": "A person updates the file when there is news"}},
+        {"id": "red", "col": "proceso", "nom": {"es": "Cálculo de la red de vacantes", "en": "Vacancies network computation"}, "sub": {"es": "Se arma al consultarla", "en": "Built on request"}},
+        {"id": "tests", "col": "proceso", "nom": {"es": "Tests diarios", "en": "Daily tests"}, "sub": {"es": "03:00: controlan el código", "en": "03:00 ART: check the code"}},
+        {"id": "magj", "col": "dato", "nom": {"es": "Magistrados y vacantes", "en": "Judges and vacancies"}, "sub": {"es": "magistrados.json, vacantes.json, renuncias.json y designaciones.json", "en": "magistrados.json, vacantes.json, renuncias.json and designaciones.json"}},
+        {"id": "juzj", "col": "dato", "nom": {"es": "Juzgados", "en": "Courts"}, "sub": {"es": "juzgados_nacional.json y .csv", "en": "juzgados_nacional.json and .csv"}},
+        {"id": "djd", "col": "dato", "nom": {"es": "Datasets descargados", "en": "Downloaded datasets"}, "sub": {"es": "Carpeta datos_jus/", "en": "datos_jus/ folder"}},
+        {"id": "csj", "col": "dato", "nom": {"es": "Datos de la Corte", "en": "Supreme Court data"}, "sub": {"es": "datos_csjn.json", "en": "datos_csjn.json"}},
+        {"id": "est", "col": "salida", "nom": {"es": "Corte, Consejo, indicadores y candidatos", "en": "Court, Council, indicators and candidates"}, "sub": {"es": "Tableros estratégicos", "en": "Strategic dashboards"}},
+        {"id": "ope", "col": "salida", "nom": {"es": "Cámaras, nacional y juzgados", "en": "Courts of appeals, national view and courts"}, "sub": {"es": "Tableros operativos", "en": "Operational dashboards"}},
+        {"id": "redp", "col": "salida", "nom": {"es": "Red de vacantes", "en": "Vacancies network"}, "sub": {"es": "Grafo de cámaras y ámbitos de concurso (/red)", "en": "Graph of courts and selection bodies (/red)"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: al día o atrasado, dato por dato", "en": "/api/frescura: up to date or late, item by item"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API y archivos públicos", "en": "API and public files"}, "sub": {"es": "La usan el Mapa y Monitor IRI", "en": "Used by the Map and the IRI Monitor"}},
+        {"id": "aviso", "col": "salida", "nom": {"es": "Aviso de novedades de la Corte", "en": "Supreme Court news alert"}, "sub": {"es": "Issue en GitHub, que avisa por correo", "en": "GitHub issue, which alerts by email"}}
+      ],
+      "aristas": [
+        ["djus", "mag"], ["mag", "magj"], ["magj", "juz"], ["pjn", "juz"], ["pjn", "crawl"], ["juz", "juzj"],
+        ["crawl", "juzj"], ["djus", "refresh"], ["refresh", "djd"], ["djd", "juz"], ["csjn", "vigia"], ["vigia", "aviso"],
+        ["csjn", "carga"], ["carga", "csj"], ["magj", "red"], ["red", "redp"], ["magj", "est"], ["csj", "est"],
+        ["djd", "est"], ["juzj", "ope"], ["magj", "ope"], ["magj", "fresc"], ["djd", "fresc"], ["csj", "fresc"],
+        ["magj", "api"], ["tests", "est"]
+      ]
+    },
+    "corrupcion": {
+      "nombre": {"es": "Corrupción Estratégica · Vectores", "en": "Strategic Corruption · Vectors"},
+      "url": "https://corrupcionestrategica-production.up.railway.app/",
+      "nodos": [
+        {"id": "inv", "col": "fuente", "nom": {"es": "Investigación documentada", "en": "Documented research"}, "sub": {"es": "Casos, evidencia y enablers relevados a mano", "en": "Cases, evidence and enablers gathered by hand"}},
+        {"id": "bcra", "col": "fuente", "nom": {"es": "BCRA", "en": "BCRA"}, "sub": {"es": "Comunicados del Banco Central", "en": "Central Bank announcements"}},
+        {"id": "bora", "col": "fuente", "nom": {"es": "Boletín Oficial", "en": "Official Gazette"}, "sub": {"es": "Primera sección de los últimos días", "en": "First section of recent days"}},
+        {"id": "seed", "col": "proceso", "nom": {"es": "Carga inicial", "en": "Initial load"}, "sub": {"es": "seed_vectores.json: entra al arrancar si la base está vacía", "en": "seed_vectores.json: loaded at startup if the database is empty"}},
+        {"id": "clas", "col": "proceso", "nom": {"es": "Clasificación NEST", "en": "NEST classification"}, "sub": {"es": "scoring.py: asigna clasificación y nivel de alerta", "en": "scoring.py: assigns classification and alert level"}},
+        {"id": "robot", "col": "proceso", "nom": {"es": "Robot semanal", "en": "Weekly robot"}, "sub": {"es": "Lunes 08:00: robot_diario.py busca novedades de cada vector", "en": "Mondays 08:00 ART: robot_diario.py looks for news on each vector"}},
+        {"id": "base", "col": "dato", "nom": {"es": "Vectores", "en": "Vectors"}, "sub": {"es": "PostgreSQL: actores, contrapartes, puntajes y clasificación", "en": "PostgreSQL: actors, counterparts, scores and classification"}},
+        {"id": "evid", "col": "dato", "nom": {"es": "Evidencia y novedades", "en": "Evidence and news"}, "sub": {"es": "PostgreSQL: fuentes y actualizaciones de cada vector", "en": "PostgreSQL: sources and updates for each vector"}},
+        {"id": "enab", "col": "dato", "nom": {"es": "Enablers y vínculos", "en": "Enablers and links"}, "sub": {"es": "Cargados a mano en la página", "en": "Loaded by hand in the page"}},
+        {"id": "panel", "col": "salida", "nom": {"es": "Panel", "en": "Panel"}, "sub": {"es": "Indicadores, tabla y detalle de cada vector", "en": "Indicators, table and detail of each vector"}},
+        {"id": "grafo", "col": "salida", "nom": {"es": "Grafo", "en": "Graph"}, "sub": {"es": "País, actor, contraparte, enablers y personas", "en": "Country, actor, counterpart, enablers and people"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/vectores y /api/alertas; la consulta el Mapa", "en": "/api/vectores and /api/alertas; queried by the Map"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: última novedad registrada", "en": "/api/frescura: latest news recorded"}}
+      ],
+      "aristas": [
+        ["inv", "seed"], ["seed", "clas"], ["clas", "base"], ["inv", "enab"], ["bcra", "robot"], ["bora", "robot"],
+        ["base", "robot"], ["robot", "evid"], ["base", "panel"], ["evid", "panel"], ["enab", "panel"], ["base", "grafo"],
+        ["enab", "grafo"], ["base", "api"], ["base", "fresc"], ["evid", "fresc"]
+      ]
+    },
+    "decla": {
+      "nombre": {"es": "DECLA · Declaraciones juradas", "en": "DECLA · Asset declarations"},
+      "url": "https://decla.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "oa", "col": "fuente", "nom": {"es": "Oficina Anticorrupción", "en": "Anti-Corruption Office"}, "sub": {"es": "DDJJ, bienes y deudas (datos.jus.gob.ar)", "en": "Declarations, assets and debts (datos.jus.gob.ar)"}},
+        {"id": "mag", "col": "fuente", "nom": {"es": "Magistrados federales", "en": "Federal judges"}, "sub": {"es": "Nómina publicada en datos.jus.gob.ar", "en": "List published on datos.jus.gob.ar"}},
+        {"id": "mappap", "col": "fuente", "nom": {"es": "Actividades previas y posteriores", "en": "Prior and later activities"}, "sub": {"es": "Paso entre sector público y privado (OA)", "en": "Moves between public and private sector (OA)"}},
+        {"id": "contr", "col": "fuente", "nom": {"es": "Monitor Contratos", "en": "Contracts Monitor"}, "sub": {"es": "Adjudicaciones del Boletín Oficial", "en": "Official Gazette awards"}},
+        {"id": "bcra", "col": "fuente", "nom": {"es": "BCRA", "en": "BCRA"}, "sub": {"es": "Tipo de cambio para llevar montos a dólares", "en": "Exchange rate to convert amounts to dollars"}},
+        {"id": "marcos", "col": "fuente", "nom": {"es": "Marcos internacionales", "en": "International frameworks"}, "sub": {"es": "GAFI, Banco Mundial, Transparencia Internacional, OCDE", "en": "FATF, World Bank, Transparency International, OECD"}},
+        {"id": "arca", "col": "fuente", "nom": {"es": "ARCA", "en": "ARCA"}, "sub": {"es": "Padrón A13: constancias de inscripción", "en": "A13 registry: registration certificates"}},
+        {"id": "etl", "col": "proceso", "nom": {"es": "Fase 1: ETL", "en": "Phase 1: ETL"}, "sub": {"es": "Diario 03:00: baja y normaliza las DDJJ", "en": "Daily 03:00 ART: downloads and normalizes declarations"}},
+        {"id": "cruces", "col": "proceso", "nom": {"es": "Fase 2: cruces", "en": "Phase 2: cross-checks"}, "sub": {"es": "CUIT × adjudicaciones y puertas giratorias", "en": "Tax ID × awards and revolving doors"}},
+        {"id": "score", "col": "proceso", "nom": {"es": "Fase 3: puntaje", "en": "Phase 3: scoring"}, "sub": {"es": "Calcula el nivel de riesgo de cada declaración", "en": "Computes the risk level of each declaration"}},
+        {"id": "ml", "col": "proceso", "nom": {"es": "Fase 4: anomalías", "en": "Phase 4: anomalies"}, "sub": {"es": "Isolation Forest y One-Class SVM", "en": "Isolation Forest and One-Class SVM"}},
+        {"id": "indic", "col": "proceso", "nom": {"es": "Fase 5: indicadores", "en": "Phase 5: indicators"}, "sub": {"es": "12 indicadores internacionales aplicados a las DDJJ", "en": "12 international indicators applied to declarations"}},
+        {"id": "const", "col": "proceso", "nom": {"es": "Constancias", "en": "Certificates"}, "sub": {"es": "Diario 04:00: consulta ARCA y reutiliza lo ya consultado", "en": "Daily 04:00 ART: queries ARCA and reuses earlier results"}},
+        {"id": "ddjj", "col": "dato", "nom": {"es": "Funcionarios y magistrados", "en": "Officials and judges"}, "sub": {"es": "CSV: sujetos obligados y tabla judicial", "en": "CSV: obliged filers and judicial table"}},
+        {"id": "alert", "col": "dato", "nom": {"es": "Alertas", "en": "Alerts"}, "sub": {"es": "CSV: conflicto de interés y puertas giratorias", "en": "CSV: conflict of interest and revolving doors"}},
+        {"id": "scor", "col": "dato", "nom": {"es": "Puntajes y anomalías", "en": "Scores and anomalies"}, "sub": {"es": "CSV: riesgo por declaración y casos atípicos", "en": "CSV: risk per declaration and outliers"}},
+        {"id": "ind", "col": "dato", "nom": {"es": "Perfil internacional", "en": "International profile"}, "sub": {"es": "CSV: indicadores y perfil de riesgo completo", "en": "CSV: indicators and full risk profile"}},
+        {"id": "cons", "col": "dato", "nom": {"es": "Constancias públicas", "en": "Public certificates"}, "sub": {"es": "CSV sin domicilio ni otros datos personales", "en": "CSV without address or other personal data"}},
+        {"id": "panel", "col": "salida", "nom": {"es": "Tablero", "en": "Dashboard"}, "sub": {"es": "Por poder del Estado, con riesgo y alertas", "en": "By branch of government, with risk and alerts"}},
+        {"id": "red", "col": "salida", "nom": {"es": "Red de pasos", "en": "Moves network"}, "sub": {"es": "/red: organismo y sector privado declarado, sin personas", "en": "/red: agency and declared private sector, without people"}},
+        {"id": "pind", "col": "salida", "nom": {"es": "Pestaña Indicadores", "en": "Indicators tab"}, "sub": {"es": "12 indicadores por marco internacional y por funcionario", "en": "12 indicators by international framework and by official"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/resumen, /api/alertas, /api/funcionario; la consulta el Mapa", "en": "/api/resumen, /api/alertas, /api/funcionario; queried by the Map"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: ejercicio de las DDJJ y última consulta a ARCA", "en": "/api/frescura: declaration year and latest ARCA query"}}
+      ],
+      "aristas": [
+        ["oa", "etl"], ["mag", "etl"], ["etl", "ddjj"], ["ddjj", "cruces"],
+        ["mappap", "cruces"], ["contr", "cruces"], ["cruces", "alert"], ["ddjj", "score"],
+        ["bcra", "score"], ["marcos", "score"], ["score", "scor"], ["scor", "ml"],
+        ["ddjj", "ml"], ["ml", "scor"], ["alert", "indic"], ["scor", "indic"],
+        ["marcos", "indic"], ["indic", "ind"], ["ddjj", "const"], ["arca", "const"],
+        ["const", "cons"], ["alert", "red"], ["ddjj", "panel"], ["alert", "panel"], ["scor", "panel"],
+        ["cons", "panel"], ["ind", "pind"], ["ddjj", "api"], ["alert", "api"],
+        ["scor", "api"], ["ind", "api"], ["cons", "api"], ["ddjj", "fresc"],
+        ["cons", "fresc"]
+      ]
+    },
+    "ajuste": {
+      "nombre": {"es": "Ajuste · Monitor del ajuste presupuestario", "en": "Ajuste · Budget adjustment monitor"},
+      "url": "https://ajuste.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "mecon", "col": "fuente", "nom": {"es": "Presupuesto Abierto", "en": "Open Budget"}, "sub": {"es": "Crédito anual publicado por MECON", "en": "Annual appropriations published by MECON"}},
+        {"id": "bora", "col": "fuente", "nom": {"es": "Boletín Oficial", "en": "Official Gazette"}, "sub": {"es": "Decisiones administrativas presupuestarias", "en": "Budget administrative decisions"}},
+        {"id": "bcra", "col": "fuente", "nom": {"es": "BCRA", "en": "BCRA"}, "sub": {"es": "Tipo de cambio mayorista y series monetarias", "en": "Wholesale exchange rate and monetary series"}},
+        {"id": "argd", "col": "fuente", "nom": {"es": "ArgentinaDatos", "en": "ArgentinaDatos"}, "sub": {"es": "Inflación mensual y dólar oficial", "en": "Monthly inflation and official dollar"}},
+        {"id": "deis", "col": "fuente", "nom": {"es": "DEIS y SNIC", "en": "DEIS and SNIC"}, "sub": {"es": "Salud y Seguridad: mortalidad y suicidios", "en": "Health and Security: mortality and suicides"}},
+        {"id": "pres", "col": "proceso", "nom": {"es": "Actualización del presupuesto", "en": "Budget update"}, "sub": {"es": "Diario 08:00: reemplaza 2026; carga 2023 si falta", "en": "Daily 08:00 ART: replaces 2026; loads 2023 if missing"}},
+        {"id": "disc", "col": "proceso", "nom": {"es": "Descubrimiento de normas", "en": "Rule discovery"}, "sub": {"es": "Diario 03:00: busca DA de los últimos 30 días", "en": "Daily 03:00 ART: looks for decisions from the last 30 days"}},
+        {"id": "acum", "col": "proceso", "nom": {"es": "Acumulación de normas", "en": "Rule accumulation"}, "sub": {"es": "Después de cada búsqueda: agrega y nunca borra", "en": "After each search: adds and never deletes"}},
+        {"id": "macro", "col": "proceso", "nom": {"es": "Índices macro", "en": "Macro indices"}, "sub": {"es": "Día 16 de cada mes: seed_macro_indices.py", "en": "Day 16 of each month: seed_macro_indices.py"}},
+        {"id": "soc", "col": "proceso", "nom": {"es": "Indicadores sociales", "en": "Social indicators"}, "sub": {"es": "Días 1 y 15 de cada mes: scraper_social.py", "en": "Days 1 and 15 of each month: scraper_social.py"}},
+        {"id": "verif", "col": "proceso", "nom": {"es": "Verificación de cifras", "en": "Figure check"}, "sub": {"es": "Diario 10:30: recalcula y compara con la API; abre un issue si falla", "en": "Daily 10:30 ART: recomputes and compares with the API; opens an issue on failure"}},
+        {"id": "dpres", "col": "dato", "nom": {"es": "Presupuesto", "en": "Budget"}, "sub": {"es": "PostgreSQL: partidas de 2023 y 2026", "en": "PostgreSQL: 2023 and 2026 line items"}},
+        {"id": "ddas", "col": "dato", "nom": {"es": "Normativa", "en": "Rules"}, "sub": {"es": "JSON: normas recientes y acumuladas", "en": "JSON: recent and accumulated rules"}},
+        {"id": "dmac", "col": "dato", "nom": {"es": "Índices macro", "en": "Macro indices"}, "sub": {"es": "Inflación y dólar: base del deflactor", "en": "Inflation and dollar: basis of the deflator"}},
+        {"id": "dsoc", "col": "dato", "nom": {"es": "Datos sociales", "en": "Social data"}, "sub": {"es": "JSON: indicadores sanitarios y de seguridad", "en": "JSON: health and security indicators"}},
+        {"id": "dver", "col": "dato", "nom": {"es": "Última verificación sana", "en": "Latest clean check"}, "sub": {"es": "JSON: resultado de la verificación diaria", "en": "JSON: result of the daily check"}},
+        {"id": "panel", "col": "salida", "nom": {"es": "Tablero", "en": "Dashboard"}, "sub": {"es": "Ranking, incisos, nominal vs. real, licuación y sectores", "en": "Ranking, items, nominal vs. real, erosion and sectors"}},
+        {"id": "impa", "col": "salida", "nom": {"es": "Impacto social", "en": "Social impact"}, "sub": {"es": "Indicadores junto a la evolución del gasto", "en": "Indicators next to spending trends"}},
+        {"id": "mapa", "col": "salida", "nom": {"es": "Mapa del presupuesto", "en": "Budget map"}, "sub": {"es": "/treemap: jurisdicción, programa e inciso de un año", "en": "/treemap: jurisdiction, program and item for one year"}},
+        {"id": "norm", "col": "salida", "nom": {"es": "Normativa", "en": "Rules"}, "sub": {"es": "/api/v1/normativa: decisiones publicadas", "en": "/api/v1/normativa: published decisions"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API", "en": "API"}, "sub": {"es": "/api/v1/analisis y /api/v1/partidas; la consulta el Mapa", "en": "/api/v1/analisis and /api/v1/partidas; queried by the Map"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: períodos y última verificación", "en": "/api/frescura: periods and latest check"}}
+      ],
+      "aristas": [
+        ["mecon", "pres"], ["pres", "dpres"], ["bora", "disc"], ["disc", "acum"],
+        ["acum", "ddas"], ["bcra", "macro"], ["argd", "macro"], ["macro", "dmac"],
+        ["deis", "soc"], ["soc", "dsoc"], ["api", "verif"], ["verif", "dver"],
+        ["dpres", "mapa"], ["dpres", "panel"], ["dmac", "panel"], ["bcra", "panel"], ["dpres", "api"],
+        ["dmac", "api"], ["dsoc", "impa"], ["ddas", "norm"], ["dpres", "fresc"],
+        ["dmac", "fresc"], ["dsoc", "fresc"], ["dver", "fresc"]
+      ]
+    },
+    "comprar": {
+      "nombre": {"es": "Comprar · Monitor de licitaciones y contratos", "en": "Comprar · Tenders and contracts monitor"},
+      "url": "https://comprar.ecosistematransparencia.com.ar/",
+      "nodos": [
+        {"id": "bora", "col": "fuente", "nom": {"es": "Boletín Oficial", "en": "Official Gazette"}, "sub": {"es": "Sección Tercera: licitaciones y adjudicaciones", "en": "Third Section: tenders and awards"}},
+        {"id": "compr", "col": "fuente", "nom": {"es": "Comprar.gob.ar", "en": "Comprar.gob.ar"}, "sub": {"es": "Procesos con apertura próxima; sin histórico", "en": "Processes opening soon; no history"}},
+        {"id": "tgn", "col": "fuente", "nom": {"es": "TGN", "en": "National Treasury"}, "sub": {"es": "Presupuesto Abierto: pagado por organismo, sin CUIT", "en": "Open Budget: paid per agency, no tax ID"}},
+        {"id": "meaci", "col": "fuente", "nom": {"es": "MEACI", "en": "MEACI"}, "sub": {"es": "Sanciones internacionales por CUIT", "en": "International sanctions by tax ID"}},
+        {"id": "ia", "col": "fuente", "nom": {"es": "Claude (IA)", "en": "Claude (AI)"}, "sub": {"es": "Segunda opinión a pedido; no cambia el puntaje", "en": "Second opinion on request; does not change the score"}},
+        {"id": "rep", "col": "proceso", "nom": {"es": "Reporte diario", "en": "Daily report"}, "sub": {"es": "Lun a vie 08:30 y 12:30: corre en un equipo en Argentina", "en": "Mon-Fri 08:30 and 12:30 ART: runs on a computer in Argentina"}},
+        {"id": "ext", "col": "proceso", "nom": {"es": "Extracción de avisos", "en": "Notice extraction"}, "sub": {"es": "Proveedor, CUIT y monto de cada adjudicación", "en": "Supplier, tax ID and amount of each award"}},
+        {"id": "cruce", "col": "proceso", "nom": {"es": "Cruce entre fuentes", "en": "Source cross-check"}, "sub": {"es": "BORA → Comprar → TGN, por nombre del organismo", "en": "BORA → Comprar → Treasury, by agency name"}},
+        {"id": "riesgo", "col": "proceso", "nom": {"es": "Matriz de riesgo", "en": "Risk matrix"}, "sub": {"es": "Calcula el riesgo licitatorio de cada aviso", "en": "Computes the tender risk of each notice"}},
+        {"id": "sync", "col": "proceso", "nom": {"es": "Publicación en el sitio", "en": "Site publishing"}, "sub": {"es": "El servidor toma los reportes del repositorio", "en": "The server takes the reports from the repository"}},
+        {"id": "alerta", "col": "proceso", "nom": {"es": "Control de faltantes", "en": "Missing-report check"}, "sub": {"es": "Días hábiles 14:00: avisa por mail si falta el reporte", "en": "Business days 14:00 ART: emails if the report is missing"}},
+        {"id": "excel", "col": "dato", "nom": {"es": "Reportes Excel", "en": "Excel reports"}, "sub": {"es": "Licitaciones, adjudicaciones, Comprar, TGN y riesgo, por día", "en": "Tenders, awards, Comprar, Treasury and risk, per day"}},
+        {"id": "marco", "col": "dato", "nom": {"es": "Marco normativo", "en": "Legal framework"}, "sub": {"es": "Régimen y topes de cada procedimiento", "en": "Regime and limits of each procedure"}},
+        {"id": "panel", "col": "salida", "nom": {"es": "Dashboard", "en": "Dashboard"}, "sub": {"es": "Resumen del último reporte", "en": "Summary of the latest report"}},
+        {"id": "lici", "col": "salida", "nom": {"es": "Licitaciones", "en": "Tenders"}, "sub": {"es": "Flujo cruzado del día, con alertas de MEACI", "en": "Daily cross-checked flow, with MEACI alerts"}},
+        {"id": "pmarco", "col": "salida", "nom": {"es": "Marco normativo", "en": "Legal framework"}, "sub": {"es": "Página y /api/marco-normativo", "en": "Page and /api/marco-normativo"}},
+        {"id": "api", "col": "salida", "nom": {"es": "API y descargas", "en": "API and downloads"}, "sub": {"es": "/api/reportes y Excel por día; la consulta el Mapa", "en": "/api/reportes and Excel per day; queried by the Map"}},
+        {"id": "estado", "col": "salida", "nom": {"es": "Estado", "en": "Status"}, "sub": {"es": "/estado: salud del sistema y días faltantes", "en": "/estado: system health and missing days"}},
+        {"id": "fresc", "col": "salida", "nom": {"es": "Ficha de frescura", "en": "Freshness sheet"}, "sub": {"es": "/api/frescura: último reporte guardado", "en": "/api/frescura: latest stored report"}}
+      ],
+      "aristas": [
+        ["bora", "rep"], ["compr", "rep"], ["tgn", "rep"], ["rep", "ext"],
+        ["ext", "cruce"], ["cruce", "riesgo"], ["riesgo", "excel"], ["excel", "sync"],
+        ["excel", "alerta"], ["sync", "panel"], ["sync", "lici"], ["sync", "api"],
+        ["sync", "estado"], ["sync", "fresc"], ["meaci", "lici"], ["ia", "lici"],
+        ["marco", "lici"], ["marco", "pmarco"]
+      ]
+    }
+  }
+}

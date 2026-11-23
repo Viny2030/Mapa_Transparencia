@@ -1,0 +1,16 @@
+{
+  "_nota": "Sitios que controla la alarma diaria de frescura (scripts/frescura_check.py). Si el sitio publica /api/frescura (formato frescura/1) se leen sus datos; si no, solo se controla que responda.",
+  "sitios": [
+    {"id": "comprar",      "nombre": "COMPRAR",                "url": "https://comprar.ecosistematransparencia.com.ar/"},
+    {"id": "contratos",    "nombre": "CONTRATOS",              "url": "https://contratos.ecosistematransparencia.com.ar/"},
+    {"id": "jefatura",     "nombre": "JEFATURA",               "url": "https://jefatura.ecosistematransparencia.com.ar/"},
+    {"id": "monitor",      "nombre": "MONITOR IRI",            "url": "https://monitor.ecosistematransparencia.com.ar/"},
+    {"id": "meaci",        "nombre": "MEACI",                  "url": "https://meaci.ecosistematransparencia.com.ar/"},
+    {"id": "ajuste",       "nombre": "AJUSTE",                 "url": "https://ajuste.ecosistematransparencia.com.ar/"},
+    {"id": "decla",        "nombre": "DECLA",                  "url": "https://decla.ecosistematransparencia.com.ar/"},
+    {"id": "justicia",     "nombre": "JUSTICIA",               "url": "https://justicia.ecosistematransparencia.com.ar/"},
+    {"id": "legislativo",  "nombre": "LEGISLATIVO",            "url": "https://legislativo.ecosistematransparencia.com.ar/"},
+    {"id": "senadores",    "nombre": "SENADORES",              "url": "https://senadores.ecosistematransparencia.com.ar/"},
+    {"id": "corrupcion",   "nombre": "CORRUPCIÓN ESTRATÉGICA", "url": "https://corrupcionestrategica-production.up.railway.app/"}
+  ]
+}
