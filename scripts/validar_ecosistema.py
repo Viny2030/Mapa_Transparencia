@@ -92,7 +92,7 @@ def control_comprar_vs_contratos(dias: int) -> None:
 def control_contratos_interno():
     try:
         resumen = get(f"{URL['contratos']}/api/resumen")
-        organismos = get(f"{URL['contratos']}/api/organismos").get("data", [])
+        organismos = get(f"{URL['contratos']}/api/organismos?top=100").get("data", [])
     except Exception as e:
         registrar("FALLA", "Contratos interno", f"Error al consultar: {e}")
         return
