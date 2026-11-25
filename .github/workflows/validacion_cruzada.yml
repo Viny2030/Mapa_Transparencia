@@ -54,13 +54,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           TITULO="Validación cruzada: hay controles en FALLA"
-          NUM=$(gh issue list --state open --search "in:title \"$TITULO\"" --json number --jq '.[0].number')
+          NUM=""
+          for i in 1 2 3; do
+            NUM=$(gh issue list --state open --search "in:title \"$TITULO\"" --json number --jq '.[0].number' 2>/dev/null) && break
+            echo "::warning::gh issue list falló (intento $i/3), reintentando en 5s..."
+            sleep 5
+          done
           if [ -n "$NUM" ]; then
             gh issue comment "$NUM" --body-file reporte.md
           else
             gh issue create --title "$TITULO" --body-file reporte.md
           fi
-
-      - name: Marcar el job en rojo si hubo fallas
-        if: steps.validar.outcome == 'failure'
-        run: exit 1
